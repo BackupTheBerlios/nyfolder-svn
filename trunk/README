@@ -1,0 +1,26 @@
+            _______         ___________    .__       .___            
+            \      \ ___.__.\_   _____/___ |  |    __| _/___________ 
+            /   |   <   |  | |    __)/  _ \|  |   / __ |/ __ \_  __ \
+           /    |    \___  | |     \(  <_> )  |__/ /_/ \  ___/|  | \/
+           \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
+                   \/\/          \/ README             \/    \/     
+
+ * IMPORTANTE
+	Ogni Riga di Codice che e' dentro ad un evento e lavora sull'interfaccia
+	Gtk2 deve essere racchiusa tra:
+	-------------------------------------------
+		Gtk.Application.Invoke(delegate {
+			...
+		});
+	-------------------------------------------
+
+
+=====================
+	P2P Interface
+=====================
+	- P2PManager.Connected (Peer, UserInfo);
+	- P2PManager.Receive (Peer, string data);
+
+
+A me basta ricevere le Informazioni dall'utente...
+Login 'pio@nyfolder' 80.235.235.235:7085

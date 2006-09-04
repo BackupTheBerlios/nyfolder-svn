@@ -1,0 +1,46 @@
+            _______         ___________    .__       .___            
+            \      \ ___.__.\_   _____/___ |  |    __| _/___________ 
+            /   |   <   |  | |    __)/  _ \|  |   / __ |/ __ \_  __ \
+           /    |    \___  | |     \(  <_> )  |__/ /_/ \  ___/|  | \/
+           \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
+                   \/\/          \/ TODO               \/    \/       
+
+ * IMPORTANTE
+	Ogni Riga di Codice che e' dentro ad un evento e lavora sull'interfaccia
+	Gtk2 deve essere racchiusa tra:
+	-------------------------------------------
+		Gtk.Application.Invoke(delegate {
+			...
+		});
+	-------------------------------------------
+
+ - URGENT ToDo List
+==============================
+ - Quando Trasciono un Oggetto all'Interno di un Peer, 
+   deve essere lanciato il popup "Vuoi Salvare Questo File ?"
+ - Se e' Stato Selezionati "Ok" Inviare il File
+
+
+ - ToDo List
+==============================
+ * UserPanel:
+	* Info Labels
+		- Add Events to Upload Num Download/Upload/Shared Files
+
+ * Network Viewer
+	- On Left Click Open/Request Peer Folder
+	- On Right Click Open Popup Menu Options
+	- Add Event To "Peer Change Avatar"
+
+ * Folder Manager
+	- All menu Events
+
+ * MenuBar
+	- Logout
+
+ - Quando viene inviato un file deve essere forzato il salvataggio 
+   nella sua shared directory dell'utente (MyInfo.Name)
+
+ * Utils/Proxy & GUI/Dialogs/ProxySettings
+ 	- Modify To Use Utils.Proxy Configuration
+
