@@ -20,12 +20,18 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading;
+using System.Net.Sockets;
 
 using Niry;
 using Niry.Utils;
 using Niry.Network;
+
+using NyFolder;
+using NyFolder.Utils;
+using NyFolder.Protocol;
 
 namespace NyFolder.Protocol {
 	public delegate void EndSendFilePartHandler (object sender, EndSendFilePartArgs args);
@@ -57,51 +63,47 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Consts
 		// ============================================
-		public const uint ChunkSize = 2048;	// 8192
+		public const int ChunkSize = 8192;	// 8192
 
 		// ============================================
 		// PUBLIC Events
 		// ============================================
-		public EndSendFilePartHandler EndSend = null;
-		
+		public event EndSendFilePartHandler EndSend = null;
+
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private byte[] fileContent;
-		private PeerSocket peer;
-		private string fileName;
-		private long fileSize;
+		private StreamWriter streamWriter = null;
+		private TcpClient tcpClient = null;
+		private string fileName = null;
+		private PeerSocket peer = null;
+		private string b64file = null;
+		private long b64fileSize = 0;
+		private long fileSize = 0;
 		private Thread thread;
 
+		// ============================================
+		// PUBLIC Constructors
+		// ============================================
 		public FileSender (PeerSocket peer, string fileName) {
 			this.peer = peer;
 
-			// Initialize & Read Entire File
-			this.fileName = fileName;
-			this.fileContent = FileUtils.ReadEntireFile(this.fileName);
-			this.fileSize = this.fileContent.Length;
-
-			// Initialize Thread :)
-			thread = null;
+			InitializeTcpClient(peer);
+			InitializeAndReadFile(fileName, fileName);
 		}
 
-		public FileSender (PeerSocket peer, string path, string displayName) {
+		public FileSender (PeerSocket peer, string fileName, string displayName) {
 			this.peer = peer;
 
-			// Initialize & Read Entire File
-			this.fileName = displayName;
-			this.fileContent = FileUtils.ReadEntireFile(path);
-			this.fileSize = this.fileContent.Length;
-
-			// Initialize Thread :)
-			thread = null;
+			InitializeTcpClient(peer);
+			InitializeAndReadFile(fileName, displayName);
 		}
 
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
 		public void Start() {
-			thread = new Thread(new ThreadStart(StartSendingFile));
+			thread = new Thread(new ThreadStart(ThreadSendFile));
 			thread.Start();
 		}
 
@@ -112,99 +114,56 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
-		private void StartSendingFile() {
+		private void ThreadSendFile() {
 			try {
-				// Send File Start
-				SendFileStart();
+				// Start Sending FileName
+				streamWriter.Write(this.fileName + "\n");
 
-				while (fileContent != null) {
-					long length = ChunkSize;
-					if (fileContent.Length < ChunkSize)
-						length = fileContent.Length;
+				// Send All File
+				while (b64file.Length > 0) {
+					int size = (b64file.Length > ChunkSize) ? ChunkSize : b64file.Length;
+					string toSend = b64file.Substring(0, size);
+					b64file = b64file.Remove(0, size);
 
-					// Copy First `ChunkSize` byte and Send It
-					byte[] buffer = new byte[length];
-					Array.Copy(fileContent, buffer, length);
-					
-					// Send File Part Event
-					SendFilePart(buffer);
-
-					// Remove Sended Part From File
-					if (fileContent.Length > ChunkSize) {
-						// Remove First `ChunkSize` byte
-						buffer = fileContent;
-						length = buffer.Length - ChunkSize;
-						fileContent = new byte[length];
-						Array.Copy(buffer, ChunkSize, fileContent, 0, length);
-					} else {
-						fileContent = null;
-					}
+					streamWriter.Write(toSend);
 				}
 
-				// Send File End
-				SendFileEnd(null);
-
 				// Send Event... End File Ok
-				if (EndSend != null)
-					EndSend(this, new EndSendFilePartArgs(true));
+				if (EndSend != null) EndSend(this, new EndSendFilePartArgs(true));
 			} catch (ThreadAbortException e) {
-				SendFileEnd(e.Message);
-
 				// Send Thread Abort Error
-				if (EndSend != null)
-					EndSend(this, new EndSendFilePartArgs(false, e.Message));
+				if (EndSend != null) EndSend(this, new EndSendFilePartArgs(false, e.Message));
 			} catch (Exception e) {
-				SendFileEnd(e.Message);
-
 				// Send Thread Error
-				if (EndSend != null)
-					EndSend(this, new EndSendFilePartArgs(false, e.Message));
+				if (EndSend != null) EndSend(this, new EndSendFilePartArgs(false, e.Message));
+			} finally {
+				this.streamWriter.Close();
+				this.tcpClient.Close();
 			}
 		}
 
-		private void SendFilePart (byte[] data) {
-			// Base64 Convert
-			string b64data = Convert.ToBase64String(data);
+		private void InitializeTcpClient (PeerSocket peer) {
+			// Get User Info
+			UserInfo userInfo = peer.Info as UserInfo;
 
-			// XmlRequest
-			XmlRequest xmlRequest = new XmlRequest();
-			xmlRequest.FirstTag = "snd";
-			xmlRequest.BodyText = b64data;
-			xmlRequest.Attributes.Add("what", "file");
-			xmlRequest.Attributes.Add("name", this.fileName);
-			xmlRequest.Attributes.Add("size", this.fileSize);
+			// Initialize TcpClient
+			this.tcpClient = new TcpClient(peer.GetRemoteIP().ToString(), userInfo.Port + 1);
 
-			// Add md5sum
-			xmlRequest.AddAttributeMd5Sum();
-
-			// Send To Peer
-			if (this.peer != null) this.peer.Send(xmlRequest.GenerateXml());
+			// Initialize Stream Writer
+			this.streamWriter = new StreamWriter(tcpClient.GetStream());
 		}
 
-		private void SendFileStart() {
-			// XmlRequest
-			XmlRequest xmlRequest = new XmlRequest();
-			xmlRequest.FirstTag = "snd-start";
-			xmlRequest.Attributes.Add("what", "file");
-			xmlRequest.Attributes.Add("name", this.fileName);
-			xmlRequest.Attributes.Add("size", this.fileSize);
+		private void InitializeAndReadFile (string fileName, string displayName) {
+			// Initialize FileName
+			this.fileName = displayName;
 
-			// Send To Peer
-			if (this.peer != null) this.peer.Send(xmlRequest.GenerateXml());
-		}
+			// Read All File
+			byte[] fileBytes = FileUtils.ReadEntireFile(fileName);
+			this.fileSize = fileBytes.Length;
 
-		private void SendFileEnd (string msgerror) {
-			// XmlRequest
-			XmlRequest xmlRequest = new XmlRequest();
-			xmlRequest.FirstTag = "snd-end";
-			if (msgerror != null)
-				xmlRequest.BodyText = "Sending Error: " + msgerror;
-			xmlRequest.Attributes.Add("what", "file");
-			xmlRequest.Attributes.Add("name", this.fileName);
-			xmlRequest.Attributes.Add("size", this.fileSize);
-
-			// Send To Peer
-			if (this.peer != null) this.peer.Send(xmlRequest.GenerateXml());
+			// Transform Into Base64
+			this.b64file = Convert.ToBase64String(fileBytes);
+			this.b64fileSize = this.b64file.Length;
 		}
 
 		// ============================================
@@ -224,8 +183,8 @@ namespace NyFolder.Protocol {
 
 		public int SendedPercent {
 			get {
-				long sendedLength = fileSize - fileContent.Length;
-				return((int) (((double) sendedLength / (double) fileSize) * 100));
+				long sendedLength = b64fileSize - b64file.Length;
+				return((int) (((double) sendedLength / (double) b64fileSize) * 100));
 			}
 		}
 	}

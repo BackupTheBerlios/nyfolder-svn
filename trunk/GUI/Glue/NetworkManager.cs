@@ -43,6 +43,7 @@ namespace NyFolder.GUI.Glue {
 		private MenuManager menuManager;
 		private UserPanel userPanel;
 
+		private ShareServer shareServer;
 		private P2PManager p2pManager;
 		private CmdManager cmdManager;
 
@@ -157,20 +158,47 @@ namespace NyFolder.GUI.Glue {
 			userPanel.SetOnlineStatus(action.Active);
 
 			if (action.Active == true) {
-				this.p2pManager.StartListening();
-				UploadManager.Initialize();
-				this.cmdManager.AddPeerEventsHandler();
-				this.AddProtocolEvents();
+				try {
+					// P2P Start Listening
+					this.p2pManager.StartListening();
 
-				if (AddProtocolEvent != null) AddProtocolEvent(p2pManager, cmdManager);
+					// Initialize Download & Upload Manager
+					UploadManager.Initialize();
+					this.shareServer = new ShareServer(this.p2pManager.CurrentPort + 1);
+					this.shareServer.Start();
+
+					// Initialize Command Manager & Add Commands Handler
+					this.cmdManager.AddPeerEventsHandler();
+					this.AddProtocolEvents();
+
+					// Add Custom Command Handler
+					if (AddProtocolEvent != null) AddProtocolEvent(p2pManager, cmdManager);
+				} catch (Exception e) {
+					Glue.Dialogs.MessageErrorDialog("P2P Connection Error", e.Message);
+					action.Active = false;
+				}
 			} else {
-				if (DelProtocolEvent != null) DelProtocolEvent(p2pManager, cmdManager);
+				try {
+					// Remove Custom Command Handler
+					if (DelProtocolEvent != null) DelProtocolEvent(p2pManager, cmdManager);
 
-				this.RemoveAllUsers();
-				this.DelProtocolEvents();
-				this.cmdManager.DelPeerEventsHandler();
-				UploadManager.Clear();
-				this.p2pManager.StopListening();
+					// Remove All Connected Users
+					this.RemoveAllUsers();
+
+					// Reset Command Manager & Del Commands Handler
+					this.DelProtocolEvents();
+					this.cmdManager.DelPeerEventsHandler();
+
+					// Reset Download & Upload Manager
+					UploadManager.Clear();
+					this.shareServer.Stop();
+					this.shareServer = null;
+
+					// P2P Stop Listening
+					this.p2pManager.StopListening();
+				} catch (Exception e) {
+					Glue.Dialogs.MessageErrorDialog("P2P Disconnection Error", e.Message);
+				}
 			}
 		}
 

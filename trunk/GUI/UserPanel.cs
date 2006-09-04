@@ -101,19 +101,25 @@ namespace NyFolder.GUI {
 		}
 
 		public void UpdateSharedFilesNum() {
-			string sharedFolder = Paths.UserSharedDirectory(MyInfo.Name);
-			int numFiles = CountDirectoryFiles(sharedFolder);
-			this.labelTFiles.Text = numFiles.ToString() + " Shared Files";
+			try {
+				string sharedFolder = Paths.UserSharedDirectory(MyInfo.Name);
+				int numFiles = CountDirectoryFiles(sharedFolder);
+				this.labelTFiles.Text = numFiles.ToString() + " Shared Files";
+			} catch {}
 		}
 
 		public void UpdateDownloadNum() {
-			int numDownload = 0; // DownloadManager.NDownloads;
-			this.labelDownload.Text = numDownload.ToString() + " Download";
+			try {
+				int numDownload = ShareServer.NDownloads;
+				this.labelDownload.Text = numDownload.ToString() + " Download";
+			} catch {}
 		}
 
 		public void UpdateUploadNum() {
-			int numUpload = UploadManager.NUploads;
-			this.labelUpload.Text = numUpload.ToString() + " Upload";
+			try {
+				int numUpload = UploadManager.NUploads;
+				this.labelUpload.Text = numUpload.ToString() + " Upload";
+			} catch {}
 		}
 
 		// ============================================

@@ -54,7 +54,7 @@ namespace NyFolder.Protocol {
 		}
 
 		private void ParseCommand (string xml) {
-//#if false
+//#if DEBUG
 			Debug.Log("==================================================");
 			if (peer.Info != null) {
 				UserInfo userInfo = this.peer.Info as UserInfo;
@@ -65,8 +65,15 @@ namespace NyFolder.Protocol {
 //#endif
 
 			// Parse Xml Command
-			XmlRequest xmlRequest = new XmlRequest(xml);
-			xmlRequest.Parse();
+			XmlRequest xmlRequest = null;
+			try {
+				xmlRequest = new XmlRequest(xml);
+				xmlRequest.Parse();
+			} catch (Exception e) {
+				Debug.Log("Parse Xml: {0}", e.Message);
+				Debug.Log(xml);
+				return;
+			}
 
 			// Protocol Commands
 			switch (xmlRequest.FirstTag) {
@@ -215,9 +222,37 @@ namespace NyFolder.Protocol {
 			XmlRequest xmlRequest = new XmlRequest();
 			xmlRequest.FirstTag = "ask";
 			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("path", path);
 			xmlRequest.Attributes.Add("name", fileInfo.Name);
 			xmlRequest.Attributes.Add("size", fileInfo.Length);
 
+			peer.Send(xmlRequest.GenerateXml());
+		}
+
+		public static void AcceptFile (PeerSocket peer, XmlRequest xmlAsk) {
+			xmlAsk.FirstTag = "accept";
+			peer.Send(xmlAsk.GenerateXml());
+		}
+
+		public static void AcceptFile (PeerSocket peer, string path) {
+			FileInfo fileInfo = new FileInfo(path);
+
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "accept";
+			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("path", path);
+			xmlRequest.Attributes.Add("name", fileInfo.Name);
+			xmlRequest.Attributes.Add("size", fileInfo.Length);
+
+			peer.Send(xmlRequest.GenerateXml());
+		}
+
+		public static void SendFileList (PeerSocket peer, string path) {
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "snd";
+			xmlRequest.BodyText = GetMyFolder(path);
+			xmlRequest.Attributes.Add("what", "folder-list");
+			xmlRequest.Attributes.Add("path", path);
 			peer.Send(xmlRequest.GenerateXml());
 		}
 
@@ -297,6 +332,33 @@ namespace NyFolder.Protocol {
 
 			// Start New Command Parse Thread
 			new CmdParse(peer, xmlCmds);
+		}
+
+		private static string GetMyFolder (string path) {
+			string mySharedPath = Paths.UserSharedDirectory(MyInfo.Name);
+
+			path = Path.Combine(mySharedPath, path.Substring(1));
+			// Now Go Through The Directory and Extract All The File Information
+			if (Directory.Exists(path) == false)
+				return(null);
+
+			// Get Root Directory
+			DirectoryInfo root = new DirectoryInfo(path);
+			string folder = "";		// Path|is_dir(0|1)\n
+
+			// Get SubDirectory
+			foreach (DirectoryInfo d in root.GetDirectories()) {
+				if (!d.Name.StartsWith("."))
+					folder += d.FullName.Substring(mySharedPath.Length) + "|1\n";
+			}
+
+			// Get Files
+			foreach (FileInfo f in root.GetFiles()) {
+				if (!f.Name.StartsWith("."))
+					folder += f.FullName.Substring(mySharedPath.Length) + "|0\n";
+			}
+
+			return(folder);
 		}
 
 		// ============================================

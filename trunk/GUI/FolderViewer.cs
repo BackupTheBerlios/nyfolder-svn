@@ -25,6 +25,10 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using Niry;
+using Niry.Utils;
+using Niry.GUI.Gtk2;
+
 using NyFolder;
 using NyFolder.Utils;
 using NyFolder.Protocol;
@@ -39,6 +43,8 @@ namespace NyFolder.GUI {
 		// ============================================
 		public event FileEventHandler FolderRefresh = null;
 		public event DirChangedHandler DirChanged = null;
+		public event RightMenuHandler RightMenu = null;
+		public event FileEventHandler SaveFile = null;
 
 		// ============================================
 		// PROTECTED Members
@@ -53,6 +59,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
+/*
 		private static TargetEntry[] dndTargetTable = new TargetEntry[] {
 			new TargetEntry("STRING", 0, 0),
 			new TargetEntry("text/plain", 0, 1),
@@ -65,7 +72,7 @@ namespace NyFolder.GUI {
 			new TargetEntry("x-special/gnome-icon-list", 0, 8),
 			new TargetEntry("x-special/gnome-reset-background", 0, 9)
 		};
-
+*/
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
@@ -89,17 +96,19 @@ namespace NyFolder.GUI {
 
 			// Initialize Icon View
 			iconView = new IconView(store);
-			iconView.SelectionMode = SelectionMode.Single;
 			iconView.TextColumn = FolderStore.COL_NAME;
 			iconView.PixbufColumn = FolderStore.COL_PIXBUF;
+			iconView.SelectionMode = SelectionMode.Multiple;
 
 			// Initialize Icon View Events
 			iconView.ItemActivated += new ItemActivatedHandler(OnItemActivated);
 			iconView.ButtonPressEvent += new ButtonPressEventHandler(OnItemClicked);
 
+/*
 			// Initialize Icon View Drag & Drop
 			iconView.EnableModelDragDest(dndTargetTable, Gdk.DragAction.Copy);
 			iconView.DragDataReceived += new DragDataReceivedHandler(OnDragDataReceived);
+*/
 
 			// Add IconView to ScrolledWindow
 			Add(iconView);
@@ -153,6 +162,23 @@ namespace NyFolder.GUI {
 			}
 		}
 
+		public void Fill (string path, string fileList) {
+			currentDirectory = new DirectoryInfo(path);
+
+			string[] flist = fileList.Split('\n');
+			foreach (string fileInfo in flist) {
+				if (fileInfo == "" || fileInfo == null || fileInfo.Length == 0)
+					continue;
+
+				string[] file = fileInfo.Split('|');
+				if (file[1].Equals("0")) {
+					store.AddFile(file[0]);
+				} else {
+					store.AddDirectory(file[0]);
+				}
+			}
+		}
+
 		public bool CanGoUp() {
 			return(!currentDirectory.FullName.Equals(baseDirectory));
 		}
@@ -160,33 +186,30 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PROTECTED (Methods) Event Handlers
 		// ============================================
+/*
 		protected void OnDragDataReceived (object sender, DragDataReceivedArgs args) {
-			IconViewDropPosition pos;
-			TreePath path;			
-
-			// Get Dest Item Position
-			if (iconView.GetDestItemAtPos(args.X, args.Y, out path, out pos) == false) {
-				Drag.Finish(args.Context, false, false, args.Time);
-				return;
-			}
-
-			// Select Item (Change Icon To Activate)
-			Console.WriteLine("Item At Pos: {0} {1}", path, pos);
-
 			// Get Drop Uri
 			string[] filesUri = Regex.Split(args.SelectionData.Text, "\r\n");
 			foreach (string uri in filesUri) {
 				if (uri == null || uri.Equals("") || uri.Length == 0)
 					continue;
+				
+				string filePath = uri;
+				if (filePath.StartsWith("file://") == true)
+					filePath = filePath.Substring(7);
 
-				// Start Event Send File:
-				//if (SendFile != null) SendFile(path, uri);
-				Console.WriteLine("URI: '{0}'", uri);
+				if (this.userInfo == MyInfo.GetInstance()) {
+					Console.WriteLine("Save File: '{0}'", uri);
+				} else {
+					// Start Event Send File:
+					//if (SendFile != null) SendFile(path, uri);
+					Console.WriteLine("Send File: '{0}'", uri);
+				}
 			}
 
 			Drag.Finish(args.Context, true, false, args.Time);
 		}
-
+*/
 		protected void OnItemActivated (object sender, ItemActivatedArgs args) {
 			// Get File Path & IsDirectory Flag				
 			bool isDir = store.GetIsDirectory(args.Path);
@@ -212,10 +235,37 @@ namespace NyFolder.GUI {
 				return;
 
 			if (args.Event.Button == 3) {
-				Console.WriteLine("Right Click");
-			} else {
-				Console.WriteLine("{0} Click", args.Event.Button);
+				PopupMenu menu = new PopupMenu();
+
+				// Options
+				if (this.userInfo == MyInfo.GetInstance()) {
+					menu.AddImageItem(Gtk.Stock.Remove, new EventHandler(OnFileRemove));
+				} else {
+					menu.AddImageItem(Gtk.Stock.Save, new EventHandler(OnFileSave));
+				}
+
+				// Start Right Menu Event
+				if (RightMenu != null) RightMenu(this, menu);
+
+				menu.Popup();
+				menu.ShowAll();
 			}
+		}
+
+		// ============================================
+		// PROTECTED (Methods) Menu Event Handlers
+		// ============================================
+		protected void OnFileSave (object sender, EventArgs args) {
+			foreach (TreePath treePath in iconView.SelectedItems) {
+				string fpath = store.GetFilePath(treePath);
+				Console.WriteLine("Save {0}", fpath);
+			}
+		}
+
+		protected void OnFileRemove (object sender, EventArgs args) {
+			foreach (TreePath treePath in iconView.SelectedItems)
+				FileUtils.RemoveAll(store.GetFilePath(treePath));
+			Gtk.Application.Invoke(delegate { Refresh(); });
 		}
 
 		// ============================================

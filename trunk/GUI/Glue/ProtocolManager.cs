@@ -19,7 +19,10 @@
  */
 
 using Gtk;
+
 using System;
+using System.IO;
+using System.Text;
 
 using Niry;
 using Niry.Utils;
@@ -55,7 +58,33 @@ namespace NyFolder.GUI.Glue {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		private void AcceptFileQuestion (PeerSocket peer, XmlRequest xml) {
+			string name = (string) xml.Attributes["name"];
+			string path = (string) xml.Attributes["path"];
+			string size = (string) xml.Attributes["size"];
+			if (size == null) size = "0";
 
+			UserInfo userInfo = peer.Info as UserInfo;
+
+			StringBuilder questionMsg = new StringBuilder();
+			questionMsg.AppendFormat("Accept File '<b>{0}</b>' ", name);
+			questionMsg.AppendFormat("(Size <b>{0}</b>)\n", FolderStore.GetSizeString(long.Parse(size)));
+			questionMsg.AppendFormat("From User '<b>{0}</b>' ?", userInfo.Name);
+
+			// Accept Yes/No Dialog
+			bool accept = Glue.Dialogs.QuestionDialog("Accept File", questionMsg.ToString());
+			if (accept == false) return;
+
+			// Save File Dialog
+			string savePath = Glue.Dialogs.SaveFile(Paths.UserSharedDirectory(MyInfo.Name), name);
+			if (savePath == null) return;
+
+			// Send Accept File Command
+			Debug.Log("Accept File '{0}' From '{1}', Save as '{2}'", userInfo.Name, path, savePath);
+
+			ShareServer.AddToAcceptList(peer, path, savePath);
+			CmdManager.AcceptFile(peer, xml);
+		}
 
 		// ============================================
 		// PRIVATE (Methods) Event Handler
@@ -64,6 +93,8 @@ namespace NyFolder.GUI.Glue {
 			// NetworkViewer
 			NetworkViewer networkViewer = notebookViewer.NetworkViewer;
 			networkViewer.SendFile += new SendFileHandler(OnSendFile);
+			notebookViewer.SaveFile += new SendFileHandler(OnSaveFile);
+			notebookViewer.FolderRefresh += new FileEventHandler(OnFolderRefresh); 
 
 			// Protocol Commands
 			CmdManager.GetEvent += new ProtocolHandler(OnGetEvent);
@@ -78,6 +109,8 @@ namespace NyFolder.GUI.Glue {
 			// NetworkViewer
 			NetworkViewer networkViewer = notebookViewer.NetworkViewer;
 			networkViewer.SendFile -= new SendFileHandler(OnSendFile);
+			notebookViewer.SaveFile -= new SendFileHandler(OnSaveFile);
+			notebookViewer.FolderRefresh -= new FileEventHandler(OnFolderRefresh);
 
 			// Protocol Commands
 			CmdManager.GetEvent -= new ProtocolHandler(OnGetEvent);
@@ -92,43 +125,104 @@ namespace NyFolder.GUI.Glue {
 		// PRIVATE (Sub Methods) NetworkViewer Event Handler
 		// ===================================================
 		private void OnSendFile (object sender, UserInfo userInfo, string path) {
-			PeerSocket peer = P2PManager.KnownPeers[userInfo] as PeerSocket;
-			try {
-				CmdManager.AskSendFile(peer, path);
-			} catch {
-				Gtk.Application.Invoke(delegate {
+			Gtk.Application.Invoke(delegate {
+				PeerSocket peer = P2PManager.KnownPeers[userInfo] as PeerSocket;
+
+				try {
+					CmdManager.AskSendFile(peer, path);
+				} catch {				
 					Glue.Dialogs.MessageErrorDialog("Ask Send File Error", 
 													"Directory Send Not Supported (Now)");
-				});
-			}
+				}
+			});
+		}
+
+		private void OnSaveFile (object sender, UserInfo userInfo, string path) {
+			Gtk.Application.Invoke(delegate {
+				PeerSocket peer = P2PManager.KnownPeers[userInfo] as PeerSocket;
+
+				// Save File Dialog
+				Console.WriteLine("Save: {0}", path);
+				string savePath = Glue.Dialogs.SaveFile(Paths.UserSharedDirectory(MyInfo.Name), path.Substring(1));
+				if (savePath == null) return;
+
+				ShareServer.AddToAcceptList(peer, path, savePath);
+				CmdManager.AcceptFile(peer, path);
+			});
+		}
+
+		private void OnFolderRefresh (object sender, string path) {
+			FolderViewer folderViewer = sender as FolderViewer;
+			Gtk.Application.Invoke(delegate {
+				PeerSocket peer = P2PManager.KnownPeers[folderViewer.UserInfo] as PeerSocket;
+				CmdManager.RequestFolder(peer, path);
+			});
 		}
 
 		// ===================================================
 		// PRIVATE (Sub Methods) Protocol Event Handler
 		// ===================================================
 		public void OnGetEvent (PeerSocket peer, XmlRequest xml) {
-			Console.WriteLine("Get Event");
+			Gtk.Application.Invoke(delegate {
+				string what = (string) xml.Attributes["what"];
+
+				if (what == "folder") {
+					CmdManager.SendFileList(peer, xml.BodyText);
+				}
+			});
 		}
 
+		// Evento Scatenato quando un utente decide di inviare qualcosa...
+		// E' una semplice domanda "Vuoi Accettare questo file?"
+		//		<ask what='file' name='...' path='...' size='...' />
 		public void OnAskEvent (PeerSocket peer, XmlRequest xml) {
-			Console.WriteLine("Ask Event");
+			Gtk.Application.Invoke(delegate {
+				string what = (string) xml.Attributes["what"];
+
+				if (what == "file") {
+					AcceptFileQuestion(peer, xml);
+				}
+			});
 		}
 
+		// Evento Scatenato quando un utente accetta un qualcosa...
+		// Indica al Ricevente di Iniziare ad Inviare...
+		//		<accept what='file' name='...' path='...' size='...' />
 		public void OnAcceptEvent (PeerSocket peer, XmlRequest xml) {
-			Console.WriteLine("Accept Event");
+			Gtk.Application.Invoke(delegate {
+				string what = (string) xml.Attributes["what"];
+
+				if (what == "file") {
+					string path = (string) xml.Attributes["path"];
+					UserInfo userInfo = peer.Info as UserInfo;
+
+					UploadManager.Add(userInfo, path);
+				}
+			});
 		}
 
 		public void OnSndEvent (PeerSocket peer, XmlRequest xml) {
-			Console.WriteLine("Snd Event");
+			Gtk.Application.Invoke(delegate {
+				string what = (string) xml.Attributes["what"];
+
+				if (what == "folder-list") {
+					UserInfo userInfo = peer.Info as UserInfo;
+					FolderViewer folderViewer = notebookViewer.LookupPage(userInfo);
+					folderViewer.Fill((string) xml.Attributes["path"], xml.BodyText);
+				}
+			});
 		}
 
 		public void OnSndStartEvent (PeerSocket peer, XmlRequest xml) {
-			Console.WriteLine("Snd Start Event");
-			#warning ToDo All This :)
+			Gtk.Application.Invoke(delegate {
+				Console.WriteLine("Send Start Event");
+			});
 		}
 
 		public void OnSndEndEvent (PeerSocket peer, XmlRequest xml) {
-			Console.WriteLine("Snd End Event");
+			Gtk.Application.Invoke(delegate {
+				Console.WriteLine("Send End Event");
+			});
 		}
 	}
 }

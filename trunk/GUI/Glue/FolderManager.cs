@@ -131,19 +131,22 @@ namespace NyFolder.GUI.Glue {
 		// PRIVATE (Methods) Event Handler
 		// ============================================
 		private void OnSwitchPage (object o, SwitchPageArgs args) {
-			if (args.Page.GetType() != typeof(FolderViewer)) {
-				// NetworkViewer or Custom
-				SetSensitiveGoUpMenu(false);
-				SetSensitiveGoHomeMenu(false);
-			} else {
-				// Folder Viewer
-				Gtk.Widget page = notebookViewer.GetNthPage((int) args.PageNum);
-				FolderViewer folderViewer = page as FolderViewer;
+			Gtk.Application.Invoke(delegate {
+				if (args.Page.GetType() != typeof(FolderViewer)) {
+					// NetworkViewer or Custom
+					SetSensitiveGoUpMenu(false);
+					SetSensitiveGoHomeMenu(false);
+				} else {
+					// Folder Viewer
+					Gtk.Widget page = notebookViewer.GetNthPage((int) args.PageNum);
+					FolderViewer folderViewer = page as FolderViewer;
+					folderViewer.Refresh();
 
-				bool canGoUp = folderViewer.CanGoUp();
-				SetSensitiveGoUpMenu(canGoUp);
-				SetSensitiveGoHomeMenu(true);
-			}
+					bool canGoUp = folderViewer.CanGoUp();
+					SetSensitiveGoUpMenu(canGoUp);
+					SetSensitiveGoHomeMenu(true);
+				}
+			});
 		}
 
 		private void OnMyFolderCliecked (object sender, EventArgs args) {

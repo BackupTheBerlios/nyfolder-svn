@@ -20,6 +20,7 @@
 
 using Gtk;
 using System;
+using System.IO;
 
 using Niry;
 using Niry.Utils;
@@ -42,6 +43,35 @@ namespace NyFolder.GUI.Glue {
 										title, message);
 			dialog.Run();
 			dialog.Destroy();
+		}
+
+		public static bool QuestionDialog (string title, string message) {
+			MessageDialog dialog;
+			dialog = new MessageDialog(null, DialogFlags.Modal, MessageType.Question, 
+										ButtonsType.YesNo, true, 
+										"<span size='x-large'><b>{0}</b></span>\n\n{1}",
+										title, message);
+			bool response = (ResponseType) dialog.Run() == ResponseType.Yes;
+			dialog.Destroy();
+			return(response);
+		}
+
+		public static string SaveFile (string path, string fileName) {
+			FileChooserDialog dialog = new FileChooserDialog("Save File", null,
+															 FileChooserAction.Save);
+			dialog.AddButton(Stock.Cancel, ResponseType.Cancel);
+			dialog.AddButton(Stock.Save, ResponseType.Ok);
+
+			dialog.SelectMultiple = false;
+			dialog.SetCurrentFolder(path);
+			dialog.CurrentName = fileName;
+
+			string uri = null;
+			if ((ResponseType) dialog.Run() == ResponseType.Ok)
+				uri = dialog.Filename;
+				// Replace Existing File
+			dialog.Destroy();
+			return(uri);
 		}
 
 		// Run Proxy Settings Dialog & Save Configuration

@@ -14,7 +14,7 @@ PKGS = $(PKG_GTK) $(PKG_GLADE) $(PKG_SQLITE) $(PKG_NIRY)
 
 # ===================================== NyFolder Info ======================
 NAME = NyFolder
-VERSION = 0.0.902
+VERSION = 0.0.903
 COMPILER = `$(CC) --version`
 # ==========================================================================
 
@@ -46,14 +46,16 @@ GUI_SRC = $(GUI) $(GUI_DIALOGS) $(GUI_GLUE)
 
 DATABASE_SRC =	
 
-PROTOCOL_SRC = 	Protocol/CmdManager.cs		\
-				Protocol/FileSender.cs		\
-				Protocol/HttpRequest.cs		\
-				Protocol/Login.cs			\
-				Protocol/MyInfo.cs			\
-				Protocol/Proxy.cs			\
-				Protocol/UploadManager.cs	\
-				Protocol/UserInfo.cs		\
+PROTOCOL_SRC = 	Protocol/CmdManager.cs			\
+				Protocol/FileReceiver.cs		\
+				Protocol/FileSender.cs			\
+				Protocol/HttpRequest.cs			\
+				Protocol/Login.cs				\
+				Protocol/MyInfo.cs				\
+				Protocol/Proxy.cs				\
+				Protocol/ShareServer.cs			\
+				Protocol/UploadManager.cs		\
+				Protocol/UserInfo.cs			\
 				Protocol/XmlRequest.cs
 
 UTILS_SRC	= 	Utils/Debug.cs  		\

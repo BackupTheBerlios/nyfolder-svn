@@ -81,11 +81,13 @@ namespace NyFolder.Protocol {
 			if (fileSenderList == null) fileSenderList = new ArrayList();
 
 			// Initialize & Start File Sender
+
 			FileSender fileSender = new FileSender(peer, path);
 			fileSender.EndSend += new EndSendFilePartHandler(OnEndSendFilePart);
 			fileSender.Start();
 
 			// Update Upload List
+			fileSenderList.Add(fileSender);
 			uploads[peer] = fileSenderList;
 
 			// Update Num Uploads
@@ -105,20 +107,26 @@ namespace NyFolder.Protocol {
 			UserInfo userInfo = peer.Info as UserInfo;
 
 			ArrayList fileSenderList = uploads[peer] as ArrayList;
-			if (fileSenderList == null)
+			if (fileSenderList == null) {
+				Console.WriteLine("File Sender List is NULL");
 				throw(new UploadManagerException(userInfo.Name + " File '" + path + "' Not Found"));
+			}
 
-			int filePos;
-			if ((filePos = fileSenderList.IndexOf(path)) < 0)
-				throw(new UploadManagerException(userInfo.Name + " File '" + path + "' Not Found"));
+			FileSender fileSender = null;
+			foreach (FileSender fs in fileSenderList) {
+				if (fs.FileName == path) {
+					fileSender = fs;
+					break;
+				}
+			}
 
 			// Stop File Sender Transfer
-			FileSender fileSender = fileSenderList[filePos] as FileSender;
 			fileSender.Stop();
 			fileSender.EndSend -= new EndSendFilePartHandler(OnEndSendFilePart);
+			SendEndFileCmd(fileSender.Peer, fileSender);
 
 			// Remove File & Update Upload List
-			fileSenderList.RemoveAt(filePos);
+			fileSenderList.Remove(fileSender);
 			uploads[peer] = fileSenderList;
 
 			// Update Num Uploads
@@ -140,6 +148,15 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		private static void SendEndFileCmd (PeerSocket peer, FileSender fileSender) {
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "snd-end";
+			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("name", fileSender.FileName);
+			xmlRequest.Attributes.Add("size", fileSender.FileSize);
+
+			peer.Send(xmlRequest.GenerateXml());
+		}
 
 		// ============================================
 		// PUBLIC Properties

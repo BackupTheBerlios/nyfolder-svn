@@ -31,7 +31,9 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
+		public event FileEventHandler FolderRefresh = null;
 		public event DirChangedHandler DirChanged = null;
+		public event SendFileHandler SaveFile = null;
 
 		// ============================================
 		// PROTECTED Members
@@ -97,7 +99,9 @@ namespace NyFolder.GUI {
 
 				// Initialize Folder Viewer
 				folderViewer = new FolderViewer(userInfo);
+				folderViewer.SaveFile += new FileEventHandler(OnFileSave);
 				folderViewer.DirChanged += new DirChangedHandler(OnDirChangedHandler);
+				folderViewer.FolderRefresh += new FileEventHandler(OnFolderRefresh);
 
 				// Add TabLabel -> UserInfo
 				this.tabs.Add(tabLabel.Button, userInfo);
@@ -119,7 +123,9 @@ namespace NyFolder.GUI {
 			FolderViewer folderViewer = LookupPage(userInfo);
 			if (folderViewer != null) {
 				// Remove Folder Viewer Event
+				folderViewer.SaveFile -= new FileEventHandler(OnFileSave);
 				folderViewer.DirChanged -= new DirChangedHandler(OnDirChangedHandler);
+				folderViewer.FolderRefresh -= new FileEventHandler(OnFolderRefresh);
 
 				// Remove TabLabel -> UserInfo
 				TabLabel tabLabel = (TabLabel) GetTabLabel(folderViewer);
@@ -231,6 +237,15 @@ namespace NyFolder.GUI {
 		// ============================================
 		private void OnDirChangedHandler (object sender, bool parent) {
 			if (DirChanged != null) DirChanged(sender, parent);
+		}
+
+		private void OnFileSave (object sender, string path) {
+			FolderViewer folderViewer = sender as FolderViewer;
+			if (SaveFile != null) SaveFile(sender, folderViewer.UserInfo, path);
+		}
+
+		private void OnFolderRefresh (object sender, string path) {
+			if (FolderRefresh != null) FolderRefresh(sender, path);
 		}
 
 		// ============================================

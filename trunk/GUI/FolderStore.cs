@@ -80,7 +80,6 @@ namespace NyFolder.GUI {
 		}
 
 		public void Fill (string path) {
-			Console.WriteLine(path);
 			// Now Go Through The Directory and Extract All The File Information
 			if (Directory.Exists(path) == false)
 				return;
@@ -147,6 +146,17 @@ namespace NyFolder.GUI {
 			return((bool) GetValue(iter, COL_IS_DIRECTORY));
 		}
 
+		public static string GetSizeString (long byteSize) {
+			if (byteSize > 1073741824)
+				return((byteSize / 1073741824).ToString() + "Gb");
+			if (byteSize > 1048576)
+				return((byteSize / 1048576).ToString() + "Mb");
+			if (byteSize > 1024)
+				return((byteSize / 1024).ToString() + "Kb");
+			
+			return(byteSize.ToString() + "byte");
+		}
+
 		// ============================================
 		// PROTECTED Methods
 		// ============================================
@@ -161,17 +171,6 @@ namespace NyFolder.GUI {
 				ext = null;
 			}
 			return(ext);
-		}
-
-		public static string GetSizeString (long byteSize) {
-			if (byteSize > 1073741824)
-				return((byteSize / 1073741824).ToString() + "Gb");
-			if (byteSize > 1048576)
-				return((byteSize / 1048576).ToString() + "Mb");
-			if (byteSize > 1024)
-				return((byteSize / 1024).ToString() + "Kb");
-			
-			return(byteSize.ToString() + "byte");
 		}
 
 		// ============================================

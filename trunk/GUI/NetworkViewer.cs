@@ -152,7 +152,9 @@ namespace NyFolder.GUI {
 					filePath = filePath.Substring(7);
 
 				Debug.Log("Send To '{0}' URI: '{1}'", userInfo.Name, filePath);
-				if (SendFile != null) SendFile(this, userInfo, filePath);
+				Gtk.Application.Invoke(delegate {
+					if (SendFile != null) SendFile(this, userInfo, filePath);
+				});
 			}
 
 			Drag.Finish(args.Context, true, false, args.Time);

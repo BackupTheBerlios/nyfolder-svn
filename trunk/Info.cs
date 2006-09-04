@@ -22,10 +22,10 @@ using System;
 
 namespace NyFolder {
 	public class Info {
-		public const string Version = "0.0.901";
+		public const string Version = "0.0.903";
 		public const string Name = "NyFolder";
 
-		public const string Compiler = "Mono C# compiler version 1.1.16.1";
+		public const string Compiler = "Mono C# compiler version 1.1.17.1";
 		public static string InstallDirectory = AppDomain.CurrentDomain.BaseDirectory;
 	}
 }
