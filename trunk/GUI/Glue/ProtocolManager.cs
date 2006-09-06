@@ -23,6 +23,7 @@ using Gtk;
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 using Niry;
 using Niry.Utils;
@@ -82,7 +83,7 @@ namespace NyFolder.GUI.Glue {
 			// Send Accept File Command
 			Debug.Log("Accept File '{0}' From '{1}', Save as '{2}'", userInfo.Name, path, savePath);
 
-			ShareServer.AddToAcceptList(peer, path, savePath);
+			DownloadManager.AddToAcceptList(peer, path, savePath);
 			CmdManager.AcceptFile(peer, xml);
 		}
 
@@ -131,7 +132,7 @@ namespace NyFolder.GUI.Glue {
 				try {
 					CmdManager.AskSendFile(peer, path);
 				} catch {				
-					Glue.Dialogs.MessageErrorDialog("Ask Send File Error", 
+					Glue.Dialogs.MessageError("Ask Send File Error", 
 													"Directory Send Not Supported (Now)");
 				}
 			});
@@ -140,13 +141,13 @@ namespace NyFolder.GUI.Glue {
 		private void OnSaveFile (object sender, UserInfo userInfo, string path) {
 			Gtk.Application.Invoke(delegate {
 				PeerSocket peer = P2PManager.KnownPeers[userInfo] as PeerSocket;
+				Console.WriteLine("Name: {0}", userInfo.Name);
 
 				// Save File Dialog
-				Console.WriteLine("Save: {0}", path);
 				string savePath = Glue.Dialogs.SaveFile(Paths.UserSharedDirectory(MyInfo.Name), path.Substring(1));
 				if (savePath == null) return;
 
-				ShareServer.AddToAcceptList(peer, path, savePath);
+				DownloadManager.AddToAcceptList(peer, path, savePath);
 				CmdManager.AcceptFile(peer, path);
 			});
 		}
@@ -209,19 +210,41 @@ namespace NyFolder.GUI.Glue {
 					UserInfo userInfo = peer.Info as UserInfo;
 					FolderViewer folderViewer = notebookViewer.LookupPage(userInfo);
 					folderViewer.Fill((string) xml.Attributes["path"], xml.BodyText);
+				} else if (what == "file") {
+					try {
+						DownloadManager.GetFilePart(peer, xml);
+					} catch (Exception e) {
+						Glue.Dialogs.MessageError("Download File Part", e.Message);
+					}
 				}
 			});
 		}
 
 		public void OnSndStartEvent (PeerSocket peer, XmlRequest xml) {
 			Gtk.Application.Invoke(delegate {
-				Console.WriteLine("Send Start Event");
+				string what = (string) xml.Attributes["what"];
+
+				if (what == "file") {
+					try {
+						DownloadManager.InitFile(peer, xml);
+					} catch (Exception e) {
+						Glue.Dialogs.MessageError("Start File Download", e.Message);
+					}
+				}
 			});
 		}
 
 		public void OnSndEndEvent (PeerSocket peer, XmlRequest xml) {
 			Gtk.Application.Invoke(delegate {
-				Console.WriteLine("Send End Event");
+				string what = (string) xml.Attributes["what"];
+
+				if (what == "file") {
+					try {
+						DownloadManager.SaveFile(peer, xml);
+					} catch (Exception e) {
+						Glue.Dialogs.MessageError("End File Download", e.Message);
+					}
+				}
 			});
 		}
 	}

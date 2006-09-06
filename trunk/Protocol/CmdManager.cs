@@ -51,10 +51,11 @@ namespace NyFolder.Protocol {
 		private void ParseXml() {
 			foreach (string xml in xmlCmds) 
 				ParseCommand(xml);
+			xmlCmds.Clear();
 		}
 
 		private void ParseCommand (string xml) {
-//#if DEBUG
+#if DEBUG
 			Debug.Log("==================================================");
 			if (peer.Info != null) {
 				UserInfo userInfo = this.peer.Info as UserInfo;
@@ -62,7 +63,7 @@ namespace NyFolder.Protocol {
 			}
 			Debug.Log("Response: '{0}'", xml);
 			Debug.Log("==================================================");
-//#endif
+#endif
 
 			// Parse Xml Command
 			XmlRequest xmlRequest = null;
@@ -317,10 +318,13 @@ namespace NyFolder.Protocol {
 			ArrayList xmlCmds = new ArrayList();
 			lock (peer.Response) {
 				int splitPos = 0;
-				while ((splitPos = xml.IndexOf("><", splitPos)) > -1) {
+				while ((splitPos = xml.IndexOf("><")) >= 0) {
+					// Add Xml Command To Cmds
 					string cmd = xml.Substring(0, splitPos + 1);
-					xml = xml.Remove(0, splitPos + 1);
 					xmlCmds.Add(cmd);
+
+					// Remove Splitted Part
+					xml = xml.Remove(0, splitPos + 1);
 				}
 
 				if (XmlRequest.IsEndedXml(xml) == false) {
@@ -329,7 +333,7 @@ namespace NyFolder.Protocol {
 					xmlCmds.Add(xml);
 				}
 			}
-
+			
 			// Start New Command Parse Thread
 			new CmdParse(peer, xmlCmds);
 		}

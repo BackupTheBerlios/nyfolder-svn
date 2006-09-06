@@ -19,6 +19,8 @@
 using Gtk;
 
 using System;
+using System.Threading;
+using System.Diagnostics;
 
 using Niry;
 using Niry.Utils;

@@ -14,13 +14,14 @@ PKGS = $(PKG_GTK) $(PKG_GLADE) $(PKG_SQLITE) $(PKG_NIRY)
 
 # ===================================== NyFolder Info ======================
 NAME = NyFolder
-VERSION = 0.0.903
+VERSION = 0.0.990
 COMPILER = `$(CC) --version`
 # ==========================================================================
 
 GUI_DIALOGS =	GUI/Dialogs/About.cs			\
 				GUI/Dialogs/AcceptUser.cs		\
 				GUI/Dialogs/AddPeer.cs			\
+				GUI/Dialogs/DownloadManager.cs	\
 				GUI/Dialogs/Login.cs			\
 				GUI/Dialogs/ProxySettings.cs	\
 				GUI/Dialogs/RemovePeer.cs		\
@@ -47,13 +48,13 @@ GUI_SRC = $(GUI) $(GUI_DIALOGS) $(GUI_GLUE)
 DATABASE_SRC =	
 
 PROTOCOL_SRC = 	Protocol/CmdManager.cs			\
+				Protocol/DownloadManager.cs		\
 				Protocol/FileReceiver.cs		\
 				Protocol/FileSender.cs			\
 				Protocol/HttpRequest.cs			\
 				Protocol/Login.cs				\
 				Protocol/MyInfo.cs				\
 				Protocol/Proxy.cs				\
-				Protocol/ShareServer.cs			\
 				Protocol/UploadManager.cs		\
 				Protocol/UserInfo.cs			\
 				Protocol/XmlRequest.cs

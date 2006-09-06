@@ -20,10 +20,9 @@
 
 using System;
 using System.IO;
-using System.Net;
 using System.Text;
 using System.Threading;
-using System.Net.Sockets;
+using System.Collections;
 
 using Niry;
 using Niry.Utils;
@@ -36,64 +35,49 @@ using NyFolder.Protocol;
 namespace NyFolder.Protocol {
 	public class FileReceiver {
 		// ============================================
-		// PUBLIC Events
-		// ============================================
-
-		// ============================================
-		// PROTECTED Members
-		// ============================================
-
-		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private StreamReader streamReader;
-		private Socket socket;
+		private BinaryWriter binaryWriter;
+		private Hashtable fileContent;
+		private PeerSocket peer;
+		private string fileName;
+		private long fileSaved;
+		private long fileSize;
 
-		// ============================================
-		// PUBLIC Constructors
-		// ============================================
-		public FileReceiver (Socket socket) {
-			this.socket = socket;
-			this.streamReader = new StreamReader(new NetworkStream(this.socket));
+		public FileReceiver (PeerSocket peer, XmlRequest xml, string name) {
+			this.peer = peer;
 
-			Thread thread = new Thread(new ThreadStart(Receive));
-			thread.Start();
+			fileName = (string) xml.Attributes["name"];
+			fileSize = Int32.Parse((string) xml.Attributes["size"]);
+			fileContent = Hashtable.Synchronized(new Hashtable());
+
+			// Create File Stream
+			binaryWriter = new BinaryWriter(File.Create(name));
 		}
 
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		public IPAddress GetRemoteIP() {
-			if (this.socket != null) {
-				IPEndPoint ipEndPoint = (IPEndPoint) this.socket.RemoteEndPoint;
-				return(IPAddress.Parse(ipEndPoint.Address.ToString()));
+		public void Append (XmlRequest xml) {
+			lock (fileContent) {
+				int part = int.Parse((string) xml.Attributes["part"]);
+				byte[] data = Convert.FromBase64String(xml.BodyText);
+				fileSaved += data.Length;
+
+				// Add To Hashtable
+				fileContent.Add(part, data);
 			}
-			return(null);
 		}
 
-		// ============================================
-		// PROTECTED (Methods) Event Handlers
-		// ============================================
-		protected void Receive() {
-			ShareServer.NDownloads++;
+		public void Save () {
+			int numParts = fileContent.Count;
 
-			string fileName = streamReader.ReadLine();
-			string saveAs = ShareServer.LookupFile(GetRemoteIP(), fileName);
-
-			if (saveAs != null) {
-				string b64file = streamReader.ReadToEnd();
-				byte[] data = Convert.FromBase64String(b64file);
-				
-				FileStream stream = File.Create(saveAs);
-				stream.Write(data, 0, data.Length);
-				stream.Close();
+			for (int i=0; i < numParts; i++) {
+				byte[] data = (byte[]) fileContent[i];
+				binaryWriter.Write(data, 0, data.Length);
 			}
 
-			// Close Connection
-			this.streamReader.Close();
-			this.socket.Close();
-
-			ShareServer.NDownloads--;
+			binaryWriter.Close();
 		}
 
 		// ============================================
@@ -103,5 +87,20 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		public PeerSocket Peer {
+			get { return(this.peer); }
+		}
+
+		public string FileName {
+			get { return(this.fileName); }
+		}
+
+		public long FileSize {
+			get { return(this.fileSize); }
+		}
+
+		public int ReceivedPercent {
+			get { return((int) (((double) fileSaved / (double) fileSize) * 100)); }
+		}
 	}
 }

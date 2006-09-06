@@ -1,0 +1,13 @@
+            _______         ___________    .__       .___            
+            \      \ ___.__.\_   _____/___ |  |    __| _/___________ 
+            /   |   <   |  | |    __)/  _ \|  |   / __ |/ __ \_  __ \
+           /    |    \___  | |     \(  <_> )  |__/ /_/ \  ___/|  | \/
+           \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
+                   \/\/          \/ ChangeLog         \/    \/     
+
+ * 06 Sep 2006 - Matteo Bertozzi
+	- Rewrited FileSender & FileReceiver
+	- Fixed Download Manager
+	- Fixed GUI Glue Protocol Manager
+	- Fixed Command Manager Xml Parse Error 
+	- Fixed Send/Receive File, Now Seems Working 

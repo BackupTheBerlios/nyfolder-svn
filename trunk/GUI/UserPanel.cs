@@ -110,7 +110,7 @@ namespace NyFolder.GUI {
 
 		public void UpdateDownloadNum() {
 			try {
-				int numDownload = ShareServer.NDownloads;
+				int numDownload = DownloadManager.NDownloads;
 				this.labelDownload.Text = numDownload.ToString() + " Download";
 			} catch {}
 		}

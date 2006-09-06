@@ -52,7 +52,7 @@ namespace NyFolder.Protocol {
 		// PUBLIC Methods
 		// ============================================
 		public static void Initialize() {
-			uploads = new Hashtable();
+			uploads = Hashtable.Synchronized(new Hashtable());
 			numUploads = 0;
 		}
 
@@ -78,7 +78,8 @@ namespace NyFolder.Protocol {
 			// Get File List
 			PeerSocket peer = P2PManager.KnownPeers[userInfo] as PeerSocket;
 			ArrayList fileSenderList = uploads[peer] as ArrayList;
-			if (fileSenderList == null) fileSenderList = new ArrayList();
+			if (fileSenderList == null)
+				fileSenderList = ArrayList.Synchronized(new ArrayList());
 
 			// Initialize & Start File Sender
 
@@ -163,6 +164,10 @@ namespace NyFolder.Protocol {
 		// ============================================
 		public static int NUploads {
 			get { return(numUploads); }
+		}
+
+		public static Hashtable UploadsFileList {
+			get { return(uploads); }
 		}
 	}
 }

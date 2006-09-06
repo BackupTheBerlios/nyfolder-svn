@@ -19,11 +19,13 @@
  */
 
 using Gtk;
-using GLib;
 using Glade;
+
 using System;
+using System.Collections;
 
 using Niry;
+using Niry.Utils;
 using Niry.Network;
 
 using NyFolder;
@@ -39,13 +41,13 @@ namespace NyFolder.GUI.Dialogs {
 
 		public void Add (FileSender fs) {
 			UserInfo userInfo = fs.Peer.Info as UserInfo;
-			string fileSize = Utils.FileProperties.GetSizeString(fs.FileSize);
+			string fileSize = FileUtils.GetSizeString(fs.FileSize);
 			AppendValues(userInfo.Name, fs.FileName, fs.SendedPercent, fileSize);
 		}
 
 		public void Add (FileReceiver fr) {
 			UserInfo userInfo = fr.Peer.Info as UserInfo;
-			string fileSize = Utils.FileProperties.GetSizeString(fr.FileSize);
+			string fileSize = FileUtils.GetSizeString(fr.FileSize);
 			AppendValues(userInfo.Name, fr.FileName, fr.ReceivedPercent, fileSize);
 		}
 	}
@@ -82,7 +84,6 @@ namespace NyFolder.GUI.Dialogs {
 		[Glade.WidgetAttribute] private Gtk.ScrolledWindow swSnd;
 		[Glade.WidgetAttribute] private Gtk.Window window;
 		[Glade.WidgetAttribute] private Gtk.Image image;
-		private Protocol.DownloadManager dwManager;
 		private DownloadViewer recvViewer;
 		private DownloadViewer sndViewer;
 		private DownloadStore recvStore;
@@ -110,9 +111,6 @@ namespace NyFolder.GUI.Dialogs {
 			sndViewer = new DownloadViewer(sndStore);
 			swSnd.Add(sndViewer);
 
-			// Get Instance Of Protocol Download Manager
-			dwManager = Protocol.DownloadManager.GetInstance();
-
 			// Update Downloads Manually
 			OnUpdateRecvStore(null, null);
 			OnUpdateSndStore(null, null);
@@ -122,7 +120,7 @@ namespace NyFolder.GUI.Dialogs {
 			P2PManager.PeerSended += new PeerEventHandler(OnUpdateSndStore);
 
 			// Update Downloads With Timeout
-			TimeHandle = GLib.Timeout.Add(1000, new TimeoutHandler(UpdateStores));
+			TimeHandle = GLib.Timeout.Add(1000, new GLib.TimeoutHandler(UpdateStores));
 
 			this.window.ShowAll();
 		}
@@ -138,21 +136,39 @@ namespace NyFolder.GUI.Dialogs {
 
 		private void OnUpdateRecvStore (object sender, PeerEventArgs args) {
 			Gtk.Application.Invoke(delegate {
-				lock (recvStore) {
-					recvStore.Clear();
-					foreach (FileReceiver fileReceiver in dwManager.Receiving)
-						recvStore.Add(fileReceiver);
-				}
+				try {
+					lock (recvStore) {
+						recvStore.Clear();
+
+						foreach (PeerSocket peer in Protocol.DownloadManager.ReceivingFileList.Keys) {
+							try {
+								Hashtable fileList = (Hashtable) Protocol.DownloadManager.ReceivingFileList[peer];
+								foreach (FileReceiver fileReceiver in fileList.Values) {
+									recvStore.Add(fileReceiver);
+								}
+							} catch {}
+						}
+					}
+				} catch {}
 			});
 		}
 
 		private void OnUpdateSndStore (object sender, PeerEventArgs args) {
 			Gtk.Application.Invoke(delegate {
-				lock (sndStore) {
-					sndStore.Clear();
-					foreach (FileSender fileSender in dwManager.Sending)
-						sndStore.Add(fileSender);
-				}
+				try {
+					lock (sndStore) {
+						sndStore.Clear();
+
+						foreach (PeerSocket peer in UploadManager.UploadsFileList.Keys) {
+							try {
+								ArrayList fileList = (ArrayList) UploadManager.UploadsFileList[peer];
+								foreach (FileSender fileSender in fileList) {
+									sndStore.Add(fileSender);
+								}
+							} catch {}
+						}
+					}
+				} catch {}
 			});
 		}
 

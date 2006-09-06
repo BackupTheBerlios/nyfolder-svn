@@ -42,21 +42,21 @@ namespace NyFolder.Protocol {
 		// PUBLIC Constructors
 		// ============================================
 		public UserInfo (string username) {
-			this.informations = new Hashtable();
+			this.informations = Hashtable.Synchronized(new Hashtable());
 			this.secureAuth = false;
 			this.name = username;
 			this.port = 7085;
 		}
 
 		public UserInfo (string username, bool secureAuth) {
-			this.informations = new Hashtable();
+			this.informations = Hashtable.Synchronized(new Hashtable());
 			this.secureAuth = secureAuth;
 			this.name = username;
 			this.port = 7085;
 		}
 
 		public UserInfo (string username, bool secureAuth, string magic) {
-			this.informations = new Hashtable();
+			this.informations = Hashtable.Synchronized(new Hashtable());
 			this.secureAuth = secureAuth;
 			this.name = username;
 			this.port = 7085;

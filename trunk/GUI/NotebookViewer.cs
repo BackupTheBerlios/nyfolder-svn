@@ -58,10 +58,10 @@ namespace NyFolder.GUI {
 			this.Scrollable = true;
 
 			// Initialize Notebook Members
-			this.pages = new Hashtable();
-			this.tabs = new Hashtable();
-			this.tabsCustom = new Hashtable();
-			this.pagesCustom = new ArrayList();
+			this.pages = Hashtable.Synchronized(new Hashtable());
+			this.tabs = Hashtable.Synchronized(new Hashtable());
+			this.tabsCustom = Hashtable.Synchronized(new Hashtable());
+			this.pagesCustom = ArrayList.Synchronized(new ArrayList());
 
 			// Initialize Network Viewer
 			// =========================================================

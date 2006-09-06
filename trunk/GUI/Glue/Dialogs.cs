@@ -34,7 +34,7 @@ using NyFolder.Protocol;
 namespace NyFolder.GUI.Glue {
 	public static class Dialogs {
 		// Simple Message Error Dialog
-		public static void MessageErrorDialog (string title, string message) {
+		public static void MessageError (string title, string message) {
 			MessageDialog dialog;
 
 			dialog = new MessageDialog (null, DialogFlags.Modal, MessageType.Error,
@@ -99,7 +99,7 @@ namespace NyFolder.GUI.Glue {
 					// Save Proxy
 					Proxy.Save();
 				} catch (Exception e) {
-					MessageErrorDialog("Proxy Settings", e.Message);
+					MessageError("Proxy Settings", e.Message);
 				}
 			}
 			dialog.Destroy();
@@ -141,7 +141,7 @@ namespace NyFolder.GUI.Glue {
 					}
 					return(userInfo);
 				} catch (Exception e) {
-					MessageErrorDialog("Fetch " + userInfo.Name + " Information", e.Message);
+					MessageError("Fetch " + userInfo.Name + " Information", e.Message);
 					return(null);
 				}
 			}

@@ -51,8 +51,8 @@ namespace NyFolder.Protocol {
 		// PUBLIC Methods
 		// ============================================
 		public static void Initialize() {
-			recvFileList = new Hashtable();
-			acceptList = new Hashtable();
+			recvFileList = Hashtable.Synchronized(new Hashtable());
+			acceptList = Hashtable.Synchronized(new Hashtable());
 		}
 
 		public static void Clear() {
@@ -69,7 +69,10 @@ namespace NyFolder.Protocol {
 
 		public static void AddToAcceptList (PeerSocket peer, string path, string savePath) {
 			Hashtable peerList = acceptList[peer] as Hashtable;
-			if (peerList == null) peerList = new Hashtable();
+
+			// Initialize Peer List
+			if (peerList == null)
+				peerList = Hashtable.Synchronized(new Hashtable());
 
 			peerList[path] = savePath;
 			acceptList[peer] = peerList;
@@ -124,9 +127,12 @@ namespace NyFolder.Protocol {
 
 		private static void AddFileReceiver (PeerSocket peer, string name, FileReceiver fr) {
 			Hashtable peerList = recvFileList[peer] as Hashtable;
-			if (peerList == null) peerList = new Hashtable();
+
+			// Initialize PeerList
+			if (peerList == null)
+				peerList = Hashtable.Synchronized(new Hashtable());
 			peerList[name] = fr;
-			recvFileList[peer] = peerList;			
+			recvFileList[peer] = peerList;
 		}
 
 		private static void RemoveFileReceiver (PeerSocket peer, string fileName) {
@@ -145,6 +151,10 @@ namespace NyFolder.Protocol {
 		// ============================================
 		public static int NDownloads {
 			get { return(recvFileList.Count); }
+		}
+
+		public static Hashtable ReceivingFileList {
+			get { return(recvFileList); }
 		}
 	}
 }

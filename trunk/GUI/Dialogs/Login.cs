@@ -143,7 +143,7 @@ namespace NyFolder.GUI.Dialogs {
 			// Check NULL Username
 			if (Username == "" || Username == null) {
 				WindowUtils.Shake(this, 2);
-				Glue.Dialogs.MessageErrorDialog ("Invalid UserName", 
+				Glue.Dialogs.MessageError("Invalid UserName", 
 									"Please Set Your UserName, Null Username Found");
 				return(false);
 			}
@@ -155,7 +155,7 @@ namespace NyFolder.GUI.Dialogs {
 			// Check NULL Password
 			if (Password == "" || Password == null) {
 				WindowUtils.Shake(this, 2);
-				Glue.Dialogs.MessageErrorDialog ("Invalid Password", 
+				Glue.Dialogs.MessageError("Invalid Password", 
 									"Please Set Your Password, Null Password Found");
 				return(false);
 			}
@@ -181,7 +181,7 @@ namespace NyFolder.GUI.Dialogs {
 
 			WindowUtils.Shake(this, 2);
 			if (responseMsg != null)
-				Glue.Dialogs.MessageErrorDialog("Login Error", responseMsg);
+				Glue.Dialogs.MessageError("Login Error", responseMsg);
 			return(null);
 		}
 

@@ -43,7 +43,6 @@ namespace NyFolder.GUI.Glue {
 		private MenuManager menuManager;
 		private UserPanel userPanel;
 
-		private ShareServer shareServer;
 		private P2PManager p2pManager;
 		private CmdManager cmdManager;
 
@@ -93,7 +92,7 @@ namespace NyFolder.GUI.Glue {
 				CmdManager.Login(peer, MyInfo.GetInstance());
 				OnPeerLogin(peer, userInfo);
 			} catch (Exception e) {
-				Glue.Dialogs.MessageErrorDialog("Connenting To " + userInfo.Name + " Failed",  e.Message);
+				Glue.Dialogs.MessageError("Connenting To " + userInfo.Name + " Failed",  e.Message);
 			}
 		}
 
@@ -139,6 +138,7 @@ namespace NyFolder.GUI.Glue {
 						Dialogs.SetP2PPort();
 						break;
 					case "DownloadManager":
+						new GUI.Dialogs.DownloadManager();
 						break;
 					case "AddPeer":
 						UserInfo userInfo = Glue.Dialogs.AddPeer();
@@ -163,9 +163,8 @@ namespace NyFolder.GUI.Glue {
 					this.p2pManager.StartListening();
 
 					// Initialize Download & Upload Manager
+					DownloadManager.Initialize();
 					UploadManager.Initialize();
-					this.shareServer = new ShareServer(this.p2pManager.CurrentPort + 1);
-					this.shareServer.Start();
 
 					// Initialize Command Manager & Add Commands Handler
 					this.cmdManager.AddPeerEventsHandler();
@@ -174,7 +173,7 @@ namespace NyFolder.GUI.Glue {
 					// Add Custom Command Handler
 					if (AddProtocolEvent != null) AddProtocolEvent(p2pManager, cmdManager);
 				} catch (Exception e) {
-					Glue.Dialogs.MessageErrorDialog("P2P Connection Error", e.Message);
+					Glue.Dialogs.MessageError("P2P Connection Error", e.Message);
 					action.Active = false;
 				}
 			} else {
@@ -191,13 +190,12 @@ namespace NyFolder.GUI.Glue {
 
 					// Reset Download & Upload Manager
 					UploadManager.Clear();
-					this.shareServer.Stop();
-					this.shareServer = null;
+					DownloadManager.Clear();
 
 					// P2P Stop Listening
 					this.p2pManager.StopListening();
 				} catch (Exception e) {
-					Glue.Dialogs.MessageErrorDialog("P2P Disconnection Error", e.Message);
+					Glue.Dialogs.MessageError("P2P Disconnection Error", e.Message);
 				}
 			}
 		}
@@ -239,7 +237,7 @@ namespace NyFolder.GUI.Glue {
 			Debug.Log("Peer ({0}) Error: {1}", userInfo.Name, args.Message);
 #if false
 			Gtk.Application.Invoke(delegate {
-				Glue.Dialogs.MessageErrorDialog(userInfo.Name + " Error", args.Message);
+				Glue.Dialogs.MessageError(userInfo.Name + " Error", args.Message);
 			});
 			Gtk.Application.Quit();
 			Environment.Exit(0);
