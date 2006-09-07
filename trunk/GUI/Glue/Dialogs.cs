@@ -19,8 +19,10 @@
  */
 
 using Gtk;
+
 using System;
 using System.IO;
+using System.Text;
 
 using Niry;
 using Niry.Utils;
@@ -66,13 +68,39 @@ namespace NyFolder.GUI.Glue {
 			dialog.SetCurrentFolder(path);
 			dialog.CurrentName = fileName;
 
-			string uri = null;
-			if ((ResponseType) dialog.Run() == ResponseType.Ok)
-				uri = dialog.Filename;
-				// Replace Existing File
+			string filePath = null;
+			do {
+				if ((ResponseType) dialog.Run() != ResponseType.Ok) {
+					filePath = dialog.Filename;
+					break;
+				}
+
+				if (File.Exists(dialog.Filename) == false) {
+					filePath = dialog.Filename;
+					break;
+				}
+
+				if (ReplaceExistingFile(dialog.Filename) == true) {
+					filePath = dialog.Filename;
+					break;
+				}
+			} while (true);
 			dialog.Destroy();
-			return(uri);
+			return(filePath);
 		}
+
+		public static bool ReplaceExistingFile (string fileName) {
+			FileInfo fileInfo = new FileInfo(fileName);
+
+			StringBuilder msg = new StringBuilder();
+			msg.AppendFormat("A file named \"{0}\" already exists.\n", fileInfo.Name);
+			msg.Append("Do you want to replace it ?\n\n");
+			msg.AppendFormat("The file already exists in \"{0}\".\n", fileInfo.DirectoryName);
+			msg.Append("Replacing it will overwrite its contents.");
+
+			return(QuestionDialog("Replace File", msg.ToString()));
+		}
+
 
 		// Run Proxy Settings Dialog & Save Configuration
 		public static void ProxySettings() {

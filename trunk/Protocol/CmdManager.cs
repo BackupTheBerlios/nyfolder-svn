@@ -236,14 +236,13 @@ namespace NyFolder.Protocol {
 		}
 
 		public static void AcceptFile (PeerSocket peer, string path) {
-			FileInfo fileInfo = new FileInfo(path);
+			string name = Path.GetFileName(path);
 
 			XmlRequest xmlRequest = new XmlRequest();
 			xmlRequest.FirstTag = "accept";
 			xmlRequest.Attributes.Add("what", "file");
 			xmlRequest.Attributes.Add("path", path);
-			xmlRequest.Attributes.Add("name", fileInfo.Name);
-			xmlRequest.Attributes.Add("size", fileInfo.Length);
+			xmlRequest.Attributes.Add("name", name);
 
 			peer.Send(xmlRequest.GenerateXml());
 		}

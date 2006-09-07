@@ -82,14 +82,14 @@ namespace NyFolder.Protocol {
 		public string GetName() {
 			// username@domain
 			int domainStart = name.LastIndexOf('@');
-			if (domainStart == -1) return(name);
+			if (domainStart < 0) return(name);
 			return(name.Substring(0, domainStart));
 		}
 
 		public string GetDomain() {
 			// username@domain
 			int domainStart = name.LastIndexOf('@');
-			if (domainStart == -1) return(null);
+			if (domainStart < 0) return(null);
 			return(name.Substring(domainStart + 1));
 		}
 

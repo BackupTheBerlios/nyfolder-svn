@@ -16,11 +16,19 @@
 
 
 =====================
-	P2P Interface
+    HTTP Protocol	
 =====================
-	- P2PManager.Connected (Peer, UserInfo);
-	- P2PManager.Receive (Peer, string data);
+	1. Send Username & Password						[ Login.php ]
+		- Return: Magic
+	2. Send Connect Event (Port, Ip)				[ Connect.php ]
+		- Return Ok/Error
+	3. Send Disconnect Event						[ Disconnect.php ]
+		- Return Ok/Error
+	4. Send Logout									[ Logout.php ]
+		- Return Ok/Error
 
+	-. Get Ip										[ GetIp.php ]
+	-. Get Port										[ GetPort.php ]
+	-. Get Magic									[ GetMagic.php ]
 
-A me basta ricevere le Informazioni dall'utente...
-Login 'pio@nyfolder' 80.235.235.235:7085
+Login All'Inizio, Poi Connetti/Disconnetti -> Invia al Server i Dati

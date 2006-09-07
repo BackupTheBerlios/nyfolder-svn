@@ -14,7 +14,7 @@ PKGS = $(PKG_GTK) $(PKG_GLADE) $(PKG_SQLITE) $(PKG_NIRY)
 
 # ===================================== NyFolder Info ======================
 NAME = NyFolder
-VERSION = 0.0.990
+VERSION = 0.1
 COMPILER = `$(CC) --version`
 # ==========================================================================
 
@@ -54,7 +54,6 @@ PROTOCOL_SRC = 	Protocol/CmdManager.cs			\
 				Protocol/HttpRequest.cs			\
 				Protocol/Login.cs				\
 				Protocol/MyInfo.cs				\
-				Protocol/Proxy.cs				\
 				Protocol/UploadManager.cs		\
 				Protocol/UserInfo.cs			\
 				Protocol/XmlRequest.cs
@@ -62,7 +61,8 @@ PROTOCOL_SRC = 	Protocol/CmdManager.cs			\
 UTILS_SRC	= 	Utils/Debug.cs  		\
 				Utils/Paths.cs  		\
 				Utils/Plugin.cs  		\
-				Utils/PluginManager.cs
+				Utils/PluginManager.cs	\
+				Utils/Proxy.cs
 
 GLADE_RES = Glade/AcceptUserDialog.glade		\
 			Glade/AddPeerDialog.glade			\

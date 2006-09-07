@@ -177,6 +177,8 @@ namespace NyFolder.GUI {
 					store.AddDirectory(file[0]);
 				}
 			}
+
+			this.ShowAll();
 		}
 
 		public bool CanGoUp() {
@@ -258,7 +260,7 @@ namespace NyFolder.GUI {
 		protected void OnFileSave (object sender, EventArgs args) {
 			foreach (TreePath treePath in iconView.SelectedItems) {
 				string fpath = store.GetFilePath(treePath);
-				Console.WriteLine("Save {0}", fpath);
+				if (SaveFile != null) SaveFile(this, fpath);
 			}
 		}
 

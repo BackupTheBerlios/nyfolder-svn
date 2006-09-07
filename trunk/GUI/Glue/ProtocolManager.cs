@@ -141,14 +141,17 @@ namespace NyFolder.GUI.Glue {
 		private void OnSaveFile (object sender, UserInfo userInfo, string path) {
 			Gtk.Application.Invoke(delegate {
 				PeerSocket peer = P2PManager.KnownPeers[userInfo] as PeerSocket;
-				Console.WriteLine("Name: {0}", userInfo.Name);
 
 				// Save File Dialog
 				string savePath = Glue.Dialogs.SaveFile(Paths.UserSharedDirectory(MyInfo.Name), path.Substring(1));
 				if (savePath == null) return;
 
-				DownloadManager.AddToAcceptList(peer, path, savePath);
-				CmdManager.AcceptFile(peer, path);
+				try {
+					DownloadManager.AddToAcceptList(peer, path, savePath);
+					CmdManager.AcceptFile(peer, path);
+				} catch (Exception e) {
+					Glue.Dialogs.MessageError("Save File", e.Message);
+				}
 			});
 		}
 
@@ -184,7 +187,7 @@ namespace NyFolder.GUI.Glue {
 					AcceptFileQuestion(peer, xml);
 				}
 			});
-		}
+		}		
 
 		// Evento Scatenato quando un utente accetta un qualcosa...
 		// Indica al Ricevente di Iniziare ad Inviare...
@@ -194,10 +197,7 @@ namespace NyFolder.GUI.Glue {
 				string what = (string) xml.Attributes["what"];
 
 				if (what == "file") {
-					string path = (string) xml.Attributes["path"];
-					UserInfo userInfo = peer.Info as UserInfo;
-
-					UploadManager.Add(userInfo, path);
+					OnAcceptFileEvent(peer, xml);
 				}
 			});
 		}
@@ -246,6 +246,19 @@ namespace NyFolder.GUI.Glue {
 					}
 				}
 			});
+		}
+
+		// ===================================================
+		// PRIVATE (Methods) Protocol Event Handler
+		// ===================================================
+		private void OnAcceptFileEvent (PeerSocket peer, XmlRequest xml) {
+			try {
+				string path = (string) xml.Attributes["path"];
+				UserInfo userInfo = peer.Info as UserInfo;
+				UploadManager.Add(userInfo, path);
+			} catch (Exception e) {
+				Glue.Dialogs.MessageError("Accept File", e.Message);
+			}
 		}
 	}
 }

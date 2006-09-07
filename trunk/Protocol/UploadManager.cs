@@ -82,8 +82,13 @@ namespace NyFolder.Protocol {
 				fileSenderList = ArrayList.Synchronized(new ArrayList());
 
 			// Initialize & Start File Sender
-
-			FileSender fileSender = new FileSender(peer, path);
+			string realPath = Paths.UserSharedDirectory(MyInfo.Name)+path;
+			FileSender fileSender = null;
+			if (File.Exists(realPath) == true) {
+				fileSender = new FileSender(peer, realPath, path);
+			} else {
+				fileSender = new FileSender(peer, path);
+			}
 			fileSender.EndSend += new EndSendFilePartHandler(OnEndSendFilePart);
 			fileSender.Start();
 
@@ -92,6 +97,7 @@ namespace NyFolder.Protocol {
 			uploads[peer] = fileSenderList;
 
 			// Update Num Uploads
+			Debug.Log("To Upload: {0}", path);
 			numUploads++;
 		}
 
@@ -122,9 +128,8 @@ namespace NyFolder.Protocol {
 			}
 
 			// Stop File Sender Transfer
-			fileSender.Stop();
 			fileSender.EndSend -= new EndSendFilePartHandler(OnEndSendFilePart);
-			SendEndFileCmd(fileSender.Peer, fileSender);
+			fileSender.Stop();
 
 			// Remove File & Update Upload List
 			fileSenderList.Remove(fileSender);
@@ -149,15 +154,6 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
-		private static void SendEndFileCmd (PeerSocket peer, FileSender fileSender) {
-			XmlRequest xmlRequest = new XmlRequest();
-			xmlRequest.FirstTag = "snd-end";
-			xmlRequest.Attributes.Add("what", "file");
-			xmlRequest.Attributes.Add("name", fileSender.FileName);
-			xmlRequest.Attributes.Add("size", fileSender.FileSize);
-
-			peer.Send(xmlRequest.GenerateXml());
-		}
 
 		// ============================================
 		// PUBLIC Properties

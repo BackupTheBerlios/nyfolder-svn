@@ -82,6 +82,7 @@ namespace NyFolder.Protocol {
 			throw(new Exception(xml.FirstTag + ": " + xml.BodyText));
 		}
 
+
 		public static bool Login (UserInfo userInfo, string password) {
 			Hashtable options = new Hashtable();
 			options.Add("passwd", password);
@@ -104,6 +105,31 @@ namespace NyFolder.Protocol {
 
 			// Parse Xml Response
 			if (xml.FirstTag != "logout") {
+				// Request Error
+				throw(new Exception(xml.FirstTag + ": " + xml.BodyText));
+			}
+		}
+
+		public static void Connect (UserInfo userInfo, int port) {
+			Hashtable options = new Hashtable();
+			options.Add("port", port);
+
+			string url = MakeUrl(userInfo, "Connect.php", options);
+			XmlRequest xml = MakeRequest(url);
+
+			// Parse Xml Response
+			if (xml.FirstTag != "connect") {
+				// Request Error
+				throw(new Exception(xml.FirstTag + ": " + xml.BodyText));
+			}
+		}
+
+		public static void Disconnect (UserInfo userInfo) {
+			string url = MakeUrl(userInfo, "Disconnect.php", null);
+			XmlRequest xml = MakeRequest(url);
+
+			// Parse Xml Response
+			if (xml.FirstTag != "disconnect") {
 				// Request Error
 				throw(new Exception(xml.FirstTag + ": " + xml.BodyText));
 			}
@@ -168,7 +194,9 @@ namespace NyFolder.Protocol {
 			// Make Http Request
 			WebRequest request = WebRequest.Create(url);
 			request.Timeout = 5000;
-			request.Proxy = proxy;
+
+			if ((proxy = Utils.Proxy.GetConfig()) != null)
+				request.Proxy = proxy;
 
 			// Wait Http Response
 			WebResponse response = request.GetResponse();

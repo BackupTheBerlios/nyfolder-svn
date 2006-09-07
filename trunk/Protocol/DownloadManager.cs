@@ -29,6 +29,7 @@ using Niry.Network;
 
 using NyFolder;
 using NyFolder.Utils;
+using NyFolder.Protocol;
 
 namespace NyFolder.Protocol {
 	public class DownloadManagerException : Exception {
@@ -46,6 +47,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		private static Hashtable recvFileList = null;
 		private static Hashtable acceptList = null;
+		private static int numDownloads = 0;
 
 		// ============================================
 		// PUBLIC Methods
@@ -91,6 +93,8 @@ namespace NyFolder.Protocol {
 				fileRecv = new FileReceiver(peer, xml, name);
 				AddFileReceiver(peer, path, fileRecv);
 			}
+
+			numDownloads++;
 		}
 
 		public static void GetFilePart (PeerSocket peer, XmlRequest xml) {
@@ -99,7 +103,13 @@ namespace NyFolder.Protocol {
 			if (fileRecv != null) {
 				fileRecv.Append(xml);
 			} else {
-				throw(new DownloadManagerException("What file is this ?"));
+				string fileName = (string) xml.Attributes["name"];
+				UserInfo userInfo = peer.Info as UserInfo;
+
+				string message = "What file is this ?" +
+								 "\nUser: " + userInfo.Name +
+								 "\nFileName: " + fileName;
+				throw(new DownloadManagerException(message));
 			}
 		}
 
@@ -109,8 +119,15 @@ namespace NyFolder.Protocol {
 			if (fileRecv != null) {
 				fileRecv.Save();
 				RemoveFileReceiver(peer, fileRecv.FileName);
+				numDownloads--;
 			} else {
-				throw(new DownloadManagerException("What file is this ?"));
+				string fileName = (string) xml.Attributes["name"];
+				UserInfo userInfo = peer.Info as UserInfo;
+
+				string message = "<b>What file is this ?</b>" +
+								 "\n<b>User:</b> " + userInfo.Name +
+								 "\n<b>FileName:</b> " + fileName;
+				throw(new DownloadManagerException(message));
 			}			
 		}
 
@@ -150,7 +167,7 @@ namespace NyFolder.Protocol {
 		// PUBLIC Properties
 		// ============================================
 		public static int NDownloads {
-			get { return(recvFileList.Count); }
+			get { return(numDownloads); }
 		}
 
 		public static Hashtable ReceivingFileList {

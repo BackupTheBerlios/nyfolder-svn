@@ -127,6 +127,14 @@ namespace NyFolder.GUI {
 		// PROTECTED (Methods) Event Handlers
 		// ============================================
 		protected void OnDragDataReceived (object sender, DragDataReceivedArgs args) {
+			if (args.SelectionData.Text == null || 
+				args.SelectionData.Text.Length <= 0)
+			{
+				Debug.Log("DRAG Uris: '{0}'", args.SelectionData.Uris);
+				Drag.Finish(args.Context, false, false, args.Time);
+				return;
+			}
+
 			IconViewDropPosition pos;
 			TreePath path;			
 

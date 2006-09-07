@@ -63,7 +63,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Consts
 		// ============================================
-		public const uint ChunkSize = 1024;	// 8Kb
+		public const uint ChunkSize = 5120;	// 1024 it's ok
 
 		// ============================================
 		// PUBLIC Events
@@ -113,7 +113,10 @@ namespace NyFolder.Protocol {
 		}
 
 		public void Stop() {
-			thread.Abort();
+			if (ended == true) return;
+			if (thread.IsAlive) {
+				thread.Abort();
+			}
 		}
 
 		// ============================================

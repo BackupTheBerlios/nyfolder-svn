@@ -22,6 +22,9 @@ using System;
 using System.Threading;
 using System.Collections;
 
+using NyFolder;
+using NyFolder.Utils;
+
 namespace NyFolder.Protocol {
 	public delegate void LoginEventHandler (UserInfo info, bool status, string msg);
 
@@ -55,13 +58,68 @@ namespace NyFolder.Protocol {
 		// PUBLIC Methods (HttpRequest Required)
 		// ============================================
 		public static void Login (string password) {
-			if (myInfo == null)
-				throw(new UserInfoException("Login Failed, MyInfo is not Initialized"));
+			if (myInfo == null) {
+				string message = "Login Failed, MyInfo is not Initialized";
+				if (LoginChecked != null) LoginChecked(myInfo, false, message);
+				return;
+			}
+
+			// If it's Insecure Login, it's always OK
+			if (myInfo.SecureAuthentication == false) {
+				string message = "Login Ok, Insecure Authentication";
+				if (LoginChecked != null) LoginChecked(myInfo, true, message);
+				return;
+			}
+
+			// Get Domain
+			string domain = myInfo.GetDomain();
+			if (domain == null) {
+				string message = "Domain Not Found, Check your UserName";
+				if (LoginChecked != null) LoginChecked(myInfo, false, message);
+				return;
+			}
+
+			myInfo.Informations.Add("Password", password);
+			Thread thread = new Thread(new ThreadStart(CheckSecureLogin));
+			thread.Start();			
 		}
 
 		public static void Logout() {
-			if (myInfo == null)
-				throw(new UserInfoException("Logout Failed, MyInfo is not Initialized"));
+			if (myInfo == null) return;
+
+			// If it's Insecure Login, No Logout
+			if (myInfo.SecureAuthentication == false)
+				return;
+
+			// Do Logout
+			try {
+				HttpRequest.Logout(myInfo);
+			} catch (Exception e) {
+				Debug.Log("Logout Failed For {0}", myInfo.Name);
+				Debug.Log(e.Message);
+			}
+		}
+
+		public static void ConnectToWebServer (int port) {
+			if (myInfo == null) return;
+
+			// If it's Insecure Login, Don't Connect To Web Server
+			if (myInfo.SecureAuthentication == false)
+				return;
+
+			// Connect To Web Server
+			HttpRequest.Connect(myInfo, port);
+		}
+
+		public static void DisconnectFromWebServer() {
+			if (myInfo == null) return;
+
+			// If it's Insecure Login, You're Not Connected To Web Server
+			if (myInfo.SecureAuthentication == false)
+				return;
+
+			// Disconnect From Web Server
+			HttpRequest.Disconnect(myInfo);
 		}
 
 		// ============================================
@@ -71,6 +129,27 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		private static void CheckSecureLogin() {
+			string message = "Login Failed";
+			bool status = false;
+
+			// Get And Remove Password From UserInfo
+			string password = (string) myInfo.Informations["Password"];
+			myInfo.Informations.Remove("Password");
+
+			try {
+				Login login = new Login(myInfo);
+
+				if ((status = login.CheckSecureLogin(password)) == true)
+					message = "Login Ok";
+			} catch (Exception e) {
+				message = e.Message;
+				status = false;
+			}
+
+			// Send Login Checked Event
+			if (LoginChecked != null) LoginChecked(myInfo, status, message);
+		}
 
 		// ============================================
 		// PUBLIC Properties

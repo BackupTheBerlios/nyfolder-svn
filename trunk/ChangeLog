@@ -5,9 +5,20 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/     
 
+ * 07 Sep 2006 - Matteo Bertozzi
+	- Fixed GUI.Dialogs.Login for do Secure Login
+	- Fixed GUI.Glue.NetworkManager for Web Server Connect/Disconnect
+	- Added Some Methods to Protocol.MyInfo
+	- Fixed Protocol.HttpRequest
+	- Working on Web Server Services... Not Complete
+ 
  * 06 Sep 2006 - Matteo Bertozzi
 	- Rewrited FileSender & FileReceiver
 	- Fixed Download Manager
 	- Fixed GUI Glue Protocol Manager
 	- Fixed Command Manager Xml Parse Error 
 	- Fixed Send/Receive File, Now Seems Working 
+	- Added Handler to Right Click "File Save", Seems Working
+	- Added GUI.Dialogs.DownloadManager We have to FIX Uploads Methods
+	- Added GUI.Glue.ReplaceExistingFile()
+	- Fixed GUI.Glue.Dialogs.SaveFile() to Ask if Replace Existing file

@@ -102,7 +102,10 @@ namespace NyFolder.GUI {
 
 		public void UpdateSharedFilesNum() {
 			try {
-				string sharedFolder = Paths.UserSharedDirectory(MyInfo.Name);
+				UserInfo userInfo = MyInfo.GetInstance();
+
+				// Fix Name Only N Char "PART...END"
+				string sharedFolder = Paths.UserSharedDirectory(userInfo.GetName());
 				int numFiles = CountDirectoryFiles(sharedFolder);
 				this.labelTFiles.Text = numFiles.ToString() + " Shared Files";
 			} catch {}

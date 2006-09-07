@@ -172,12 +172,18 @@ namespace NyFolder.GUI.Glue {
 
 					// Add Custom Command Handler
 					if (AddProtocolEvent != null) AddProtocolEvent(p2pManager, cmdManager);
+
+					// Connect To NyFolder Web Server
+					MyInfo.ConnectToWebServer(this.p2pManager.CurrentPort);
 				} catch (Exception e) {
 					Glue.Dialogs.MessageError("P2P Connection Error", e.Message);
 					action.Active = false;
 				}
 			} else {
 				try {
+					// Disconnect From NyFolder Web Server
+					MyInfo.DisconnectFromWebServer();
+
 					// Remove Custom Command Handler
 					if (DelProtocolEvent != null) DelProtocolEvent(p2pManager, cmdManager);
 

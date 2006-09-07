@@ -23,7 +23,7 @@ using System.IO;
 using System.Text;
 
 namespace NyFolder.Utils {
-	public class Debug : IDisposable {
+	public sealed class Debug : IDisposable {
 		// PRIVATE Members
 		private StringBuilder logBuffer = null;
 		private TextWriter logStream = null;

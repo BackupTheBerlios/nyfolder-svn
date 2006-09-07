@@ -103,6 +103,9 @@ namespace NyFolder.GUI {
 				folderViewer.DirChanged += new DirChangedHandler(OnDirChangedHandler);
 				folderViewer.FolderRefresh += new FileEventHandler(OnFolderRefresh);
 
+				// Refresh Folder Viewer
+				folderViewer.Refresh();
+
 				// Add TabLabel -> UserInfo
 				this.tabs.Add(tabLabel.Button, userInfo);
 

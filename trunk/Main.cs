@@ -20,7 +20,6 @@ using Gtk;
 
 using System;
 using System.Threading;
-using System.Diagnostics;
 
 using Niry;
 using Niry.Utils;
@@ -75,6 +74,8 @@ namespace NyFolder {
 		}
 
 		public void Logout() {
+			// Disconnect User From Http Server
+			Protocol.MyInfo.Logout();
 		}
 
 		// ============================================
@@ -83,6 +84,9 @@ namespace NyFolder {
 		private void RunMainWindow() {
 			// Start NyFolder Window
 			this.window = new GUI.Window();
+
+			Debug.Log("Logged In as {0}", myInfo.Name);
+			Debug.Log("Shared Path: {0}", Paths.UserSharedDirectory(myInfo.Name));
 
 			// Add GUI Glue
 			new GUI.Glue.FolderManager(window.Menu, window.UserPanel, window.NotebookViewer);
