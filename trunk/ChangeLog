@@ -5,6 +5,15 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/     
 
+ * 09 Sep 2006 - Matteo Bertozzi
+	- Download Manager is Now a Plugin ToDo :D
+	- Fixed Protocol.MyInfo, Added Timer to Update Web Status
+	- Added Update() To Protocol.HttpRequest (Web Status Update)
+	- Fixed GUI.Glue.NetworkManager, Connect/Disconnect Error Message
+
+ * 08 Sep 2006 - Matteo Bertozzi
+	- Fixed GUI.UserPanel (User Name & Domain Label)
+
  * 07 Sep 2006 - Matteo Bertozzi
 	- Fixed GUI.Dialogs.Login for do Secure Login
 	- Fixed GUI.Glue.NetworkManager for Web Server Connect/Disconnect

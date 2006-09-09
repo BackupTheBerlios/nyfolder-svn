@@ -123,6 +123,95 @@ namespace NyFolder.GUI.Glue {
 			menuManager.SetSensitive("/MenuBar/NetworkMenu/RmPeer", sensitive);
 		}
 
+		private void ConnectMyPeer() {
+			try {
+				// P2P Start Listening
+				this.p2pManager.StartListening();
+			} catch (Exception e) {
+				Glue.Dialogs.MessageError("P2P Starting Error", e.Message);
+				// ReTrow Exception
+				throw(e);
+			}
+
+			try {
+				// Initialize Download & Upload Manager
+				DownloadManager.Initialize();
+				UploadManager.Initialize();
+			} catch (Exception e) {
+				Glue.Dialogs.MessageError("Download/Upload Manager Init", e.Message);
+				// P2P Stop Listening
+				this.p2pManager.StopListening();
+				// ReTrow Exception
+				throw(e);
+			}
+
+			try {
+				// Initialize Command Manager & Add Commands Handler
+				this.cmdManager.AddPeerEventsHandler();
+				this.AddProtocolEvents();
+
+				// Add Custom Command Handler
+				if (AddProtocolEvent != null) AddProtocolEvent(p2pManager, cmdManager);
+			} catch (Exception e) {
+				Glue.Dialogs.MessageError("Add Protocol Events", e.Message);
+				// P2P Stop Listening
+				this.p2pManager.StopListening();
+				// ReTrow Exception
+				throw(e);
+			}
+
+			try {
+				// Connect To NyFolder Web Server
+				MyInfo.ConnectToWebServer(this.p2pManager.CurrentPort);
+			} catch (Exception e) {
+				Glue.Dialogs.MessageError("Connect To Web Server", e.Message);
+
+				// P2P Stop Listening
+				this.p2pManager.StopListening();
+
+				// ReTrow Exception
+				throw(e);
+			}
+		}
+
+		private void DisconnectMyPeer() {
+			try {
+				// Disconnect From NyFolder Web Server
+				MyInfo.DisconnectFromWebServer();
+			} catch (Exception e) {
+				Glue.Dialogs.MessageError("Disconnection From Web Server", e.Message);
+			}
+
+			try {
+				// Remove All Connected Users
+				this.RemoveAllUsers();
+
+				// Remove Custom Command Handler
+				if (DelProtocolEvent != null) DelProtocolEvent(p2pManager, cmdManager);
+
+				// Reset Command Manager & Del Commands Handler
+				this.DelProtocolEvents();
+				this.cmdManager.DelPeerEventsHandler();
+			} catch (Exception e) {
+				Glue.Dialogs.MessageError("Remove Protocol Events", e.Message);
+			}
+
+			try {
+				// Reset Download & Upload Manager
+				UploadManager.Clear();
+				DownloadManager.Clear();
+			} catch (Exception e) {
+				Glue.Dialogs.MessageError("Download/Upload Manager Stop", e.Message);
+			}
+
+			try {
+				// P2P Stop Listening
+				this.p2pManager.StopListening();
+			} catch (Exception e) {
+				Glue.Dialogs.MessageError("P2P Disconnection Error", e.Message);
+			}
+		}
+
 		// ============================================
 		// PRIVATE (Methods) Event Handler
 		// ============================================
@@ -136,9 +225,6 @@ namespace NyFolder.GUI.Glue {
 						break;
 					case "SetPort":
 						Dialogs.SetP2PPort();
-						break;
-					case "DownloadManager":
-						new GUI.Dialogs.DownloadManager();
 						break;
 					case "AddPeer":
 						UserInfo userInfo = Glue.Dialogs.AddPeer();
@@ -159,50 +245,12 @@ namespace NyFolder.GUI.Glue {
 
 			if (action.Active == true) {
 				try {
-					// P2P Start Listening
-					this.p2pManager.StartListening();
-
-					// Initialize Download & Upload Manager
-					DownloadManager.Initialize();
-					UploadManager.Initialize();
-
-					// Initialize Command Manager & Add Commands Handler
-					this.cmdManager.AddPeerEventsHandler();
-					this.AddProtocolEvents();
-
-					// Add Custom Command Handler
-					if (AddProtocolEvent != null) AddProtocolEvent(p2pManager, cmdManager);
-
-					// Connect To NyFolder Web Server
-					MyInfo.ConnectToWebServer(this.p2pManager.CurrentPort);
-				} catch (Exception e) {
-					Glue.Dialogs.MessageError("P2P Connection Error", e.Message);
+					ConnectMyPeer();
+				} catch {
 					action.Active = false;
-				}
+				}				
 			} else {
-				try {
-					// Disconnect From NyFolder Web Server
-					MyInfo.DisconnectFromWebServer();
-
-					// Remove Custom Command Handler
-					if (DelProtocolEvent != null) DelProtocolEvent(p2pManager, cmdManager);
-
-					// Remove All Connected Users
-					this.RemoveAllUsers();
-
-					// Reset Command Manager & Del Commands Handler
-					this.DelProtocolEvents();
-					this.cmdManager.DelPeerEventsHandler();
-
-					// Reset Download & Upload Manager
-					UploadManager.Clear();
-					DownloadManager.Clear();
-
-					// P2P Stop Listening
-					this.p2pManager.StopListening();
-				} catch (Exception e) {
-					Glue.Dialogs.MessageError("P2P Disconnection Error", e.Message);
-				}
+				DisconnectMyPeer();
 			}
 		}
 

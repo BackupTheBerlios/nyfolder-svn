@@ -58,9 +58,8 @@ namespace NyFolder.GUI {
 			this.PackStart(this.imageFolder, false, false, 2);
 
 			// Initialize Label Folder Button
-			this.labelFolderButton = new Gtk.Label ("<span size='x-large'><b>" + 
-													this.myInfo.Name + 
-													"</b></span>");
+			this.labelFolderButton = new Gtk.Label(GetNameLabel());
+			this.labelFolderButton.Justify = Justification.Center;
 			this.labelFolderButton.UseMarkup = true;
 
 			// Initialize Folder Button
@@ -103,9 +102,7 @@ namespace NyFolder.GUI {
 		public void UpdateSharedFilesNum() {
 			try {
 				UserInfo userInfo = MyInfo.GetInstance();
-
-				// Fix Name Only N Char "PART...END"
-				string sharedFolder = Paths.UserSharedDirectory(userInfo.GetName());
+				string sharedFolder = Paths.UserSharedDirectory(userInfo.Name);
 				int numFiles = CountDirectoryFiles(sharedFolder);
 				this.labelTFiles.Text = numFiles.ToString() + " Shared Files";
 			} catch {}
@@ -148,6 +145,38 @@ namespace NyFolder.GUI {
 			foreach (DirectoryInfo subDir in dirInfo.GetDirectories())
 				numFiles += CountDirectoryFiles(subDir.FullName);
 			return(numFiles);
+		}
+
+		private string GetNameLabel() {
+			string name = this.myInfo.GetName();
+			int length = name.Length;
+
+			string label;
+			if (length < 14) {
+				label = "<span size='x-large'><b>" + name + "</b></span>";
+			} else if (length < 17) {
+				label = "<span size='large'><b>" + name + "</b></span>";
+			} else if (length < 19) {
+				label = "<b>" + name + "</b>";
+			} else {
+				string pt1 = name.Substring(0, 8);
+				string pt2 = name.Substring(length - 8);
+				label = "<b>" + pt1 + "..." + pt2 + "</b>";
+			}
+
+			string domain = this.myInfo.GetDomain();
+			if (domain == null) return(label);
+
+			length = domain.Length;
+			if (length < 20) {
+				label += "\n" + domain;
+			} else {
+				string pt1 = domain.Substring(0, 9);
+				string pt2 = domain.Substring(length - 8);
+				label += "\n" + pt1 + "..." + pt2;
+			}
+
+			return(label);
 		}
 
 		// ============================================

@@ -37,6 +37,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE (Singleton) Members
 		// ============================================
+		private static Timer timerWebStatusUpdate = null;
 		private static UserInfo myInfo = null;
 	
 		// ============================================
@@ -86,6 +87,11 @@ namespace NyFolder.Protocol {
 
 		public static void Logout() {
 			if (myInfo == null) return;
+
+			if (timerWebStatusUpdate != null) {
+				timerWebStatusUpdate.Dispose();
+				timerWebStatusUpdate = null;
+			}
 
 			// If it's Insecure Login, No Logout
 			if (myInfo.SecureAuthentication == false)
@@ -142,6 +148,10 @@ namespace NyFolder.Protocol {
 
 				if ((status = login.CheckSecureLogin(password)) == true)
 					message = "Login Ok";
+
+				// Start Update Web Status Timer ~5min (Less :D)
+				if (timerWebStatusUpdate != null) timerWebStatusUpdate = null;
+				timerWebStatusUpdate = new Timer(new TimerCallback(UpdateWebStatus), null, 0, 250000);
 			} catch (Exception e) {
 				message = e.Message;
 				status = false;
@@ -149,6 +159,15 @@ namespace NyFolder.Protocol {
 
 			// Send Login Checked Event
 			if (LoginChecked != null) LoginChecked(myInfo, status, message);
+		}
+
+		// Web Server Time is 5 Minutes (300 sec, 300000 msec)
+		private static void UpdateWebStatus (object obj) {
+			try {
+				HttpRequest.Update(myInfo);
+			} catch (Exception e) {
+				Debug.Log("Web Status Update Failed: {0}", e.Message);
+			}
 		}
 
 		// ============================================

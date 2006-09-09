@@ -40,7 +40,7 @@ namespace NyFolder.GUI {
 		private Gtk.VBox vboxRight;
 		private Gtk.VBox vboxLeft;
 		private Gtk.VBox vboxMain;
-		private Gtk.HPaned hpaned;
+		private Gtk.HBox hbox;
 
 		// ============================================
 		// PUBLIC Constructors
@@ -64,13 +64,13 @@ namespace NyFolder.GUI {
 			Gtk.MenuBar menuBar = this.MenuBar;
 			this.vboxMain.PackStart(menuBar, false, false, 0);
 
-			// Initialize HPaned
-			this.hpaned = new Gtk.HPaned();
-			this.vboxMain.PackStart(this.hpaned, true, true, 2);
+			// Initialize HBox
+			this.hbox = new Gtk.HBox();
+			this.vboxMain.PackStart(this.hbox, true, true, 2);
 
 			// Initialize Left VBox
 			this.vboxLeft = new Gtk.VBox(false, 2);
-			this.hpaned.Pack1(this.vboxLeft, false, false);
+			this.hbox.PackStart(this.vboxLeft, false, false, 2);
 
 			// Initialize User Panel
 			this.userPanel = new UserPanel();
@@ -78,7 +78,7 @@ namespace NyFolder.GUI {
 
 			// Initialize Right VBox
 			this.vboxRight = new Gtk.VBox(false, 2);
-			this.hpaned.Pack2(this.vboxRight, true, true);
+			this.hbox.PackStart(this.vboxRight, true, true, 2);
 
 			// Initialize ToolBar
 			Gtk.Toolbar toolBar = this.ToolBar;
@@ -126,6 +126,9 @@ namespace NyFolder.GUI {
 					// View Menu
 					case "ViewToolBar":
 						this.ToolBar.Visible = !this.ToolBar.Visible;
+						break;
+					case "ViewUserPanel":
+						this.UserPanel.Visible = !this.UserPanel.Visible;
 						break;
 					// Help Menu
 					case "About":

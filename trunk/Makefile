@@ -14,14 +14,13 @@ PKGS = $(PKG_GTK) $(PKG_GLADE) $(PKG_SQLITE) $(PKG_NIRY)
 
 # ===================================== NyFolder Info ======================
 NAME = NyFolder
-VERSION = 0.1
+VERSION = 0.1 Alpha 1
 COMPILER = `$(CC) --version`
 # ==========================================================================
 
 GUI_DIALOGS =	GUI/Dialogs/About.cs			\
 				GUI/Dialogs/AcceptUser.cs		\
 				GUI/Dialogs/AddPeer.cs			\
-				GUI/Dialogs/DownloadManager.cs	\
 				GUI/Dialogs/Login.cs			\
 				GUI/Dialogs/ProxySettings.cs	\
 				GUI/Dialogs/RemovePeer.cs		\
@@ -67,12 +66,7 @@ UTILS_SRC	= 	Utils/Debug.cs  		\
 GLADE_RES = Glade/AcceptUserDialog.glade		\
 			Glade/AddPeerDialog.glade			\
 			Glade/RemovePeerDialog.glade		\
-			Glade/RenameDialog.glade			\
 			Glade/SetPortDialog.glade			\
-			Glade/CreateFolderDialog.glade		\
-			Glade/DownloadManagerWindow.glade	\
-			Glade/FilePropertiesDialog.glade	\
-			Glade/PeerPropertiesDialog.glade	\
 			Glade/ProxySettingsDialog.glade
 
 IMG_RES = 	Pixmaps/Channel.png						\

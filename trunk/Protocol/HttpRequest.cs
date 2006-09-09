@@ -29,6 +29,9 @@ using System.Net.Sockets;
 using Niry;
 using Niry.Utils;
 
+using NyFolder;
+using NyFolder.Utils;
+
 namespace NyFolder.Protocol {
 	public sealed class HttpRequest {
 		// ============================================
@@ -75,22 +78,26 @@ namespace NyFolder.Protocol {
 			XmlRequest xml = MakeRequest(url);
 
 			// Parse Xml Response
-			if (xml.FirstTag == "auth")
+			if (xml.FirstTag == "authentication")
 				return(true);
 
 			// Request Error
 			throw(new Exception(xml.FirstTag + ": " + xml.BodyText));
 		}
 
-
+		// Return: IpWeb & Magic
 		public static bool Login (UserInfo userInfo, string password) {
+			// Set Options
 			Hashtable options = new Hashtable();
 			options.Add("passwd", password);
+
+			// Make Url & Request
 			string url = MakeUrl(userInfo, "Login.php", options);
 			XmlRequest xml = MakeRequest(url);
 
 			// Parse Xml Response
 			if (xml.FirstTag == "login") {
+				userInfo.Informations.Add("ipweb", xml.Attributes["ip"]);
 				userInfo.Informations.Add("magic", xml.BodyText);
 				return(true);
 			}
@@ -100,7 +107,12 @@ namespace NyFolder.Protocol {
 		}
 
 		public static void Logout (UserInfo userInfo) {
-			string url = MakeUrl(userInfo, "Logout.php", null);
+			// Set Options
+			Hashtable options = new Hashtable();
+			options.Add("magic", userInfo.Informations["magic"]);
+
+			// Make Url & Request
+			string url = MakeUrl(userInfo, "Logout.php", options);
 			XmlRequest xml = MakeRequest(url);
 
 			// Parse Xml Response
@@ -111,9 +123,12 @@ namespace NyFolder.Protocol {
 		}
 
 		public static void Connect (UserInfo userInfo, int port) {
+			// Set Options
 			Hashtable options = new Hashtable();
-			options.Add("port", port);
+			options.Add("magic", userInfo.Informations["magic"]);
+			options.Add("port", port.ToString());
 
+			// Make Url & Request
 			string url = MakeUrl(userInfo, "Connect.php", options);
 			XmlRequest xml = MakeRequest(url);
 
@@ -125,7 +140,12 @@ namespace NyFolder.Protocol {
 		}
 
 		public static void Disconnect (UserInfo userInfo) {
-			string url = MakeUrl(userInfo, "Disconnect.php", null);
+			// Set Options
+			Hashtable options = new Hashtable();
+			options.Add("magic", userInfo.Informations["magic"]);
+
+			// Make Url & Request
+			string url = MakeUrl(userInfo, "Disconnect.php", options);
 			XmlRequest xml = MakeRequest(url);
 
 			// Parse Xml Response
@@ -134,6 +154,23 @@ namespace NyFolder.Protocol {
 				throw(new Exception(xml.FirstTag + ": " + xml.BodyText));
 			}
 		}
+
+		public static void Update (UserInfo userInfo) {
+			// Set Options
+			Hashtable options = new Hashtable();
+			options.Add("magic", userInfo.Informations["magic"]);
+
+			// Make Url & Request
+			string url = MakeUrl(userInfo, "Update.php", options);
+			XmlRequest xml = MakeRequest(url);
+
+			// Parse Xml Response
+			if (xml.FirstTag != "update") {
+				// Request Error
+				throw(new Exception(xml.FirstTag + ": " + xml.BodyText));
+			}
+		}
+
 
 		// ============================================
 		// PUBLIC STATIC Proxy Methods
@@ -172,12 +209,6 @@ namespace NyFolder.Protocol {
 			url.Append("user=");
 			url.Append(userInfo.GetName());
 
-			string magic = (string) userInfo.Informations["magic"];
-			if (magic != null) {
-				url.Append("&magic=");
-				url.Append(magic);
-			}
-
 			if (opts != null) {
 				foreach (string name in opts.Keys) {
 					url.Append('&');
@@ -191,6 +222,8 @@ namespace NyFolder.Protocol {
 		}
 
 		private static XmlRequest MakeRequest (string url) {
+			Debug.Log("Web Request: '{0}'", url);
+
 			// Make Http Request
 			WebRequest request = WebRequest.Create(url);
 			request.Timeout = 5000;

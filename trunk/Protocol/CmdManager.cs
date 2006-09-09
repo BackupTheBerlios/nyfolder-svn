@@ -142,17 +142,14 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private P2PManager p2pManager = null;
 		
 		// ============================================
 		// PRIVATE Constructors
 		// ============================================
 		private CmdManager() {
-			p2pManager = P2PManager.GetInstance();
 		}
 		
 		~CmdManager() {
-			Debug.Log("Cmd Manager - Disposed");
 			DelPeerEventsHandler();
 			manager = null;
 		}
@@ -168,12 +165,10 @@ namespace NyFolder.Protocol {
 		
 		public void AddPeerEventsHandler() {
 			P2PManager.PeerReceived += new PeerEventHandler(OnReceived);
-			Debug.Log("Cmd Manager - AddPeerEventsHandler");
 		}
 
 		public void DelPeerEventsHandler() {
 			P2PManager.PeerReceived -= new PeerEventHandler(OnReceived);
-			Debug.Log("Cmd Manager - DelPeerEventsHandler");
 		}
 		
 		// ============================================
@@ -184,7 +179,6 @@ namespace NyFolder.Protocol {
 			xmlRequest.FirstTag = "login";
 			xmlRequest.Attributes.Add("name", userInfo.Name);
 			xmlRequest.Attributes.Add("secure", userInfo.SecureAuthentication.ToString());
-			xmlRequest.Attributes.Add("port", manager.p2pManager.CurrentPort);
 			peer.Send(xmlRequest.GenerateXml());
 		}
 

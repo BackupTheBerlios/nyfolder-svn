@@ -18,17 +18,12 @@
 =====================
     HTTP Protocol	
 =====================
-	1. Send Username & Password						[ Login.php ]
-		- Return: Magic
-	2. Send Connect Event (Port, Ip)				[ Connect.php ]
-		- Return Ok/Error
-	3. Send Disconnect Event						[ Disconnect.php ]
-		- Return Ok/Error
-	4. Send Logout									[ Logout.php ]
-		- Return Ok/Error
+	- L'Utente Si Logga sul Server
+		Param: UserName, Password
+		Return: Magic, Ip
 
-	-. Get Ip										[ GetIp.php ]
-	-. Get Port										[ GetPort.php ]
-	-. Get Magic									[ GetMagic.php ]
+	- L'Utente Esegue la Connect
+		Param: UserName, Magic
+		Return: Ok/Error
 
-Login All'Inizio, Poi Connetti/Disconnetti -> Invia al Server i Dati
+	- L'Utente si Collega al Server di un altro utente e chiede l'autenticazione

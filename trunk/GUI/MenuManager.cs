@@ -51,7 +51,7 @@ namespace NyFolder.GUI {
 			"      <menuitem action='Refresh'/>" +
 			"      <separator />" +
 			"      <menuitem action='ViewToolBar'/>" +
-//			"      <menuitem action='ViewUserPanel'/>" +
+			"      <menuitem action='ViewUserPanel'/>" +
 			"    </menu>" +
 			"    <menu action='GoMenu'>" +
 			"      <menuitem action='GoUp'/>" +
@@ -63,8 +63,6 @@ namespace NyFolder.GUI {
 			"    <menu action='NetworkMenu'>" +
 			"      <menuitem action='NetOnline'/>" +
 			"      <menuitem action='SetPort'/>" +
-			"      <separator />" +
-			"      <menuitem action='DownloadManager'/>" +
 			"      <separator />" +
 			"      <menuitem action='AddPeer'/>" +
 			"      <menuitem action='RmPeer'/>" +
