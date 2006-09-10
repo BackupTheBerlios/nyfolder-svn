@@ -83,11 +83,13 @@ namespace NyFolder.GUI.Dialogs {
 					sb.Append("\n");
 				}
 
+#if false
 				sb.Append("\n<b>Special Thanks To:</b>\n");
 				foreach (string s in thanks) {
 					sb.Append(s);
 					sb.Append("\n");
 				}
+#endif
 
 				sb.Append("\n<b>Arts &amp; Icons:</b>\n");
 				foreach (string s in icons) {

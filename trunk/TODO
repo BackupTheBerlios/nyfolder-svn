@@ -19,6 +19,11 @@
  - Http Protocol & All Http Related Functions
  - Preview Image File (Plugin ?)
 
+	[ ok ] Login/Logout
+	[ ok ] Connect/Disconnect
+	[ !! ] User Authentication
+	[ !! ] User Ip & Port
+
  - ToDo List
 ==============================
  * Network Viewer

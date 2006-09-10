@@ -54,16 +54,17 @@ namespace NyFolder.GUI {
 		// PRIVATE Members
 		// ============================================
 		private static TargetEntry[] dndTargetTable = new TargetEntry[] {
-			new TargetEntry("STRING", 0, 0),
-			new TargetEntry("text/plain", 0, 1),
-			new TargetEntry("text/uri-list", 0, 2),
-			new TargetEntry("_NETSCAPE_URL", 0, 3),
-			new TargetEntry("application/x-color", 0, 4),
-			new TargetEntry("application/x-rootwindow-drop", 0, 5),
-			new TargetEntry("property/bgimage", 0, 6),
-			new TargetEntry("property/keyword", 0, 7),
-			new TargetEntry("x-special/gnome-icon-list", 0, 8),
-			new TargetEntry("x-special/gnome-reset-background", 0, 9)
+			new TargetEntry("TEXT", 0, 0),
+			new TargetEntry("STRING", 0, 1),
+			new TargetEntry("text/plain", 0, 2),
+			new TargetEntry("text/uri-list", 0, 3),
+			new TargetEntry("_NETSCAPE_URL", 0, 4),
+			new TargetEntry("application/x-color", 0, 5),
+			new TargetEntry("application/x-rootwindow-drop", 0, 6),
+			new TargetEntry("property/bgimage", 0, 7),
+			new TargetEntry("property/keyword", 0, 8),
+			new TargetEntry("x-special/gnome-icon-list", 0, 9),
+			new TargetEntry("x-special/gnome-reset-background", 0, 10)
 		};
 
 		// ============================================
@@ -100,7 +101,8 @@ namespace NyFolder.GUI {
 		// PUBLIC Methods
 		// ============================================
 		public void Refresh() {
-			Console.WriteLine("Refresh Network Viewer");
+			Console.WriteLine("ToDo: Refresh Network Viewer");
+			#warning ToDo: Refresh Network Viewer
 		}
 
 		public void Add (UserInfo userInfo) {
@@ -127,14 +129,6 @@ namespace NyFolder.GUI {
 		// PROTECTED (Methods) Event Handlers
 		// ============================================
 		protected void OnDragDataReceived (object sender, DragDataReceivedArgs args) {
-			if (args.SelectionData.Text == null || 
-				args.SelectionData.Text.Length <= 0)
-			{
-				Debug.Log("DRAG Uris: '{0}'", args.SelectionData.Uris);
-				Drag.Finish(args.Context, false, false, args.Time);
-				return;
-			}
-
 			IconViewDropPosition pos;
 			TreePath path;			
 
@@ -148,7 +142,9 @@ namespace NyFolder.GUI {
 			UserInfo userInfo = store.GetUserInfo(path);
 
 			// Get Drop Uri
-			string[] filesUri = Regex.Split(args.SelectionData.Text, "\r\n");
+			string draggedUris = Encoding.UTF8.GetString(args.SelectionData.Data);
+			string[] filesUri = Regex.Split(draggedUris, "\r\n");
+
 			foreach (string uri in filesUri) {
 				if (uri == null || uri.Equals("") || uri.Length == 0)
 					continue;
@@ -156,8 +152,15 @@ namespace NyFolder.GUI {
 				string filePath = uri;
 
 				// Start Event Send File:
-				if (filePath.StartsWith("file://") == true)
-					filePath = filePath.Substring(7);
+				if (filePath.StartsWith("file://") == true) {
+					if (Environment.OSVersion.Platform != PlatformID.Unix) {
+						// Windows: file:///D:/Prova
+						filePath = filePath.Substring(8);
+					} else {
+						// Unix: file:///home/
+						filePath = filePath.Substring(7);
+					}
+				}
 
 				Debug.Log("Send To '{0}' URI: '{1}'", userInfo.Name, filePath);
 				Gtk.Application.Invoke(delegate {

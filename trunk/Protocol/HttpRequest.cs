@@ -50,7 +50,12 @@ namespace NyFolder.Protocol {
 		// PUBLIC STATIC Methods
 		// ============================================
 		public static string Ip (UserInfo userInfo) {
-			string url = MakeUrl(userInfo, "GetIp.php", null);
+			// Set Options
+			Hashtable options = new Hashtable();
+			options.Add("magic", userInfo.Informations["magic"]);
+
+			// Make Url & Request
+			string url = MakeUrl(userInfo, "GetIp.php", options);
 			XmlRequest xml = MakeRequest(url);
 
 			// Parse Xml Response
@@ -62,7 +67,12 @@ namespace NyFolder.Protocol {
 		}
 
 		public static int Port (UserInfo userInfo) {
-			string url = MakeUrl(userInfo, "GetPort.php", null);
+			// Set Options
+			Hashtable options = new Hashtable();
+			options.Add("magic", userInfo.Informations["magic"]);
+
+			// Make Url & Request
+			string url = MakeUrl(userInfo, "GetPort.php", options);
 			XmlRequest xml = MakeRequest(url);
 
 			// Parse Xml Response
@@ -74,7 +84,12 @@ namespace NyFolder.Protocol {
 		}
 
 		public static bool Authentication (UserInfo userInfo) {
-			string url = MakeUrl(userInfo, "Auth.php", null);
+			// Set Options
+			Hashtable options = new Hashtable();
+			options.Add("magic", userInfo.Informations["magic"]);
+
+			// Make Url & Request
+			string url = MakeUrl(userInfo, "UserAuth.php", options);
 			XmlRequest xml = MakeRequest(url);
 
 			// Parse Xml Response
@@ -82,7 +97,7 @@ namespace NyFolder.Protocol {
 				return(true);
 
 			// Request Error
-			throw(new Exception(xml.FirstTag + ": " + xml.BodyText));
+			return(false);
 		}
 
 		// Return: IpWeb & Magic

@@ -21,14 +21,17 @@ function GetUserMagic ($username) {
 	}
 }
 
-function AuthenticateUser ($userName) {
-	# Get UserMagic
-	$userMagic = VarRequest('magic', 'Magic');
+function Authentication() {
+	# Get UserName & User Magic
+	$userName = VarRequest('user', 'UserName');	
+	$userMixMagic = VarRequest('magic', 'Magic');
+
+	# Generate Correct Magic
 	$myIp = RealIP();
+	$userMagic = GetUserMagic($userName);
+	$realMagic = md5(sha1($myIp) . sha1($userMagic));
 
-	$realMagic = md5(sha1($myIp) + sha1(GetUserMagic($userName)));
-
-	return($realMagic == $userMagic);
+	return(($realMagic == $userMixMagic) ? true : false);
 }
 
 # Quote variable to make safe

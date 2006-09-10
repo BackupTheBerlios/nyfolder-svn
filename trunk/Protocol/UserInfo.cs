@@ -67,8 +67,10 @@ namespace NyFolder.Protocol {
 		// PUBLIC Methods (HttpRequest Required)
 		// ============================================
 		public void GetIpAndPort() {
-			this.ip = null;
-			this.port = 7085;
+			if (secureAuth == true) {
+				this.ip = HttpRequest.Ip(this);
+				this.port = HttpRequest.Port(this);
+			}
 		}
 
 		public void SetIpAndPort (string ip, int port) {

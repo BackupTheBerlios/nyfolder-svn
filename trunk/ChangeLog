@@ -5,11 +5,17 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/     
 
+ * 10 Sep 2006 - Matteo Bertozzi
+	- Fixed DND on Windows (Used args.SelectionData.Data instead .Text)
+
  * 09 Sep 2006 - Matteo Bertozzi
-	- Download Manager is Now a Plugin ToDo :D
+	- Download Manager is Now a Plugin ToDo
 	- Fixed Protocol.MyInfo, Added Timer to Update Web Status
 	- Added Update() To Protocol.HttpRequest (Web Status Update)
 	- Fixed GUI.Glue.NetworkManager, Connect/Disconnect Error Message
+	- Fixed Protocol.UserInfo.GetIpAndPort()
+	- Added Static Method GenerateMagic() in Protocol.Login
+	- Fixed Protocol.CmdManager.Login()
 
  * 08 Sep 2006 - Matteo Bertozzi
 	- Fixed GUI.UserPanel (User Name & Domain Label)

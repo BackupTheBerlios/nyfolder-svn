@@ -71,7 +71,7 @@ namespace NyFolder.GUI.Glue {
 			string filePath = null;
 			do {
 				if ((ResponseType) dialog.Run() != ResponseType.Ok) {
-					filePath = dialog.Filename;
+					filePath = null;
 					break;
 				}
 

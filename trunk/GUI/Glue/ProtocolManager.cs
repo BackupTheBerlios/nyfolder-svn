@@ -257,7 +257,9 @@ namespace NyFolder.GUI.Glue {
 				UserInfo userInfo = peer.Info as UserInfo;
 				UploadManager.Add(userInfo, path);
 			} catch (Exception e) {
-				Glue.Dialogs.MessageError("Accept File", e.Message);
+				Glue.Dialogs.MessageError("Accept File", "Peer Ip: " + 
+										  peer.GetRemoteIP().ToString() + "\n" +
+										  e.Message);
 			}
 		}
 	}

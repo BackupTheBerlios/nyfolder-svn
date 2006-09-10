@@ -55,15 +55,17 @@ namespace NyFolder.Protocol {
 		}
 
 		private void ParseCommand (string xml) {
-#if DEBUG
+//#if DEBUG
 			Debug.Log("==================================================");
 			if (peer.Info != null) {
 				UserInfo userInfo = this.peer.Info as UserInfo;
 				Debug.Log("Response From: {0}", userInfo.Name);
+			} else {
+				Debug.Log("Response From: {0}", peer.GetRemoteIP());
 			}
 			Debug.Log("Response: '{0}'", xml);
 			Debug.Log("==================================================");
-#endif
+//#endif
 
 			// Parse Xml Command
 			XmlRequest xmlRequest = null;
@@ -179,6 +181,10 @@ namespace NyFolder.Protocol {
 			xmlRequest.FirstTag = "login";
 			xmlRequest.Attributes.Add("name", userInfo.Name);
 			xmlRequest.Attributes.Add("secure", userInfo.SecureAuthentication.ToString());
+
+			string magic = Protocol.Login.GenerateMagic(peer);
+			xmlRequest.Attributes.Add("magic", magic);
+
 			peer.Send(xmlRequest.GenerateXml());
 		}
 

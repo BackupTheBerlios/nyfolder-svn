@@ -22,6 +22,7 @@ using System;
 using System.Text;
 
 using Niry;
+using Niry.Utils;
 using Niry.Network;
 
 namespace NyFolder.Protocol {
@@ -48,17 +49,12 @@ namespace NyFolder.Protocol {
 			string _secureAuth = (string) xml.Attributes["secure"];
 			if (_secureAuth != null && _secureAuth == "True") secureAuth = true;
 
-			// Get User Port
-			string port = (string) xml.Attributes["port"];
-			if (port == null) return;
-
 			// Get Magic
 			string magic = (string) xml.Attributes["magic"];
 			if (secureAuth == true && magic == null) return;
 
 			// Initialize UserInfo
 			this.userInfo = new UserInfo(userName, secureAuth, magic);
-			this.userInfo.Port = Int32.Parse(port);
 		}
 
 		// ============================================
@@ -73,9 +69,22 @@ namespace NyFolder.Protocol {
 			if (userInfo.SecureAuthentication == false)
 				return(true);
 
+			if (MyInfo.GetInstance().SecureAuthentication == false)
+				return(true);
+
 			string magic = (string) userInfo.Informations["magic"];
 			if (magic == null) return(false);
 			return(HttpRequest.Authentication(userInfo));
+		}
+
+		// ============================================
+		// PUBLIC STATIC Methods
+		// ============================================
+		public static string GenerateMagic (PeerSocket peer) {
+			UserInfo myInfo = MyInfo.GetInstance();
+			string userIp = CryptoUtils.SHA1String(peer.GetRemoteIP().ToString());
+			string userMagic = CryptoUtils.SHA1String((string) myInfo.Informations["magic"]);
+			return(CryptoUtils.MD5String(userIp + userMagic));
 		}
 
 		// ============================================

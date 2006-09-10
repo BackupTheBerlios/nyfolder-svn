@@ -168,19 +168,19 @@ class NyFolderDb {
 	function GetIp ($username) {
 		if (($uid = $this->GetUid($username)) === false)
 			return(false);
-		return($this->SqlSelectOneValue("ip", "user_info", "uid=". SqlQuote($username)));
+		return($this->SqlSelectOneValue("ip", "user_info", "uid=". SqlQuote($uid)));
 	}
 
 	function GetPort ($username) {
 		if (($uid = $this->GetUid($username)) === false)
 			return(false);
-		return($this->SqlSelectOneValue("port", "user_info", "uid=". SqlQuote($username)));
+		return($this->SqlSelectOneValue("port", "user_info", "uid=". SqlQuote($uid)));
 	}
 
 	function GetMagic ($username) {
 		if (($uid = $this->GetUid($username)) === false)
 			return(false);
-		return($this->SqlSelectOneValue("magic", "user_info", "uid=". SqlQuote($username)));
+		return($this->SqlSelectOneValue("magic", "user_info", "uid=". SqlQuote($uid)));
 	}
 
 	# ===============================================
@@ -197,6 +197,7 @@ class NyFolderDb {
 
 		if ($row = mysql_fetch_assoc($result))
 			return($row[$what]);
+
 		return(false);
 	}
 
