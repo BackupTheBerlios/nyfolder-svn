@@ -27,6 +27,7 @@ using System.Text.RegularExpressions;
 
 using Niry;
 using Niry.Utils;
+using Niry.Network;
 using Niry.GUI.Gtk2;
 
 using NyFolder;
@@ -36,12 +37,14 @@ using NyFolder.Protocol;
 namespace NyFolder.GUI {
 	public delegate void DirChangedHandler (object sender, bool parent);
 	public delegate void FileEventHandler (object sender, string path);
+	public delegate void FileSendEventHandler (object sender, string path, bool isDir);
 
 	public class FolderViewer : Gtk.ScrolledWindow {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
 		public event FileEventHandler FolderRefresh = null;
+		public event FileSendEventHandler FileSend = null;
 		public event DirChangedHandler DirChanged = null;
 		public event RightMenuHandler RightMenu = null;
 		public event FileEventHandler SaveFile = null;
@@ -241,6 +244,7 @@ namespace NyFolder.GUI {
 
 				// Options
 				if (this.userInfo == MyInfo.GetInstance()) {
+					AddSendFileMenu(menu);
 					menu.AddImageItem(Gtk.Stock.Remove, new EventHandler(OnFileRemove));
 				} else {
 					menu.AddImageItem(Gtk.Stock.Save, new EventHandler(OnFileSave));
@@ -270,9 +274,35 @@ namespace NyFolder.GUI {
 			Gtk.Application.Invoke(delegate { Refresh(); });
 		}
 
+		protected void OnFileSend (object sender, EventArgs args) {
+			ExtMenuItem item = sender as ExtMenuItem;
+			PeerSocket peer = (PeerSocket) P2PManager.KnownPeers[item.ExtraData];
+			
+			// Send File Event if Peer != Null
+			if (peer != null) {
+				foreach (TreePath treePath in iconView.SelectedItems) {
+					string fpath = this.store.GetFilePath(treePath);
+					bool fisDir = this.store.GetIsDirectory(treePath);
+					if (FileSend != null) FileSend(peer, fpath, fisDir);
+				}
+			}
+		}
+
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		private void AddSendFileMenu (PopupMenu menu) {
+			if (P2PManager.KnownPeers == null) return;
+			if (P2PManager.KnownPeers.Count <= 0) return;
+
+			PopupMenu subMenu = new PopupMenu();
+			menu.AddImageItem("Send", subMenu);
+
+			foreach (UserInfo userInfo in P2PManager.KnownPeers.Keys) {
+				ExtMenuItem item = new ExtMenuItem(userInfo.Name, userInfo);
+				subMenu.AddItem(item, new EventHandler(OnFileSend));
+			}
+		}
 
 		// ============================================
 		// PUBLIC Properties

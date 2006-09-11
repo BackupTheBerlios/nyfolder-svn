@@ -53,8 +53,20 @@ namespace NyFolder.GUI {
 		// PUBLIC Methods
 		// ============================================
 		public void Add (UserInfo userInfo) {
-			Gdk.Pixbuf pixbuf = StockIcons.GetPixbuf("Network", 74);
-			this.AppendValues(userInfo, userInfo.Name, pixbuf);
+			// Setup Pixbuf
+			Gdk.Pixbuf pixbuf;
+			if (userInfo.SecureAuthentication == true) {
+				pixbuf = StockIcons.GetPixbuf("Network", 74);
+			} else {
+				pixbuf = StockIcons.GetPixbuf("NetworkInsecure", 74);
+			}
+
+			// Setup Name
+			string name = userInfo.GetName();
+			string domain = userInfo.GetDomain();
+			if (domain != null) name += "\n" + domain;
+
+			this.AppendValues(userInfo, name, pixbuf);
 		}
 
 		public void Remove (string name) {

@@ -54,8 +54,9 @@ namespace NyFolder.GUI {
 			this.myInfo = MyInfo.GetInstance();
 
 			// Initialize Folder Image
-			this.imageFolder = StockIcons.GetImage("MyFolderOffline");
+			this.imageFolder = new Gtk.Image();
 			this.PackStart(this.imageFolder, false, false, 2);
+			SetOnlineStatusIcon(false);
 
 			// Initialize Label Folder Button
 			this.labelFolderButton = new Gtk.Label(GetNameLabel());
@@ -95,8 +96,11 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		public void SetOnlineStatus (bool online) {
-			FolderImage = StockIcons.GetPixbuf("MyFolder" + ((online) ? "Online" : "Offline"));
+		public void SetOnlineStatusIcon (bool online) {
+			bool secure = myInfo.SecureAuthentication;
+			FolderImage = StockIcons.GetPixbuf("MyFolder" + 
+											   ((online) ? "Online" : "Offline") +
+											   ((secure) ? "" : "Insecure"));
 		}
 
 		public void UpdateSharedFilesNum() {

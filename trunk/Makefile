@@ -57,8 +57,7 @@ PROTOCOL_SRC = 	Protocol/CmdManager.cs			\
 				Protocol/UserInfo.cs			\
 				Protocol/XmlRequest.cs
 
-UTILS_SRC	= 	Utils/Debug.cs  		\
-				Utils/Paths.cs  		\
+UTILS_SRC	= 	Utils/Paths.cs  		\
 				Utils/Plugin.cs  		\
 				Utils/PluginManager.cs	\
 				Utils/Proxy.cs
@@ -77,13 +76,17 @@ IMG_RES = 	Pixmaps/Channel.png						\
 			Pixmaps/Lock.png						\
 			Pixmaps/MyFolder.png					\
 			Pixmaps/MyFolderOffline.png				\
+			Pixmaps/MyFolderOfflineInsecure.png		\
 			Pixmaps/MyFolderOnline.png				\
+			Pixmaps/MyFolderOnlineInsecure.png		\
 			Pixmaps/Network.png						\
+			Pixmaps/NetworkInsecure.png				\
 			Pixmaps/NyFolderIcon.png				\
 			Pixmaps/NyFolderLogo.png				\
 			Pixmaps/NyFolderSmall.png				\
 			Pixmaps/Proxy.png						\
 			Pixmaps/SecureAuth.png					\
+			Pixmaps/Send.png						\
 			Pixmaps/StockMyFolder.png				\
 			Pixmaps/StockNetwork.png				\
 			Pixmaps/FileTypes/FileTypeAc3.png		\

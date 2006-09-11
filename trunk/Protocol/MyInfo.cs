@@ -22,6 +22,9 @@ using System;
 using System.Threading;
 using System.Collections;
 
+using Niry;
+using Niry.Utils;
+
 using NyFolder;
 using NyFolder.Utils;
 
@@ -45,10 +48,12 @@ namespace NyFolder.Protocol {
 		// ============================================
 		public static void Initialize (string username) {
 			myInfo = new UserInfo(username);
+			myInfo.Informations.Add("magic", "None");
 		}
 
 		public static void Initialize (string username, bool secureAuth) {
 			myInfo = new UserInfo(username, secureAuth);
+			if (secureAuth == false) myInfo.Informations.Add("magic", "None");
 		}
 
 		public static UserInfo GetInstance() {

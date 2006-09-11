@@ -25,6 +25,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using Niry;
+using Niry.Utils;
 using Niry.GUI.Gtk2;
 
 using NyFolder;

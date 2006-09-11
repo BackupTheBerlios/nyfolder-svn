@@ -84,7 +84,7 @@ namespace NyFolder.GUI.Glue {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
-		private void Connect (UserInfo userInfo) {
+		private void UserConnect (UserInfo userInfo) {
 			try {
 				// Connect & Send Login
 				P2PManager.AddPeer(userInfo, userInfo.Ip, userInfo.Port);
@@ -228,7 +228,7 @@ namespace NyFolder.GUI.Glue {
 						break;
 					case "AddPeer":
 						UserInfo userInfo = Glue.Dialogs.AddPeer();
-						if (userInfo != null) Connect(userInfo);
+						if (userInfo != null) UserConnect(userInfo);
 						break;
 					case "RmPeer":
 						userInfo = Glue.Dialogs.RemovePeer(notebookViewer.NetworkViewer);
@@ -241,7 +241,7 @@ namespace NyFolder.GUI.Glue {
 		private void OnNetOnline (ToggleAction action) {
 			// Set UserPanel Online/Offline Status
 			SetSensitiveNetworkMenu(action.Active);
-			userPanel.SetOnlineStatus(action.Active);
+			userPanel.SetOnlineStatusIcon(action.Active);
 
 			if (action.Active == true) {
 				try {

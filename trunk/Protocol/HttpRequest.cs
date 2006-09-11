@@ -50,12 +50,8 @@ namespace NyFolder.Protocol {
 		// PUBLIC STATIC Methods
 		// ============================================
 		public static string Ip (UserInfo userInfo) {
-			// Set Options
-			Hashtable options = new Hashtable();
-			options.Add("magic", userInfo.Informations["magic"]);
-
 			// Make Url & Request
-			string url = MakeUrl(userInfo, "GetIp.php", options);
+			string url = MakeUrl(userInfo, "GetIp.php", null);
 			XmlRequest xml = MakeRequest(url);
 
 			// Parse Xml Response
@@ -67,12 +63,8 @@ namespace NyFolder.Protocol {
 		}
 
 		public static int Port (UserInfo userInfo) {
-			// Set Options
-			Hashtable options = new Hashtable();
-			options.Add("magic", userInfo.Informations["magic"]);
-
 			// Make Url & Request
-			string url = MakeUrl(userInfo, "GetPort.php", options);
+			string url = MakeUrl(userInfo, "GetPort.php", null);
 			XmlRequest xml = MakeRequest(url);
 
 			// Parse Xml Response

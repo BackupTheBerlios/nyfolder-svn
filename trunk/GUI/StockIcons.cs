@@ -32,6 +32,7 @@ namespace NyFolder.GUI {
 	public static class StockIcons {
 		private static readonly string[] stock_icons = {
 			"Download",
+			"Send",
 			"StockMyFolder",
 			"StockNetwork",
 			"Proxy"
@@ -44,13 +45,17 @@ namespace NyFolder.GUI {
 			"Download",
 			"Lock",
 			"Network",
+			"NetworkInsecure",
 			"Proxy",
 			"InsecureAuth",
 			"SecureAuth",
+			"Send",
 
 			"MyFolder",
 			"MyFolderOffline",
+			"MyFolderOfflineInsecure",
 			"MyFolderOnline",
+			"MyFolderOnlineInsecure",
 
 			// NyFolder Logos
 			"NyFolderIcon",

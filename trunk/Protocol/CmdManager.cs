@@ -25,6 +25,7 @@ using System.Threading;
 using System.Collections;
 
 using Niry;
+using Niry.Utils;
 using Niry.Network;
 
 using NyFolder;
@@ -55,7 +56,7 @@ namespace NyFolder.Protocol {
 		}
 
 		private void ParseCommand (string xml) {
-//#if DEBUG
+#if DEBUG
 			Debug.Log("==================================================");
 			if (peer.Info != null) {
 				UserInfo userInfo = this.peer.Info as UserInfo;
@@ -65,7 +66,7 @@ namespace NyFolder.Protocol {
 			}
 			Debug.Log("Response: '{0}'", xml);
 			Debug.Log("==================================================");
-//#endif
+#endif
 
 			// Parse Xml Command
 			XmlRequest xmlRequest = null;
@@ -88,6 +89,8 @@ namespace NyFolder.Protocol {
 
 						// Start Login Event
 						CmdManager.StartLoginEvent(peer, login.User);
+					} else {
+						Debug.Log("Auth Failed");
 					}
 					break;
 				case "quit":

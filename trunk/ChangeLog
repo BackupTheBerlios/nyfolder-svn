@@ -5,8 +5,14 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/     
 
+ * 11 Sep 2006 - Matteo Bertozzi
+	- Added Different "MyFolder" Image for Secure/Insecure Connection
+	- Added Menu Send into My Folder Viewer
+	- Fixed 'Ask Send' Message Error
+
  * 10 Sep 2006 - Matteo Bertozzi
 	- Fixed DND on Windows (Used args.SelectionData.Data instead .Text)
+	- ReFixed Login Secure/Insecure Connection...
 
  * 09 Sep 2006 - Matteo Bertozzi
 	- Download Manager is Now a Plugin ToDo

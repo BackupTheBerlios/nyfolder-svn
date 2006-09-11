@@ -94,7 +94,10 @@ namespace NyFolder.GUI.Glue {
 			// NetworkViewer
 			NetworkViewer networkViewer = notebookViewer.NetworkViewer;
 			networkViewer.SendFile += new SendFileHandler(OnSendFile);
+
+			// Folder Viewers
 			notebookViewer.SaveFile += new SendFileHandler(OnSaveFile);
+			notebookViewer.FileSend += new FileSendEventHandler(OnSendFileMenu);
 			notebookViewer.FolderRefresh += new FileEventHandler(OnFolderRefresh); 
 
 			// Protocol Commands
@@ -110,7 +113,10 @@ namespace NyFolder.GUI.Glue {
 			// NetworkViewer
 			NetworkViewer networkViewer = notebookViewer.NetworkViewer;
 			networkViewer.SendFile -= new SendFileHandler(OnSendFile);
+
+			// Folder Viewers
 			notebookViewer.SaveFile -= new SendFileHandler(OnSaveFile);
+			notebookViewer.FileSend -= new FileSendEventHandler(OnSendFileMenu);
 			notebookViewer.FolderRefresh -= new FileEventHandler(OnFolderRefresh);
 
 			// Protocol Commands
@@ -131,11 +137,25 @@ namespace NyFolder.GUI.Glue {
 
 				try {
 					CmdManager.AskSendFile(peer, path);
-				} catch {				
-					Glue.Dialogs.MessageError("Ask Send File Error", 
-													"Directory Send Not Supported (Now)");
+				} catch (Exception e) {
+					Glue.Dialogs.MessageError("Ask Send File Error", e.Message);
 				}
 			});
+		}
+
+		private void OnSendFileMenu (object sender, string path, bool isDir) {
+			if (isDir == true) {
+				Glue.Dialogs.MessageError("Ask Send File Error",
+										  "Directory Send Not Supported (Now)");
+				return;
+			}
+
+			PeerSocket peer = sender as PeerSocket;
+			try {
+				CmdManager.AskSendFile(peer, path);
+			} catch (Exception e) {
+				Glue.Dialogs.MessageError("Ask Send File Error", e.Message);
+			}
 		}
 
 		private void OnSaveFile (object sender, UserInfo userInfo, string path) {

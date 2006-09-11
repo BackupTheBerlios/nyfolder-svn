@@ -32,6 +32,7 @@ namespace NyFolder.GUI {
 		// PUBLIC Events
 		// ============================================
 		public event FileEventHandler FolderRefresh = null;
+		public event FileSendEventHandler FileSend = null;
 		public event DirChangedHandler DirChanged = null;
 		public event SendFileHandler SaveFile = null;
 
@@ -100,6 +101,7 @@ namespace NyFolder.GUI {
 				// Initialize Folder Viewer
 				folderViewer = new FolderViewer(userInfo);
 				folderViewer.SaveFile += new FileEventHandler(OnFileSave);
+				folderViewer.FileSend += new FileSendEventHandler(OnFileSend);
 				folderViewer.DirChanged += new DirChangedHandler(OnDirChangedHandler);
 				folderViewer.FolderRefresh += new FileEventHandler(OnFolderRefresh);
 
@@ -127,6 +129,7 @@ namespace NyFolder.GUI {
 			if (folderViewer != null) {
 				// Remove Folder Viewer Event
 				folderViewer.SaveFile -= new FileEventHandler(OnFileSave);
+				folderViewer.FileSend -= new FileSendEventHandler(OnFileSend);
 				folderViewer.DirChanged -= new DirChangedHandler(OnDirChangedHandler);
 				folderViewer.FolderRefresh -= new FileEventHandler(OnFolderRefresh);
 
@@ -249,6 +252,10 @@ namespace NyFolder.GUI {
 
 		private void OnFolderRefresh (object sender, string path) {
 			if (FolderRefresh != null) FolderRefresh(sender, path);
+		}
+
+		private void OnFileSend (object sender, string path, bool isDir) {
+			if (FileSend != null) FileSend(sender, path, isDir);
 		}
 
 		// ============================================
