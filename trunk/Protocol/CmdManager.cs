@@ -83,14 +83,14 @@ namespace NyFolder.Protocol {
 			switch (xmlRequest.FirstTag) {
 				case "login":
 					Login login = new Login(peer, xmlRequest);
-					if (login.Authentication() == true) {
+					if (login.Authentication() == true && login.User != null) {
 						// Add to Known User
 						P2PManager.AddPeer(login.User, peer);
 
 						// Start Login Event
 						CmdManager.StartLoginEvent(peer, login.User);
 					} else {
-						Debug.Log("Auth Failed");
+						Debug.Log("Auth Failed: {0}", peer.GetRemoteIP());
 					}
 					break;
 				case "quit":
@@ -117,6 +117,12 @@ namespace NyFolder.Protocol {
 				case "snd-end":
 					CmdManager.StartSndEndEvent(peer, xmlRequest);
 					break;
+				case "snd-abort":
+					CmdManager.StartSndAbortEvent(peer, xmlRequest);
+					break;
+				case "recv-abort":
+					CmdManager.StartRecvAbortEvent(peer, xmlRequest);
+					break;
 				default:
 					CmdManager.StartUnknownEvent(peer, xmlRequest);
 					break;
@@ -137,6 +143,8 @@ namespace NyFolder.Protocol {
 		public static event ProtocolHandler SndEvent = null;
 		public static event ProtocolHandler SndStartEvent = null;
 		public static event ProtocolHandler SndEndEvent = null;
+		public static event ProtocolHandler SndAbortEvent = null;
+		public static event ProtocolHandler RecvAbortEvent = null;
 		public static event ProtocolHandler UnknownEvent = null;
 
 		// ============================================
@@ -296,6 +304,14 @@ namespace NyFolder.Protocol {
 
 		public static void StartSndEndEvent (PeerSocket peer, XmlRequest xml) {
 			if (SndEndEvent != null) SndEndEvent(peer, xml);
+		}
+
+		public static void StartSndAbortEvent (PeerSocket peer, XmlRequest xml) {
+			if (SndAbortEvent != null) SndAbortEvent(peer, xml);
+		}
+
+		public static void StartRecvAbortEvent (PeerSocket peer, XmlRequest xml) {
+			if (RecvAbortEvent != null) RecvAbortEvent(peer, xml);
 		}
 
 		public static void StartUnknownEvent (PeerSocket peer, XmlRequest xml) {

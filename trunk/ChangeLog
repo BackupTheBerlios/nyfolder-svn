@@ -5,10 +5,21 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/     
 
+ * 14 Sep 2006 - Matteo Bertozzi
+	- Added Event QuittingApplication to INyFolder Interface (and Main.cs)
+	- Added Quit() Method To Main.cs and Fixed Main 'Finally'
+	- Added Send Abort & Recv Abort Protocol Command
+	- Fixed Network Manager
+
  * 11 Sep 2006 - Matteo Bertozzi
 	- Added Different "MyFolder" Image for Secure/Insecure Connection
 	- Added Menu Send into My Folder Viewer
+	- Added Logout Options to Main Window
+	- Added NetworkViewer Refresh Method
 	- Fixed 'Ask Send' Message Error
+	- Fixed Protocol.DownloadManager.Clear()
+	- Added Event 'Added'/'Finished' To DownloadManager & UploadManager
+	- Fixed UserPanel to Use Download & Upload Manager Events to update labes
 
  * 10 Sep 2006 - Matteo Bertozzi
 	- Fixed DND on Windows (Used args.SelectionData.Data instead .Text)

@@ -27,6 +27,11 @@ using Niry.GUI.Gtk2;
 namespace NyFolder.GUI {
 	public class Window : Gtk.Window {
 		// ============================================
+		// PUBLIC Events
+		// ============================================
+		public BlankEventHandler Logout = null;
+
+		// ============================================
 		// PROTECTED Members
 		// ============================================
 		protected NotebookViewer notebookViewer;
@@ -119,6 +124,13 @@ namespace NyFolder.GUI {
 					// File Menu
 					case "ProxySettings":
 						Glue.Dialogs.ProxySettings();
+						break;
+					case "Logout":
+						if (Glue.Dialogs.QuestionDialog("Logout", 
+							"Do You Really Want To Logout ?")) 
+						{
+							if (Logout != null) Logout(this);
+						}
 						break;
 					case "Quit":
 						Gtk.Application.Quit();

@@ -22,6 +22,9 @@ using Gtk;
 using Glade;
 using System;
 
+using Niry;
+using Niry.Network;
+
 namespace NyFolder.GUI.Dialogs {
 	public class SetPort {
 		[Glade.WidgetAttribute]
@@ -35,6 +38,8 @@ namespace NyFolder.GUI.Dialogs {
 		public SetPort() {
 			XML xml = new XML(null, "SetPortDialog.glade", "dialog", null);
 			xml.Autoconnect(this);
+
+			Port = P2PManager.Port;
 
 			this.image.Pixbuf = StockIcons.GetPixbuf("Channel");
 			this.dialog.ShowAll();

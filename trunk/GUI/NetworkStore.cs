@@ -36,7 +36,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private string rmUserName = null;
+		private UserInfo rmUser = null;
 
 		// ============================================
 		// PUBLIC Constructors
@@ -69,10 +69,10 @@ namespace NyFolder.GUI {
 			this.AppendValues(userInfo, name, pixbuf);
 		}
 
-		public void Remove (string name) {
-			this.rmUserName = name;
+		public void Remove (UserInfo userInfo) {
+			this.rmUser = userInfo;
 			this.Foreach(RemoveForeach);
-			this.rmUserName = null;
+			this.rmUser = null;
 		}
 
 		public UserInfo GetUserInfo (TreePath path) {
@@ -119,8 +119,8 @@ namespace NyFolder.GUI {
 		}
 
 		private bool RemoveForeach (TreeModel model, TreePath path, TreeIter iter) {
-			lock (this.rmUserName) {
-				if (GetName(iter) == this.rmUserName) {
+			lock (this.rmUser) {
+				if (GetUserInfo(iter) == this.rmUser) {
 					this.Remove(ref iter);
 					return(true);
 				}

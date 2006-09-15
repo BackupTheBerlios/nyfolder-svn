@@ -107,6 +107,8 @@ namespace NyFolder.GUI.Glue {
 			CmdManager.SndEvent += new ProtocolHandler(OnSndEvent);
 			CmdManager.SndStartEvent += new ProtocolHandler(OnSndStartEvent);
 			CmdManager.SndEndEvent += new ProtocolHandler(OnSndEndEvent);
+			CmdManager.SndAbortEvent += new ProtocolHandler(OnSndAbortEvent);
+			CmdManager.RecvAbortEvent += new ProtocolHandler(OnRecvAbortEvent);
 		}
 
 		private void OnDelProtocolEvent (P2PManager p2p, CmdManager cmd) {
@@ -126,6 +128,8 @@ namespace NyFolder.GUI.Glue {
 			CmdManager.SndEvent -= new ProtocolHandler(OnSndEvent);
 			CmdManager.SndStartEvent -= new ProtocolHandler(OnSndStartEvent);
 			CmdManager.SndEndEvent -= new ProtocolHandler(OnSndEndEvent);
+			CmdManager.SndAbortEvent -= new ProtocolHandler(OnSndAbortEvent);
+			CmdManager.RecvAbortEvent -= new ProtocolHandler(OnRecvAbortEvent);
 		}
 
 		// ===================================================
@@ -268,14 +272,50 @@ namespace NyFolder.GUI.Glue {
 			});
 		}
 
+		public void OnSndAbortEvent (PeerSocket peer, XmlRequest xml) {
+			Gtk.Application.Invoke(delegate {
+				string what = (string) xml.Attributes["what"];
+
+				if (what == "file") {
+					try {
+						DownloadManager.Remove(peer, xml);
+					} catch (Exception e) {
+						Glue.Dialogs.MessageError("Remove Download", e.Message);
+					}
+				}
+			});
+		}
+
+		public void OnRecvAbortEvent (PeerSocket peer, XmlRequest xml) {
+			Gtk.Application.Invoke(delegate {
+				string what = (string) xml.Attributes["what"];
+
+				if (what == "file") {
+					try {
+						string path = (string) xml.Attributes["name"];
+						UploadManager.Remove(peer, path);
+					} catch (Exception e) {
+						Glue.Dialogs.MessageError("Remove Upload", e.Message);
+					}
+				}
+			});
+		}
+
 		// ===================================================
 		// PRIVATE (Methods) Protocol Event Handler
 		// ===================================================
 		private void OnAcceptFileEvent (PeerSocket peer, XmlRequest xml) {
 			try {
+				if (peer == null) Debug.Log("NULL Peer");
+				if (xml == null) Debug.Log("NULL Xml");
 				string path = (string) xml.Attributes["path"];
+				if (path == null) Debug.Log("NULL Path");
 				UserInfo userInfo = peer.Info as UserInfo;
+				if (userInfo == null) 
+					Debug.Log("NULL User Info: {0} {1}", peer.GetRemoteIP(), peer.Sock.Handle);
+				Console.WriteLine("[ ST ] Add Upload Manager");
 				UploadManager.Add(userInfo, path);
+				Console.WriteLine("[ ED ] Add Upload Manager");
 			} catch (Exception e) {
 				Glue.Dialogs.MessageError("Accept File", "Peer Ip: " + 
 										  peer.GetRemoteIP().ToString() + "\n" +

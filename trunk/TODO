@@ -16,25 +16,10 @@
 
  - URGENT ToDo List
 ==============================
- - Http Protocol & All Http Related Functions
  - Preview Image File (Plugin ?)
-
-	[ ok ] Login/Logout
-	[ ok ] Connect/Disconnect
-	[ !! ] User Authentication
-	[ !! ] User Ip & Port
+ - Fix DND Path When Send
+ - Fix UploadManager SendSize SendPercentSize
 
  - ToDo List
 ==============================
- * Network Viewer
-	- Add Event To "Peer Change Avatar"
-
- * MenuBar
-	- Logout
-
- - Quando viene inviato un file deve essere forzato il salvataggio 
-   nella sua shared directory dell'utente (MyInfo.Name)
-
- * Utils/Proxy & GUI/Dialogs/ProxySettings
- 	- Modify To Use Utils.Proxy Configuration
-
+ * Add Event To "Peer Change Avatar"

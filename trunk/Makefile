@@ -64,9 +64,9 @@ UTILS_SRC	= 	Utils/Paths.cs  		\
 
 GLADE_RES = Glade/AcceptUserDialog.glade		\
 			Glade/AddPeerDialog.glade			\
+			Glade/ProxySettingsDialog.glade		\
 			Glade/RemovePeerDialog.glade		\
-			Glade/SetPortDialog.glade			\
-			Glade/ProxySettingsDialog.glade
+			Glade/SetPortDialog.glade
 
 IMG_RES = 	Pixmaps/Channel.png						\
 			Pixmaps/Close.png						\
@@ -74,6 +74,7 @@ IMG_RES = 	Pixmaps/Channel.png						\
 			Pixmaps/Download.png					\
 			Pixmaps/InsecureAuth.png				\
 			Pixmaps/Lock.png						\
+			Pixmaps/Logout.png						\
 			Pixmaps/MyFolder.png					\
 			Pixmaps/MyFolderOffline.png				\
 			Pixmaps/MyFolderOfflineInsecure.png		\

@@ -45,6 +45,7 @@ namespace NyFolder.GUI {
 			"      <separator />" +
 			"      <menuitem action='ProxySettings'/>" +
 			"      <separator />" +
+			"      <menuitem action='Logout'/>" +
 			"      <menuitem action='Quit'/>" +
 			"    </menu>" +
 			"    <menu action='ViewMenu'>" +
@@ -60,6 +61,8 @@ namespace NyFolder.GUI {
 			"      <menuitem action='GoNetwork'/>" +
 			"      <menuitem action='GoMyFolder'/>" +
 			"    </menu>" +
+			"    <menu action='ToolMenu'>" +
+			"    </menu>" +
 			"    <menu action='NetworkMenu'>" +
 			"      <menuitem action='NetOnline'/>" +
 			"      <menuitem action='SetPort'/>" +
@@ -67,8 +70,8 @@ namespace NyFolder.GUI {
 			"      <menuitem action='AddPeer'/>" +
 			"      <menuitem action='RmPeer'/>" +
 			"    </menu>" +
-			"    <menu action='HelpMenu'>" +
-			"      <menuitem action='About'/>" +
+			"    <menu action='HelpMenu' position='bot'>" +
+			"      <menuitem action='About' position='bot'/>" +
 			"    </menu>" +
 			"  </menubar>" +
 			"  <toolbar name='ToolBar'>" +
@@ -89,12 +92,15 @@ namespace NyFolder.GUI {
 				new ActionEntry("FileMenu", null, "_File", null, null, null),
 				new ActionEntry("ViewMenu", null, "_View", null, null, null),
 				new ActionEntry("GoMenu", null, "_Go", null, null, null),
+				new ActionEntry("ToolMenu", null, "_Tool", null, null, null),
 				new ActionEntry("NetworkMenu", null, "_Network", null, null, null),
 				new ActionEntry("HelpMenu", null, "_Help", null, null, null),
 	
 				// File Menu
 				new ActionEntry("ProxySettings", "Proxy", "Proxy Settings", null, 
 								"Setup Proxy", new EventHandler(ActionActivated)),
+				new ActionEntry("Logout", "Logout", "Logout", null, 
+								"Logout", new EventHandler(ActionActivated)),
 				new ActionEntry("Quit", Gtk.Stock.Quit, "Quit", "<control>Q", 
 								"Quit Shared Folder", new EventHandler(ActionActivated)),
 				// View Menu

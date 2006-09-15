@@ -35,7 +35,13 @@ namespace NyFolder {
 		// ============================================
 		// PUBLIC Event(s)
 		// ============================================
-		public event EventHandler MainWindowStarted;
+		public event BlankEventHandler QuittingApplication;
+		public event BlankEventHandler MainWindowStarted;
+
+		// ============================================
+		// PUBLIC STATIC Members
+		// ============================================
+		public static bool RestartApplication = false;
 
 		// ============================================
 		// PROTECTED Members
@@ -48,6 +54,7 @@ namespace NyFolder {
 		// ============================================
 		public NyFolderApp() {
 			MainWindowStarted = null;
+			QuittingApplication = null;
 		}
 
 		// ============================================
@@ -73,6 +80,14 @@ namespace NyFolder {
 			dialog.Response += new ResponseHandler(OnLoginResponse);
 		}
 
+		public void Quit() {
+			// Quitting Event
+			if (QuittingApplication != null) QuittingApplication(this);
+
+			// Do User Logout
+			Logout();
+		}
+
 		public void Logout() {
 			// Disconnect User From Http Server
 			Protocol.MyInfo.Logout();
@@ -84,6 +99,7 @@ namespace NyFolder {
 		private void RunMainWindow() {
 			// Start NyFolder Window
 			this.window = new GUI.Window();
+			this.window.Logout += new BlankEventHandler(OnLogout);
 
 			Debug.Log("Logged In as {0}", myInfo.Name);
 			Debug.Log("Shared Path: {0}", Paths.UserSharedDirectory(myInfo.Name));
@@ -97,7 +113,7 @@ namespace NyFolder {
 			this.window.ShowAll();
 
 			// Start 'Main Window Started' Event
-			if (MainWindowStarted != null) MainWindowStarted(this, new EventArgs());
+			if (MainWindowStarted != null) MainWindowStarted(this);
 		}
 
 		private void DoLogin (GUI.Dialogs.Login dialog) {
@@ -121,6 +137,16 @@ namespace NyFolder {
 			}
 		}
 
+		private void OnLogout (object sender) {
+			RestartApplication = true;
+
+			// Destroy Main Window
+			window.Destroy();
+			window = null;
+
+			Gtk.Application.Quit();
+		}
+
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
@@ -136,38 +162,41 @@ namespace NyFolder {
 		//               APPLICATION MAIN
 		// ============================================
 		public static int Main (string[] args) {
-			P2PManager p2pManager = null;
-			NyFolderApp nyFolder = null;
+			do {
+				NyFolderApp.RestartApplication = false;
+				P2PManager p2pManager = null;
+				NyFolderApp nyFolder = null;
 
-			try {
-				// Initialize P2PManager
-				p2pManager = P2PManager.GetInstance();
+				try {
+					// Initialize P2PManager
+					p2pManager = P2PManager.GetInstance();
 
-				// Initialize Gtk Support
-				Gtk.Application.Init();
+					// Initialize Gtk Support
+					Gtk.Application.Init();
 
-				// Initialize NyFolder Application
-				nyFolder = new NyFolderApp();
-				nyFolder.Initialize();
+					// Initialize NyFolder Application
+					nyFolder = new NyFolderApp();
+					nyFolder.Initialize();
 
-				// Initialize Plugins
-				new PluginManager(nyFolder);
+					// Initialize Plugins
+					new PluginManager(nyFolder);
 
-				// Run NyFolder Application
-				nyFolder.Run();
+					// Run NyFolder Application
+					nyFolder.Run();
 
-				// Run GtkMain
-				Gtk.Application.Run();
-			} catch (Exception e) {
-				Console.WriteLine("{0} {1} Error", Info.Name, Info.Version);
-				Console.WriteLine("Source:  {0}", e.Source);
-				Console.WriteLine("Message: {0}", e.Message);
-				Console.WriteLine("Stack Trace:\n{0}", e.StackTrace);
-				return(1);
-			} finally {
-				if (nyFolder != null) nyFolder.Logout();
-				if (p2pManager != null) p2pManager.Kill();
-			}
+					// Run GtkMain
+					Gtk.Application.Run();
+				} catch (Exception e) {
+					Console.WriteLine("{0} {1} Error", Info.Name, Info.Version);
+					Console.WriteLine("Source:  {0}", e.Source);
+					Console.WriteLine("Message: {0}", e.Message);
+					Console.WriteLine("Stack Trace:\n{0}", e.StackTrace);
+					return(1);
+				} finally {
+					if (nyFolder != null) nyFolder.Quit();
+					if (p2pManager != null) p2pManager.Kill();
+				}
+			} while (NyFolderApp.RestartApplication == true);
 			return(0);
 		}
 	}

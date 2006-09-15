@@ -76,13 +76,14 @@ namespace NyFolder.Protocol {
 		private byte[] fileContent;
 		private string realFileName;
 		private bool ended = false;
+		private long fileSize = 0;
 		private PeerSocket peer;
 		private string fileName;
-		private long fileSize;
 		private Thread thread;
 
 		public FileSender (PeerSocket peer, string fileName) {
 			this.peer = peer;
+			this.fileContent = null;
 
 			// Initialize
 			this.fileName = fileName;
@@ -94,6 +95,7 @@ namespace NyFolder.Protocol {
 
 		public FileSender (PeerSocket peer, string path, string displayName) {
 			this.peer = peer;
+			this.fileContent = null;
 
 			// Initialize & Read Entire File
 			this.fileName = displayName;
@@ -169,15 +171,8 @@ namespace NyFolder.Protocol {
 				// Send Event... End File Ok
 				if (EndSend != null)
 					EndSend(this, new EndSendFilePartArgs(true));
-			} catch (ThreadAbortException e) {
-				if (ended == true) return;
-
-				SendFileEnd(e.Message);
+			} catch (ThreadAbortException) {
 				ended = true;
-
-				// Send Thread Abort Error
-				if (EndSend != null)
-					EndSend(this, new EndSendFilePartArgs(false, e.Message));
 			} catch (Exception e) {
 				if (ended == true) return;
 
@@ -251,10 +246,17 @@ namespace NyFolder.Protocol {
 			get { return(this.fileSize); }
 		}
 
+		public long FileSendedSize {
+			get { return(fileSize - ((fileContent != null) ? fileContent.Length : 0)); }
+		}
+
 		public int SendedPercent {
 			get {
-				long sendedLength = fileSize - fileContent.Length;
-				return((int) (((double) sendedLength / (double) fileSize) * 100));
+				try {
+					return((int) (((double) FileSendedSize / (double) fileSize) * 100));
+				} catch {
+					return(0);
+				}
 			}
 		}
 	}

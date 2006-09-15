@@ -41,7 +41,8 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
-		public static event EndSendFilePartHandler EndFileUpdate = null;
+		public static event BlankEventHandler Finished = null;
+		public static event BlankEventHandler Added = null;
 
 		// ============================================
 		// PRIVATE Members
@@ -79,17 +80,23 @@ namespace NyFolder.Protocol {
 			// Get File List
 			PeerSocket peer = P2PManager.KnownPeers[userInfo] as PeerSocket;
 			ArrayList fileSenderList = uploads[peer] as ArrayList;
+
 			if (fileSenderList == null)
 				fileSenderList = ArrayList.Synchronized(new ArrayList());
 
 			// Initialize & Start File Sender
-			string realPath = Paths.UserSharedDirectory(MyInfo.Name)+path;
+			string realPath = Paths.UserSharedDirectory(MyInfo.Name) + path;
+
 			FileSender fileSender = null;
 			if (File.Exists(realPath) == true) {
 				fileSender = new FileSender(peer, realPath, path);
 			} else {
 				fileSender = new FileSender(peer, path);
 			}
+
+			if (fileSender == null)
+				throw(new UploadManagerException("File Sender Creation Faild"));
+
 			fileSender.EndSend += new EndSendFilePartHandler(OnEndSendFilePart);
 			fileSender.Start();
 
@@ -98,8 +105,10 @@ namespace NyFolder.Protocol {
 			uploads[peer] = fileSenderList;
 
 			// Update Num Uploads
-			Debug.Log("To Upload: {0}", path);
 			numUploads++;
+
+			// Start Upload New File Event
+			if (Added != null) Added(fileSender);
 		}
 
 		public static void Remove (UserInfo userInfo, string path) {
@@ -128,16 +137,31 @@ namespace NyFolder.Protocol {
 				}
 			}
 
+			if (fileSender != null) Remove(fileSender);
+		}
+
+		public static void Remove (FileSender fileSender) {
+			ArrayList fileSenderList = uploads[fileSender.Peer] as ArrayList;
+
 			// Stop File Sender Transfer
 			fileSender.EndSend -= new EndSendFilePartHandler(OnEndSendFilePart);
 			fileSender.Stop();
 
 			// Remove File & Update Upload List
 			fileSenderList.Remove(fileSender);
-			uploads[peer] = fileSenderList;
+			uploads[fileSender.Peer] = fileSenderList;
 
 			// Update Num Uploads
 			numUploads--;
+
+			// Start Upload New File Event
+			if (Finished != null) Added(fileSender);
+		}
+
+		public static void Abort (FileSender fileSender) {
+			SendFileAbort(fileSender.Peer, 
+						  fileSender.FileName, fileSender.FileSize);
+			Remove(fileSender);
 		}
 
 		// ============================================
@@ -148,13 +172,22 @@ namespace NyFolder.Protocol {
 
 			// Remove File
 			Remove(fileSender.Peer, fileSender.FileName);
-
-			if (EndFileUpdate != null) EndFileUpdate(sender, args);
 		}
 
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		private static void SendFileAbort (PeerSocket peer, string fname, long fsize) {
+			// XmlRequest
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "snd-abort";
+			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("name", fname);
+			xmlRequest.Attributes.Add("size", fsize);
+
+			// Send To Peer
+			peer.Send(xmlRequest.GenerateXml());
+		}
 
 		// ============================================
 		// PUBLIC Properties

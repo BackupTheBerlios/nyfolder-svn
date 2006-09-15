@@ -52,6 +52,7 @@ namespace NyFolder.GUI.Dialogs {
 		public About() : base("About " + Info.Name) {
 			// Initialize Dialog Window Options
 			this.SetDefaultSize(300, 275);
+			this.Resizable = false;
 
 			// Initialize VBox
 			this.vbox = new Gtk.VBox(false, 0);

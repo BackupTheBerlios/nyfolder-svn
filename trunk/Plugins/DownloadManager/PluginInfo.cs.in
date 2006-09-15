@@ -1,4 +1,4 @@
-/* [ Utils/Plugin.cs  ] NyFolder Plugin
+/* [ Plugins/Talk/PluginInfo.cs  ] NyFolder Talk Plugin Info
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -20,22 +20,12 @@
 
 using System;
 
-using Niry;
-using Niry.Network;
+namespace NyFolder.Plugins.Talk {
+	public class PluginInfo {
+		public const string Version = "@version@";
+		public const string Name = "@name@";
+		public const string Author = "@author@";
 
-using NyFolder;
-using NyFolder.Protocol;
-
-namespace NyFolder.Utils {
-	public interface INyFolder {
-		event BlankEventHandler QuittingApplication;
-		event BlankEventHandler MainWindowStarted;
-
-		GUI.Window Window { get; }
-		UserInfo MyInfo { get; }
-	}
-
-	public abstract class Plugin {
-		public abstract void Initialize (INyFolder nyFolder);
+		public static string InstallDirectory = AppDomain.CurrentDomain.BaseDirectory;
 	}
 }

@@ -23,6 +23,7 @@ using Gtk;
 using System;
 
 using NyFolder;
+using NyFolder.GUI;
 using NyFolder.Utils;
 using NyFolder.Protocol;
 

@@ -32,6 +32,7 @@ namespace NyFolder.GUI {
 	public static class StockIcons {
 		private static readonly string[] stock_icons = {
 			"Download",
+			"Logout",
 			"Send",
 			"StockMyFolder",
 			"StockNetwork",
@@ -44,6 +45,7 @@ namespace NyFolder.GUI {
 			"Directory",
 			"Download",
 			"Lock",
+			"Logout",
 			"Network",
 			"NetworkInsecure",
 			"Proxy",
@@ -141,6 +143,7 @@ namespace NyFolder.GUI {
 			}
 
 			// Stock Images
+			stock_images.Clear();
 			foreach (string name in stock_images_names) {
 				stock_images.Add(name, new Gdk.Pixbuf(null, name + ".png"));
 			}

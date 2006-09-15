@@ -25,6 +25,7 @@ using System.IO;
 using System.Collections;
 
 using Niry;
+using Niry.Utils;
 using Niry.Network;
 
 using NyFolder;
@@ -41,6 +42,9 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
+		public static event BlankEventHandler Finished = null;
+		public static event BlankEventHandler Received = null;
+		public static event BlankEventHandler Added = null;
 
 		// ============================================
 		// PRIVATE Members
@@ -58,12 +62,15 @@ namespace NyFolder.Protocol {
 		}
 
 		public static void Clear() {
-			foreach (FileReceiver fileReceiver in recvFileList)
-				fileReceiver.Save();
+			foreach (Hashtable peerTable in recvFileList.Values) {
+				foreach (FileReceiver fileReceiver in peerTable.Values)
+					fileReceiver.Save();
+				peerTable.Clear();
+			}
 			recvFileList.Clear();
 			recvFileList = null;
 
-			foreach (Hashtable peerTable in acceptList)
+			foreach (Hashtable peerTable in acceptList.Values)
 				peerTable.Clear();
 			acceptList.Clear();
 			acceptList = null;
@@ -95,6 +102,9 @@ namespace NyFolder.Protocol {
 			}
 
 			numDownloads++;
+
+			// Start New File Added
+			if (Added != null) Added(fileRecv);
 		}
 
 		public static void GetFilePart (PeerSocket peer, XmlRequest xml) {
@@ -102,6 +112,9 @@ namespace NyFolder.Protocol {
 
 			if (fileRecv != null) {
 				fileRecv.Append(xml);
+
+				// Send Received Part Event
+				if (Received != null) Received(fileRecv);
 			} else {
 				string fileName = (string) xml.Attributes["name"];
 				UserInfo userInfo = peer.Info as UserInfo;
@@ -117,9 +130,7 @@ namespace NyFolder.Protocol {
 			FileReceiver fileRecv = LookupFileReceiver(peer, xml);
 
 			if (fileRecv != null) {
-				fileRecv.Save();
-				RemoveFileReceiver(peer, fileRecv.FileName);
-				numDownloads--;
+				Remove(fileRecv);
 			} else {
 				string fileName = (string) xml.Attributes["name"];
 				UserInfo userInfo = peer.Info as UserInfo;
@@ -129,6 +140,28 @@ namespace NyFolder.Protocol {
 								 "\n<b>FileName:</b> " + fileName;
 				throw(new DownloadManagerException(message));
 			}			
+		}
+
+		public static void Remove (PeerSocket peer, XmlRequest xml) {
+			FileReceiver fileRecv = LookupFileReceiver(peer, xml);
+			if (fileRecv != null) Remove(fileRecv);
+		}
+
+		public static void Remove (FileReceiver fileReceiver) {
+			fileReceiver.Save();
+			RemoveFileReceiver(fileReceiver.Peer, fileReceiver.FileName);
+			numDownloads--;
+
+			// Start Finished File Event
+			if (Finished != null) Finished(fileReceiver);
+		}
+
+		public static void Abort (FileReceiver fileReceiver) {
+			SendFileAbort(fileReceiver.Peer, 
+						  fileReceiver.FileName, fileReceiver.FileSize);
+
+			// Remove File
+			Remove(fileReceiver);
 		}
 
 		// ============================================
@@ -161,7 +194,16 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		private static void SendFileAbort (PeerSocket peer, string fname, long fsize) {
+			// XmlRequest
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "recv-abort";
+			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("name", fname);
 
+			// Send To Peer
+			peer.Send(xmlRequest.GenerateXml());
+		}
 
 		// ============================================
 		// PUBLIC Properties

@@ -26,6 +26,7 @@ using System.Text.RegularExpressions;
 
 using Niry;
 using Niry.Utils;
+using Niry.Network;
 using Niry.GUI.Gtk2;
 
 using NyFolder;
@@ -102,8 +103,13 @@ namespace NyFolder.GUI {
 		// PUBLIC Methods
 		// ============================================
 		public void Refresh() {
-			Console.WriteLine("ToDo: Refresh Network Viewer");
-			#warning ToDo: Refresh Network Viewer
+			store.Clear();
+
+			if (P2PManager.KnownPeers == null) return;
+			if (P2PManager.KnownPeers.Count <= 0) return;
+
+			foreach (UserInfo userInfo in P2PManager.KnownPeers.Keys)
+				store.Add(userInfo);
 		}
 
 		public void Add (UserInfo userInfo) {
@@ -111,7 +117,7 @@ namespace NyFolder.GUI {
 		}
 
 		public void Remove (UserInfo userInfo) {
-			store.Remove(userInfo.Name);
+			store.Remove(userInfo);
 		}
 
 		public void RemoveAll() {
@@ -147,10 +153,9 @@ namespace NyFolder.GUI {
 			string[] filesUri = Regex.Split(draggedUris, "\r\n");
 
 			foreach (string uri in filesUri) {
-				if (uri == null || uri.Equals("") || uri.Length == 0)
+				string filePath = uri.Trim();
+				if (filePath == null || filePath.Equals("") || filePath.Length == 0)
 					continue;
-
-				string filePath = uri;
 
 				// Start Event Send File:
 				if (filePath.StartsWith("file://") == true) {
@@ -174,12 +179,14 @@ namespace NyFolder.GUI {
 
 		protected void OnItemActivated (object sender, ItemActivatedArgs args) {
 			UserInfo userInfo = store.GetUserInfo(args.Path);
+			if (userInfo == null) return;
 			if (ItemActivated != null) ItemActivated(this, userInfo);
 		}
 
 		protected void OnNetRemove (object sender, EventArgs args) {
 			foreach (TreePath treePath in iconView.SelectedItems) {
 				UserInfo userInfo = store.GetUserInfo(treePath);
+				if (userInfo == null) continue;
 				if (ItemRemoved != null) ItemRemoved(this, userInfo);
 			}
 		}

@@ -23,6 +23,9 @@ using Gtk;
 using System;
 using System.IO;
 
+using Niry;
+using Niry.Utils;
+
 using NyFolder;
 using NyFolder.Utils;
 using NyFolder.Protocol;
@@ -87,10 +90,26 @@ namespace NyFolder.GUI {
 			// Update Labels Timeout
 			timeoutUpdateRet = true;
 			timeoutUpdate = GLib.Timeout.Add(10000, UpdateInfoLabels);
+
+			// Update Download Label
+			DownloadManager.Added += new BlankEventHandler(UpdateDownloadNum);
+			DownloadManager.Finished += new BlankEventHandler(UpdateDownloadNum);
+
+			// Update Upload Label
+			UploadManager.Added += new BlankEventHandler(UpdateUploadNum);
+			UploadManager.Finished += new BlankEventHandler(UpdateUploadNum);
 		}
 
 		~UserPanel() {
 			timeoutUpdateRet = false;
+
+			// Update Download Label
+			DownloadManager.Added -= new BlankEventHandler(UpdateDownloadNum);
+			DownloadManager.Finished -= new BlankEventHandler(UpdateDownloadNum);
+
+			// Update Upload Label
+			UploadManager.Added -= new BlankEventHandler(UpdateUploadNum);
+			UploadManager.Finished -= new BlankEventHandler(UpdateUploadNum);
 		}
 
 		// ============================================
@@ -112,26 +131,28 @@ namespace NyFolder.GUI {
 			} catch {}
 		}
 
-		public void UpdateDownloadNum() {
-			try {
-				int numDownload = DownloadManager.NDownloads;
-				this.labelDownload.Text = numDownload.ToString() + " Download";
-			} catch {}
+		public void UpdateDownloadNum (object sender) {
+			Application.Invoke(delegate {
+				try {
+					int numDownload = DownloadManager.NDownloads;
+					this.labelDownload.Text = numDownload.ToString() + " Download";
+				} catch {}
+			});
 		}
 
-		public void UpdateUploadNum() {
-			try {
-				int numUpload = UploadManager.NUploads;
-				this.labelUpload.Text = numUpload.ToString() + " Upload";
-			} catch {}
+		public void UpdateUploadNum (object sender) {
+			Application.Invoke(delegate {
+				try {
+					int numUpload = UploadManager.NUploads;
+					this.labelUpload.Text = numUpload.ToString() + " Upload";
+				} catch {}
+			});
 		}
 
 		// ============================================
 		// PROTECTED (Methods) Event Handlers
 		// ============================================
 		protected bool UpdateInfoLabels() {
-			if (timeoutUpdateRet) Application.Invoke(delegate { UpdateDownloadNum(); });
-			if (timeoutUpdateRet) Application.Invoke(delegate { UpdateUploadNum(); });
 			if (timeoutUpdateRet) Application.Invoke(delegate { UpdateSharedFilesNum(); });
 			return(this.timeoutUpdateRet);
 		}

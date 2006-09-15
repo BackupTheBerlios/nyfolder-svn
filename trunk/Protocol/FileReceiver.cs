@@ -55,6 +55,10 @@ namespace NyFolder.Protocol {
 			binaryWriter = new BinaryWriter(File.Create(name));
 		}
 
+		~FileReceiver() {
+			Save();
+		}
+
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
@@ -97,6 +101,10 @@ namespace NyFolder.Protocol {
 
 		public long FileSize {
 			get { return(this.fileSize); }
+		}
+
+		public long FileSavedSize {
+			get { return(this.fileSaved); }
 		}
 
 		public int ReceivedPercent {
