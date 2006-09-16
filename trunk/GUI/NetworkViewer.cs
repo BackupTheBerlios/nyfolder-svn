@@ -22,7 +22,6 @@ using Gtk;
 
 using System;
 using System.Text;
-using System.Text.RegularExpressions;
 
 using Niry;
 using Niry.Utils;
@@ -55,19 +54,6 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private static TargetEntry[] dndTargetTable = new TargetEntry[] {
-			new TargetEntry("TEXT", 0, 0),
-			new TargetEntry("STRING", 0, 1),
-			new TargetEntry("text/plain", 0, 2),
-			new TargetEntry("text/uri-list", 0, 3),
-			new TargetEntry("_NETSCAPE_URL", 0, 4),
-			new TargetEntry("application/x-color", 0, 5),
-			new TargetEntry("application/x-rootwindow-drop", 0, 6),
-			new TargetEntry("property/bgimage", 0, 7),
-			new TargetEntry("property/keyword", 0, 8),
-			new TargetEntry("x-special/gnome-icon-list", 0, 9),
-			new TargetEntry("x-special/gnome-reset-background", 0, 10)
-		};
 
 		// ============================================
 		// PUBLIC Constructors
@@ -92,7 +78,7 @@ namespace NyFolder.GUI {
 			iconView.ButtonPressEvent += new ButtonPressEventHandler(OnItemClicked);
 
 			// Initialize Icon View Drag & Drop
-			iconView.EnableModelDragDest(dndTargetTable, Gdk.DragAction.Copy);
+			iconView.EnableModelDragDest(Dnd.TargetTable, Gdk.DragAction.Copy);
 			iconView.DragDataReceived += new DragDataReceivedHandler(OnDragDataReceived);
 
 			// Add IconView to ScrolledWindow
@@ -145,29 +131,12 @@ namespace NyFolder.GUI {
 				return;
 			}
 
-			// Select Item (Change Icon To Activate)
+			// Select Item (Change Icon To Activate it)
 			UserInfo userInfo = store.GetUserInfo(path);
 
-			// Get Drop Uri
-			string draggedUris = Encoding.UTF8.GetString(args.SelectionData.Data);
-			string[] filesUri = Regex.Split(draggedUris, "\r\n");
-
-			foreach (string uri in filesUri) {
-				string filePath = uri.Trim();
-				if (filePath == null || filePath.Equals("") || filePath.Length == 0)
-					continue;
-
-				// Start Event Send File:
-				if (filePath.StartsWith("file://") == true) {
-					if (Environment.OSVersion.Platform != PlatformID.Unix) {
-						// Windows: file:///D:/Prova
-						filePath = filePath.Substring(8);
-					} else {
-						// Unix: file:///home/
-						filePath = filePath.Substring(7);
-					}
-				}
-
+			// Get Drop Paths
+			object[] filesPath = Dnd.GetDragReceivedPaths(args);
+			foreach (string filePath in filesPath) {
 				Debug.Log("Send To '{0}' URI: '{1}'", userInfo.Name, filePath);
 				Gtk.Application.Invoke(delegate {
 					if (SendFile != null) SendFile(this, userInfo, filePath);

@@ -61,12 +61,7 @@ namespace NyFolder.GUI {
 				pixbuf = StockIcons.GetPixbuf("NetworkInsecure", 74);
 			}
 
-			// Setup Name
-			string name = userInfo.GetName();
-			string domain = userInfo.GetDomain();
-			if (domain != null) name += "\n" + domain;
-
-			this.AppendValues(userInfo, name, pixbuf);
+			this.AppendValues(userInfo, userInfo.Name, pixbuf);
 		}
 
 		public void Remove (UserInfo userInfo) {

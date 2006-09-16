@@ -21,6 +21,8 @@
 using Gtk;
 using System;
 
+using Niry;
+
 using NyFolder;
 using NyFolder.GUI;
 using NyFolder.Protocol;
@@ -49,7 +51,7 @@ namespace NyFolder.GUI.Glue {
 			// Add Event Handlers
 			this.menuManager.Activated += new EventHandler(OnMenuActivated);
 			this.notebookViewer.SwitchPage += new SwitchPageHandler(OnSwitchPage); 
-			this.notebookViewer.DirChanged += new DirChangedHandler(OnDirChangedHandler);
+			this.notebookViewer.DirChanged += new BoolEventHandler(OnBoolEventHandler);
 			this.userPanel.FolderButton.Clicked += new EventHandler(OnMyFolderCliecked);
 		}
 
@@ -155,7 +157,7 @@ namespace NyFolder.GUI.Glue {
 			});
 		}
 
-		private void OnDirChangedHandler (object sender, bool parent) {
+		private void OnBoolEventHandler (object sender, bool parent) {
 			Gtk.Application.Invoke(delegate {
 				SetSensitiveGoUpMenu(parent);
 			});

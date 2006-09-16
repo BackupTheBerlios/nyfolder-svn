@@ -26,7 +26,8 @@ GUI_DIALOGS =	GUI/Dialogs/About.cs			\
 				GUI/Dialogs/RemovePeer.cs		\
 				GUI/Dialogs/SetPort.cs
 
-GUI = 	GUI/FolderStore.cs			\
+GUI = 	GUI/Dnd.cs					\
+		GUI/FolderStore.cs			\
 		GUI/FolderViewer.cs			\
 		GUI/MenuManager.cs			\
 		GUI/NetworkStore.cs			\

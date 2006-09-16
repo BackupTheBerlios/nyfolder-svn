@@ -69,7 +69,7 @@ namespace NyFolder.GUI.Glue {
 
 			StringBuilder questionMsg = new StringBuilder();
 			questionMsg.AppendFormat("Accept File '<b>{0}</b>' ", name);
-			questionMsg.AppendFormat("(Size <b>{0}</b>)\n", FolderStore.GetSizeString(long.Parse(size)));
+			questionMsg.AppendFormat("(Size <b>{0}</b>)\n", FileUtils.GetSizeString(long.Parse(size)));
 			questionMsg.AppendFormat("From User '<b>{0}</b>' ?", userInfo.Name);
 
 			// Accept Yes/No Dialog
@@ -98,7 +98,7 @@ namespace NyFolder.GUI.Glue {
 			// Folder Viewers
 			notebookViewer.SaveFile += new SendFileHandler(OnSaveFile);
 			notebookViewer.FileSend += new FileSendEventHandler(OnSendFileMenu);
-			notebookViewer.FolderRefresh += new FileEventHandler(OnFolderRefresh); 
+			notebookViewer.FolderRefresh += new StringEventHandler(OnFolderRefresh); 
 
 			// Protocol Commands
 			CmdManager.GetEvent += new ProtocolHandler(OnGetEvent);
@@ -119,7 +119,7 @@ namespace NyFolder.GUI.Glue {
 			// Folder Viewers
 			notebookViewer.SaveFile -= new SendFileHandler(OnSaveFile);
 			notebookViewer.FileSend -= new FileSendEventHandler(OnSendFileMenu);
-			notebookViewer.FolderRefresh -= new FileEventHandler(OnFolderRefresh);
+			notebookViewer.FolderRefresh -= new StringEventHandler(OnFolderRefresh);
 
 			// Protocol Commands
 			CmdManager.GetEvent -= new ProtocolHandler(OnGetEvent);

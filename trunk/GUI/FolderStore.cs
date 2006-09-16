@@ -22,6 +22,9 @@ using Gtk;
 using System;
 using System.IO;
 
+using Niry;
+using Niry.Utils;
+
 namespace NyFolder.GUI {
 	public class FolderStore : Gtk.ListStore {
 		// ============================================
@@ -31,6 +34,12 @@ namespace NyFolder.GUI {
 		public const int COL_NAME = 1;
 		public const int COL_PIXBUF = 2;
 		public const int COL_IS_DIRECTORY = 3;
+
+		// ============================================
+		// PUBLIC Events
+		// ============================================
+		public event ObjectEventHandler DirectoryAdded = null;
+		public event ObjectEventHandler FileAdded = null;
 
 		// ============================================
 		// PROTECTED Members
@@ -70,13 +79,23 @@ namespace NyFolder.GUI {
 			FileInfo fileInfo = new FileInfo(path);
 			string ext = GetIconTypeName(fileInfo);
 			Gdk.Pixbuf pixbuf = StockIcons.GetFileIconPixbuf(ext);
-			this.AppendValues(path, fileInfo.Name, pixbuf, false);
+			
+			Gtk.TreeIter iter;
+			iter = this.AppendValues(path, fileInfo.Name, pixbuf, false);
+
+			// File Added Event
+			if (FileAdded != null) FileAdded(this, iter);
 		}
 
 		public void AddDirectory (string path) {
 			DirectoryInfo dirInfo = new DirectoryInfo(path);
 			Gdk.Pixbuf pixbuf = StockIcons.GetPixbuf("Directory");
-			this.AppendValues(path, dirInfo.Name, pixbuf, true);
+
+			Gtk.TreeIter iter;
+			iter = this.AppendValues(path, dirInfo.Name, pixbuf, true);
+
+			// Directory Added Event
+			if (DirectoryAdded != null) DirectoryAdded(this, iter);
 		}
 
 		public void Fill (string path) {
@@ -146,21 +165,10 @@ namespace NyFolder.GUI {
 			return((bool) GetValue(iter, COL_IS_DIRECTORY));
 		}
 
-		public static string GetSizeString (long byteSize) {
-			if (byteSize > 1073741824)
-				return((byteSize / 1073741824).ToString() + "Gb");
-			if (byteSize > 1048576)
-				return((byteSize / 1048576).ToString() + "Mb");
-			if (byteSize > 1024)
-				return((byteSize / 1024).ToString() + "Kb");
-			
-			return(byteSize.ToString() + "byte");
-		}
-
 		// ============================================
 		// PROTECTED Methods
 		// ============================================
-		private string GetIconTypeName (FileInfo fileInfo) {
+		protected string GetIconTypeName (FileInfo fileInfo) {
 			string ext = fileInfo.Extension;
 			if (ext != null && ext != "") {
 				ext = ext.Remove(0, 1);

@@ -23,6 +23,8 @@ using Gtk;
 using System;
 using System.Collections;
 
+using Niry;
+
 using NyFolder;
 using NyFolder.Protocol;
 
@@ -31,9 +33,12 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
-		public event FileEventHandler FolderRefresh = null;
+		public event ObjectEventHandler DirectoryAdded = null;
+		public event ObjectEventHandler FileAdded = null;
+
+		public event StringEventHandler FolderRefresh = null;
 		public event FileSendEventHandler FileSend = null;
-		public event DirChangedHandler DirChanged = null;
+		public event BoolEventHandler DirChanged = null;
 		public event SendFileHandler SaveFile = null;
 
 		// ============================================
@@ -100,10 +105,12 @@ namespace NyFolder.GUI {
 
 				// Initialize Folder Viewer
 				folderViewer = new FolderViewer(userInfo);
-				folderViewer.SaveFile += new FileEventHandler(OnFileSave);
+				folderViewer.SaveFile += new StringEventHandler(OnFileSave);
 				folderViewer.FileSend += new FileSendEventHandler(OnFileSend);
-				folderViewer.DirChanged += new DirChangedHandler(OnDirChangedHandler);
-				folderViewer.FolderRefresh += new FileEventHandler(OnFolderRefresh);
+				folderViewer.DirChanged += new BoolEventHandler(OnBoolEventHandler);
+				folderViewer.FolderRefresh += new StringEventHandler(OnFolderRefresh);
+				folderViewer.DirectoryAdded += new ObjectEventHandler(OnStoreDirAdded);
+				folderViewer.FileAdded += new ObjectEventHandler(OnStoreFileAdded);
 
 				// Refresh Folder Viewer
 				folderViewer.Refresh();
@@ -128,10 +135,12 @@ namespace NyFolder.GUI {
 			FolderViewer folderViewer = LookupPage(userInfo);
 			if (folderViewer != null) {
 				// Remove Folder Viewer Event
-				folderViewer.SaveFile -= new FileEventHandler(OnFileSave);
+				folderViewer.SaveFile -= new StringEventHandler(OnFileSave);
 				folderViewer.FileSend -= new FileSendEventHandler(OnFileSend);
-				folderViewer.DirChanged -= new DirChangedHandler(OnDirChangedHandler);
-				folderViewer.FolderRefresh -= new FileEventHandler(OnFolderRefresh);
+				folderViewer.DirChanged -= new BoolEventHandler(OnBoolEventHandler);
+				folderViewer.FolderRefresh -= new StringEventHandler(OnFolderRefresh);
+				folderViewer.DirectoryAdded -= new ObjectEventHandler(OnStoreDirAdded);
+				folderViewer.FileAdded -= new ObjectEventHandler(OnStoreFileAdded);
 
 				// Remove TabLabel -> UserInfo
 				TabLabel tabLabel = (TabLabel) GetTabLabel(folderViewer);
@@ -241,7 +250,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
-		private void OnDirChangedHandler (object sender, bool parent) {
+		private void OnBoolEventHandler (object sender, bool parent) {
 			if (DirChanged != null) DirChanged(sender, parent);
 		}
 
@@ -256,6 +265,14 @@ namespace NyFolder.GUI {
 
 		private void OnFileSend (object sender, string path, bool isDir) {
 			if (FileSend != null) FileSend(sender, path, isDir);
+		}
+
+		private void OnStoreFileAdded (object sender, object arg) {
+			if (FileAdded != null) FileAdded(sender, arg);
+		}
+
+		private void OnStoreDirAdded (object sender, object arg) {
+			if (DirectoryAdded != null) DirectoryAdded(sender, arg);
 		}
 
 		// ============================================

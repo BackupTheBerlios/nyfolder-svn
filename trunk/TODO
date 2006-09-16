@@ -16,10 +16,15 @@
 
  - URGENT ToDo List
 ==============================
- - Preview Image File (Plugin ?)
  - Fix DND Path When Send
- - Fix UploadManager SendSize SendPercentSize
+
 
  - ToDo List
 ==============================
  * Add Event To "Peer Change Avatar"
+
+ - Fix List
+==============================
+ * File Sender/Receiver Class
+ * Upload/Download Manager Class
+

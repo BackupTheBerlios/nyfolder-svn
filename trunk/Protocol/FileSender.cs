@@ -69,12 +69,15 @@ namespace NyFolder.Protocol {
 		// PUBLIC Events
 		// ============================================
 		public EndSendFilePartHandler EndSend = null;
+		public BlankEventHandler SendedPart = null;
 		
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private byte[] fileContent;
+		private int sendedPercent = 0;
+		private long sendedSize = 0;
 		private string realFileName;
+		private byte[] fileContent;
 		private bool ended = false;
 		private long fileSize = 0;
 		private PeerSocket peer;
@@ -148,6 +151,11 @@ namespace NyFolder.Protocol {
 					
 					// Send File Part Event
 					SendFilePart(buffer, npart++);
+
+					// Sended File Part
+					this.sendedSize = fileSize - fileContent.Length;
+					this.sendedPercent = (int) (((double) sendedSize / (double) fileSize) * 100);
+					if (SendedPart != null) SendedPart(this);
 
 					// Remove Sended Part From File
 					if (fileContent.Length > ChunkSize) {
@@ -247,17 +255,11 @@ namespace NyFolder.Protocol {
 		}
 
 		public long FileSendedSize {
-			get { return(fileSize - ((fileContent != null) ? fileContent.Length : 0)); }
+			get { return(this.sendedSize); }
 		}
 
 		public int SendedPercent {
-			get {
-				try {
-					return((int) (((double) FileSendedSize / (double) fileSize) * 100));
-				} catch {
-					return(0);
-				}
-			}
+			get { return(this.sendedPercent); }
 		}
 	}
 }

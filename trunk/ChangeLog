@@ -5,6 +5,10 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/     
 
+ * 15 Sep 2006 - Matteo Bertozzi
+	- Added GUI.Dnd Static Class and Fixed Network Viewer to Use it
+	- Added Send File with DND into User Folder
+
  * 14 Sep 2006 - Matteo Bertozzi
 	- Added Event QuittingApplication to INyFolder Interface (and Main.cs)
 	- Added Quit() Method To Main.cs and Fixed Main 'Finally'

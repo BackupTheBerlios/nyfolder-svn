@@ -41,6 +41,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
+		public static event BlankEventHandler SendedPart = null;
 		public static event BlankEventHandler Finished = null;
 		public static event BlankEventHandler Added = null;
 
@@ -63,6 +64,7 @@ namespace NyFolder.Protocol {
 				foreach (FileSender fileSender in (ArrayList) uploads[peer]) {
 					fileSender.Stop();
 					fileSender.EndSend -= new EndSendFilePartHandler(OnEndSendFilePart);
+					fileSender.SendedPart -= new BlankEventHandler(OnSendedFilePart);
 				}
 				ArrayList fileSenderList = uploads[peer] as ArrayList;
 				fileSenderList.Clear();
@@ -98,6 +100,7 @@ namespace NyFolder.Protocol {
 				throw(new UploadManagerException("File Sender Creation Faild"));
 
 			fileSender.EndSend += new EndSendFilePartHandler(OnEndSendFilePart);
+			fileSender.SendedPart += new BlankEventHandler(OnSendedFilePart);
 			fileSender.Start();
 
 			// Update Upload List
@@ -125,7 +128,6 @@ namespace NyFolder.Protocol {
 
 			ArrayList fileSenderList = uploads[peer] as ArrayList;
 			if (fileSenderList == null) {
-				Console.WriteLine("File Sender List is NULL");
 				throw(new UploadManagerException(userInfo.Name + " File '" + path + "' Not Found"));
 			}
 
@@ -155,7 +157,7 @@ namespace NyFolder.Protocol {
 			numUploads--;
 
 			// Start Upload New File Event
-			if (Finished != null) Added(fileSender);
+			if (Finished != null) Finished(fileSender);
 		}
 
 		public static void Abort (FileSender fileSender) {
@@ -165,13 +167,17 @@ namespace NyFolder.Protocol {
 		}
 
 		// ============================================
-		// PROTECTED (Methods) Event Handlers
+		// PRIVATE (Methods) Event Handlers
 		// ============================================
 		private static void OnEndSendFilePart (object sender, EndSendFilePartArgs args) {
 			FileSender fileSender = sender as FileSender;
 
 			// Remove File
 			Remove(fileSender.Peer, fileSender.FileName);
+		}
+
+		private static void OnSendedFilePart (object sender) {
+			if (SendedPart != null) SendedPart(sender);
 		}
 
 		// ============================================

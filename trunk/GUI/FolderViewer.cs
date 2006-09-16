@@ -35,19 +35,20 @@ using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.GUI {
-	public delegate void DirChangedHandler (object sender, bool parent);
-	public delegate void FileEventHandler (object sender, string path);
 	public delegate void FileSendEventHandler (object sender, string path, bool isDir);
 
 	public class FolderViewer : Gtk.ScrolledWindow {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
-		public event FileEventHandler FolderRefresh = null;
+		public event ObjectEventHandler DirectoryAdded = null;
+		public event ObjectEventHandler FileAdded = null;
+
+		public event StringEventHandler FolderRefresh = null;
 		public event FileSendEventHandler FileSend = null;
-		public event DirChangedHandler DirChanged = null;
+		public event BoolEventHandler DirChanged = null;
 		public event RightMenuHandler RightMenu = null;
-		public event FileEventHandler SaveFile = null;
+		public event StringEventHandler SaveFile = null;
 
 		// ============================================
 		// PROTECTED Members
@@ -62,20 +63,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-/*
-		private static TargetEntry[] dndTargetTable = new TargetEntry[] {
-			new TargetEntry("STRING", 0, 0),
-			new TargetEntry("text/plain", 0, 1),
-			new TargetEntry("text/uri-list", 0, 2),
-			new TargetEntry("_NETSCAPE_URL", 0, 3),
-			new TargetEntry("application/x-color", 0, 4),
-			new TargetEntry("application/x-rootwindow-drop", 0, 5),
-			new TargetEntry("property/bgimage", 0, 6),
-			new TargetEntry("property/keyword", 0, 7),
-			new TargetEntry("x-special/gnome-icon-list", 0, 8),
-			new TargetEntry("x-special/gnome-reset-background", 0, 9)
-		};
-*/
+
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
@@ -96,6 +84,8 @@ namespace NyFolder.GUI {
 
 			// Initialize Folder Store
 			this.store = new FolderStore();
+			this.store.DirectoryAdded += new ObjectEventHandler(OnStoreDirAdded);
+			this.store.FileAdded += new ObjectEventHandler(OnStoreFileAdded);
 
 			// Initialize Icon View
 			iconView = new IconView(store);
@@ -107,17 +97,28 @@ namespace NyFolder.GUI {
 			iconView.ItemActivated += new ItemActivatedHandler(OnItemActivated);
 			iconView.ButtonPressEvent += new ButtonPressEventHandler(OnItemClicked);
 
-/*
 			// Initialize Icon View Drag & Drop
-			iconView.EnableModelDragDest(dndTargetTable, Gdk.DragAction.Copy);
+			iconView.EnableModelDragDest(Dnd.TargetTable, Gdk.DragAction.Copy);
 			iconView.DragDataReceived += new DragDataReceivedHandler(OnDragDataReceived);
-*/
 
 			// Add IconView to ScrolledWindow
 			Add(iconView);
 
 			// Refresh Icon View
 			Refresh();
+		}
+
+		~FolderViewer() {
+			// Folder Store
+			this.store.DirectoryAdded -= new ObjectEventHandler(OnStoreDirAdded);
+			this.store.FileAdded -= new ObjectEventHandler(OnStoreFileAdded);
+
+			// Icon View Events
+			iconView.ItemActivated -= new ItemActivatedHandler(OnItemActivated);
+			iconView.ButtonPressEvent -= new ButtonPressEventHandler(OnItemClicked);
+
+			// Icon View Drag & Drop
+			iconView.DragDataReceived -= new DragDataReceivedHandler(OnDragDataReceived);
 		}
 
 		// ============================================
@@ -191,30 +192,26 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PROTECTED (Methods) Event Handlers
 		// ============================================
-/*
 		protected void OnDragDataReceived (object sender, DragDataReceivedArgs args) {
-			// Get Drop Uri
-			string[] filesUri = Regex.Split(args.SelectionData.Text, "\r\n");
-			foreach (string uri in filesUri) {
-				if (uri == null || uri.Equals("") || uri.Length == 0)
-					continue;
-				
-				string filePath = uri;
-				if (filePath.StartsWith("file://") == true)
-					filePath = filePath.Substring(7);
+			if (this.userInfo == MyInfo.GetInstance())
+				return;
 
-				if (this.userInfo == MyInfo.GetInstance()) {
-					Console.WriteLine("Save File: '{0}'", uri);
-				} else {
-					// Start Event Send File:
-					//if (SendFile != null) SendFile(path, uri);
-					Console.WriteLine("Send File: '{0}'", uri);
-				}
+			// Get Drop Paths
+			object[] filesPath = Dnd.GetDragReceivedPaths(args);
+			foreach (string filePath in filesPath) {
+				Debug.Log("Send To '{0}' URI: '{1}'", userInfo.Name, filePath);
+
+				PeerSocket peer = (PeerSocket) P2PManager.KnownPeers[userInfo];
+				bool fisDir = FileUtils.IsDirectory(filePath);
+
+				Gtk.Application.Invoke(delegate {
+					if (FileSend != null) FileSend(peer, filePath, fisDir);
+				});
 			}
 
 			Drag.Finish(args.Context, true, false, args.Time);
 		}
-*/
+
 		protected void OnItemActivated (object sender, ItemActivatedArgs args) {
 			// Get File Path & IsDirectory Flag				
 			bool isDir = store.GetIsDirectory(args.Path);
@@ -258,6 +255,14 @@ namespace NyFolder.GUI {
 			}
 		}
 
+		protected void OnStoreFileAdded (object sender, object arg) {
+			if (FileAdded != null) FileAdded(this, arg);
+		}
+
+		protected void OnStoreDirAdded (object sender, object arg) {
+			if (DirectoryAdded != null) DirectoryAdded(this, arg);
+		}
+		
 		// ============================================
 		// PROTECTED (Methods) Menu Event Handlers
 		// ============================================
