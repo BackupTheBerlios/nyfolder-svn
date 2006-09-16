@@ -49,7 +49,8 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private string rmPath;
+		private Gtk.TreeIter fIter;
+		private string fPath;
 
 		// ============================================
 		// PUBLIC Constructors
@@ -60,6 +61,7 @@ namespace NyFolder.GUI {
 									typeof(bool))
 		{
 			showHiddenFile = true;
+			fIter = Gtk.TreeIter.Zero;
 			SetSortColumnId(COL_NAME, SortType.Ascending);
 			DefaultSortFunc = new TreeIterCompareFunc(StoreSortFunc);
 		}
@@ -120,9 +122,16 @@ namespace NyFolder.GUI {
 		}
 
 		public void Remove (string path) {
-			this.rmPath = path;
-			this.Foreach(RemoveForeach);
-			this.rmPath = null;
+			Gtk.TreeIter iter = GetIter(path);
+			this.Remove(ref iter);
+		}
+
+		public Gtk.TreeIter GetIter (string path) {
+			this.fPath = path;
+			this.fIter = Gtk.TreeIter.Zero;
+			this.Foreach(GetIterForeach);
+			this.fPath = null;
+			return(this.fIter);
 		}
 
 		public string GetFilePath (TreePath path) {
@@ -165,6 +174,10 @@ namespace NyFolder.GUI {
 			return((bool) GetValue(iter, COL_IS_DIRECTORY));
 		}
 
+		public void SetPixbuf (TreeIter iter, Gdk.Pixbuf pixbuf) {
+			SetValue(iter, COL_PIXBUF, pixbuf);
+		}
+
 		// ============================================
 		// PROTECTED Methods
 		// ============================================
@@ -200,10 +213,10 @@ namespace NyFolder.GUI {
 			return(String.Compare(a_name, b_name));
 		}
 
-		private bool RemoveForeach (TreeModel model, TreePath path, TreeIter iter) {
-			lock (this.rmPath) {
-				if (GetFilePath(iter) == this.rmPath) {
-					this.Remove(ref iter);
+		private bool GetIterForeach (TreeModel model, TreePath path, TreeIter iter) {
+			lock (this.fPath) {
+				if (GetFilePath(iter) == this.fPath) {
+					this.fIter = iter;
 					return(true);
 				}
 				return(false);

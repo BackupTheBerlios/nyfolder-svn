@@ -5,6 +5,10 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/     
 
+ * 16 Sep 2006 - Matteo Bertozzi
+	- Fixed GUI.Glue.FolderManager.OnSwitchPage()
+	- Fixed Remove Folder Store Method
+
  * 15 Sep 2006 - Matteo Bertozzi
 	- Added GUI.Dnd Static Class and Fixed Network Viewer to Use it
 	- Added Send File with DND into User Folder

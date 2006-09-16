@@ -134,13 +134,13 @@ namespace NyFolder.GUI.Glue {
 		// ============================================
 		private void OnSwitchPage (object o, SwitchPageArgs args) {
 			Gtk.Application.Invoke(delegate {
-				if (args.Page.GetType() != typeof(FolderViewer)) {
+				Gtk.Widget page = notebookViewer.GetNthPage((int) args.PageNum);
+				if (page.GetType() != typeof(FolderViewer)) {
 					// NetworkViewer or Custom
 					SetSensitiveGoUpMenu(false);
 					SetSensitiveGoHomeMenu(false);
 				} else {
-					// Folder Viewer
-					Gtk.Widget page = notebookViewer.GetNthPage((int) args.PageNum);
+					// Folder Viewer					
 					FolderViewer folderViewer = page as FolderViewer;
 					folderViewer.Refresh();
 
