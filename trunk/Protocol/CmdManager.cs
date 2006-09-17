@@ -231,6 +231,9 @@ namespace NyFolder.Protocol {
 		public static void AskSendFile (PeerSocket peer, string path) {
 			FileInfo fileInfo = new FileInfo(path);
 
+			Debug.Log("AskSendFile: '{0}'", path);
+
+			Debug.Log("[ ST ] AskSendFile");
 			XmlRequest xmlRequest = new XmlRequest();
 			xmlRequest.FirstTag = "ask";
 			xmlRequest.Attributes.Add("what", "file");
@@ -239,6 +242,7 @@ namespace NyFolder.Protocol {
 			xmlRequest.Attributes.Add("size", fileInfo.Length);
 
 			peer.Send(xmlRequest.GenerateXml());
+			Debug.Log("[ ED ] AskSendFile");
 		}
 
 		public static void AcceptFile (PeerSocket peer, XmlRequest xmlAsk) {

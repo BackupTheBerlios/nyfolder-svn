@@ -167,7 +167,11 @@ namespace NyFolder {
 				P2PManager p2pManager = null;
 				NyFolderApp nyFolder = null;
 
+				Debug debug = null;
 				try {
+					// Initialize Debug Log File
+					debug = Debug.GetInstance("log.txt");
+
 					// Initialize P2PManager
 					p2pManager = P2PManager.GetInstance();
 
@@ -195,6 +199,7 @@ namespace NyFolder {
 				} finally {
 					if (nyFolder != null) nyFolder.Quit();
 					if (p2pManager != null) p2pManager.Kill();
+					if (debug != null) debug.Dispose();
 				}
 			} while (NyFolderApp.RestartApplication == true);
 			return(0);

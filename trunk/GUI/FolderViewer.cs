@@ -199,14 +199,11 @@ namespace NyFolder.GUI {
 			// Get Drop Paths
 			object[] filesPath = Dnd.GetDragReceivedPaths(args);
 			foreach (string filePath in filesPath) {
-				Debug.Log("Send To '{0}' URI: '{1}'", userInfo.Name, filePath);
-
 				PeerSocket peer = (PeerSocket) P2PManager.KnownPeers[userInfo];
 				bool fisDir = FileUtils.IsDirectory(filePath);
 
-				Gtk.Application.Invoke(delegate {
-					if (FileSend != null) FileSend(peer, filePath, fisDir);
-				});
+				Debug.Log("Send To '{0}' URI: '{1}'", userInfo.Name, filePath);
+				if (FileSend != null) FileSend(peer, filePath, fisDir);
 			}
 
 			Drag.Finish(args.Context, true, false, args.Time);

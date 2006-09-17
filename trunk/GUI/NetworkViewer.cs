@@ -138,9 +138,7 @@ namespace NyFolder.GUI {
 			object[] filesPath = Dnd.GetDragReceivedPaths(args);
 			foreach (string filePath in filesPath) {
 				Debug.Log("Send To '{0}' URI: '{1}'", userInfo.Name, filePath);
-				Gtk.Application.Invoke(delegate {
-					if (SendFile != null) SendFile(this, userInfo, filePath);
-				});
+				if (SendFile != null) SendFile(this, userInfo, filePath);
 			}
 
 			Drag.Finish(args.Context, true, false, args.Time);

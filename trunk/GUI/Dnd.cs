@@ -20,6 +20,9 @@
 
 using Gtk;
 
+using Niry;
+using Niry.Utils;
+
 using System;
 using System.IO;
 using System.Text;
@@ -69,7 +72,7 @@ namespace NyFolder.GUI {
 				string path = uri.Trim();
 
 				// Continue, if Null Path is Found
-				if (path == null || path == "" || path.Length <= 0 || path == String.Empty)
+				if (path == null || path == "" || path.Length <= 0 || path == String.Empty || path[0] == 0)
 					continue;
 
 				// Parse Path...
@@ -77,12 +80,14 @@ namespace NyFolder.GUI {
 					if (Environment.OSVersion.Platform != PlatformID.Unix) {
 						// Windows: file:///D:/Prova
 						path = path.Substring(8);
-						path = path.Replace('/', Path.DirectorySeparatorChar);
 					} else {
 						// Unix: file:///home/
 						path = path.Substring(7);
 					}
 				}
+
+				// Replace % Tags:
+				path = UrlUtils.UrlDecode(path);
 
 				// Add Path To List
 				pathList.Add(path);

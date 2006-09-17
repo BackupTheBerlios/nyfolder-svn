@@ -138,12 +138,8 @@ namespace NyFolder.GUI.Glue {
 		private void OnSendFile (object sender, UserInfo userInfo, string path) {
 			Gtk.Application.Invoke(delegate {
 				PeerSocket peer = P2PManager.KnownPeers[userInfo] as PeerSocket;
-
-				try {
-					CmdManager.AskSendFile(peer, path);
-				} catch (Exception e) {
-					Glue.Dialogs.MessageError("Ask Send File Error", e.Message);
-				}
+				Debug.Log("OnSendFile: '{0}'", path);
+				OnAskSendFile(peer, path);
 			});
 		}
 
@@ -154,12 +150,11 @@ namespace NyFolder.GUI.Glue {
 				return;
 			}
 
-			PeerSocket peer = sender as PeerSocket;
-			try {
-				CmdManager.AskSendFile(peer, path);
-			} catch (Exception e) {
-				Glue.Dialogs.MessageError("Ask Send File Error", e.Message);
-			}
+			Gtk.Application.Invoke(delegate {
+				PeerSocket peer = sender as PeerSocket;
+				Debug.Log("OnSendFileMenu: '{0}'", path);
+				OnAskSendFile(peer, path);
+			});
 		}
 
 		private void OnSaveFile (object sender, UserInfo userInfo, string path) {
@@ -313,6 +308,20 @@ namespace NyFolder.GUI.Glue {
 				Glue.Dialogs.MessageError("Accept File", "Peer Ip: " + 
 										  peer.GetRemoteIP().ToString() + "\n" +
 										  e.Message);
+			}
+		}
+
+		private void OnAskSendFile (PeerSocket peer, string path) {
+			try {
+				Debug.Log("[ ST ] Ask Send: '{0}'", path);
+				CmdManager.AskSendFile(peer, path);
+				Debug.Log("[ ED ] Ask Send: '{0}'", path);
+			} catch (ArgumentException e) {
+				Debug.Log("Argument Exception: Sending '{0}'", path);
+				Debug.Log("Path Length: {0}", path.Length);
+				Debug.Log(e.StackTrace);
+			} catch (Exception e) {
+				Glue.Dialogs.MessageError("Ask Send File Error", e.Message);
 			}
 		}
 	}
