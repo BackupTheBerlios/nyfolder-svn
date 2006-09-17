@@ -101,9 +101,11 @@ namespace NyFolder.GUI.Glue {
 		}
 
 		private void RemoveUser (UserInfo userInfo) {
-			notebookViewer.Remove(userInfo);
-			notebookViewer.NetworkViewer.Remove(userInfo);
-			P2PManager.RemovePeer(userInfo);
+			if (userInfo != null) {
+				notebookViewer.Remove(userInfo);
+				notebookViewer.NetworkViewer.Remove(userInfo);
+				P2PManager.RemovePeer(userInfo);
+			}
 		}
 
 		private void RemoveAllUsers() {

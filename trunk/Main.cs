@@ -167,11 +167,7 @@ namespace NyFolder {
 				P2PManager p2pManager = null;
 				NyFolderApp nyFolder = null;
 
-				Debug debug = null;
 				try {
-					// Initialize Debug Log File
-					debug = Debug.GetInstance("log.txt");
-
 					// Initialize P2PManager
 					p2pManager = P2PManager.GetInstance();
 
@@ -195,11 +191,12 @@ namespace NyFolder {
 					Console.WriteLine("Source:  {0}", e.Source);
 					Console.WriteLine("Message: {0}", e.Message);
 					Console.WriteLine("Stack Trace:\n{0}", e.StackTrace);
+					Console.WriteLine();
+					Console.WriteLine("Please, Report Bug(s) To Matteo Bertozzi <theo.bertozzi@gmail.com>");
 					return(1);
 				} finally {
 					if (nyFolder != null) nyFolder.Quit();
 					if (p2pManager != null) p2pManager.Kill();
-					if (debug != null) debug.Dispose();
 				}
 			} while (NyFolderApp.RestartApplication == true);
 			return(0);

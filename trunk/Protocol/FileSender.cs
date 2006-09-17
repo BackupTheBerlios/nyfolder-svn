@@ -91,7 +91,6 @@ namespace NyFolder.Protocol {
 			// Initialize
 			this.fileName = fileName;
 			this.realFileName = fileName;
-			Debug.Log("Send File: {0}", this.realFileName);
 
 			// Initialize Thread :)
 			thread = null;
@@ -104,7 +103,6 @@ namespace NyFolder.Protocol {
 			// Initialize & Read Entire File
 			this.fileName = displayName;
 			this.realFileName = path;
-			Debug.Log("Send File: {0}", this.realFileName);
 
 			// Initialize Thread :)
 			thread = null;

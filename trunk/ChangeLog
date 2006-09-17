@@ -7,7 +7,10 @@
 
  * 17 Sep 2006 - Matteo Bertozzi
 	- ReWrited Protocol.FileReceiver -99% Mem Used :)
-	- Fixed GUI.Dnd Windows Path
+	- Fixed GUI.Dnd Windows Paths
+	- Fixed GUI.Glue.NetworkManager user Remove
+	- Removed Not Important Debug.Log Messages
+	- Now We're Ready to Set as RC1
 
  * 16 Sep 2006 - Matteo Bertozzi
 	- Fixed GUI.Glue.FolderManager.OnSwitchPage()

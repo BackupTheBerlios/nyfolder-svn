@@ -14,7 +14,7 @@ PKGS = $(PKG_GTK) $(PKG_GLADE) $(PKG_SQLITE) $(PKG_NIRY)
 
 # ===================================== NyFolder Info ======================
 NAME = NyFolder
-VERSION = 0.1 Alpha 2
+VERSION = 0.1 RC1
 COMPILER = `$(CC) --version`
 # ==========================================================================
 
