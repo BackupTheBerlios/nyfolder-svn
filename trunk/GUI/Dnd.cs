@@ -21,6 +21,7 @@
 using Gtk;
 
 using System;
+using System.IO;
 using System.Text;
 using System.Collections;
 using System.Text.RegularExpressions;
@@ -76,6 +77,7 @@ namespace NyFolder.GUI {
 					if (Environment.OSVersion.Platform != PlatformID.Unix) {
 						// Windows: file:///D:/Prova
 						path = path.Substring(8);
+						path = path.Replace('/', Path.DirectorySeparatorChar);
 					} else {
 						// Unix: file:///home/
 						path = path.Substring(7);

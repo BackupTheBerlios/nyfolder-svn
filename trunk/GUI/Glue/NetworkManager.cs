@@ -103,11 +103,13 @@ namespace NyFolder.GUI.Glue {
 		private void RemoveUser (UserInfo userInfo) {
 			notebookViewer.Remove(userInfo);
 			notebookViewer.NetworkViewer.Remove(userInfo);
+			P2PManager.RemovePeer(userInfo);
 		}
 
 		private void RemoveAllUsers() {
 			notebookViewer.RemoveAll();
 			notebookViewer.NetworkViewer.RemoveAll();
+			P2PManager.RemoveAllPeer();
 		}
 
 		private bool AcceptUser (PeerSocket peer) {

@@ -31,7 +31,7 @@ using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.Plugins.DownloadManager.GUI {
-	public class Glue {
+	public class Glue : IDisposable {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
@@ -55,7 +55,7 @@ namespace NyFolder.Plugins.DownloadManager.GUI {
 			UploadManager.SendedPart += new BlankEventHandler(UpdateUpload);
 		}
 
-		~Glue() {
+		public void Dispose() {
 			// Download Manager
 			Protocol.DownloadManager.Added -= new BlankEventHandler(AddDownload);
 			Protocol.DownloadManager.Finished -= new BlankEventHandler(DelDownload);
@@ -69,33 +69,45 @@ namespace NyFolder.Plugins.DownloadManager.GUI {
 
 		private void AddDownload (object sender) {
 			FileReceiver fileReceiver = sender as FileReceiver;
-			window.DownloadsViewer.Add(fileReceiver);
+			Gtk.Application.Invoke(delegate {
+				window.DownloadsViewer.Add(fileReceiver);
+			});
 		}
 
 		private void DelDownload (object sender) {
 			FileReceiver fileReceiver = sender as FileReceiver;
-			window.DownloadsViewer.Remove(fileReceiver);
+			Gtk.Application.Invoke(delegate {
+				window.DownloadsViewer.Remove(fileReceiver);
+			});
 		}
 
 		private void UpdateDownload (object sender) {
 			FileReceiver fileReceiver = sender as FileReceiver;
-			window.DownloadsViewer.Update(fileReceiver);
+			Gtk.Application.Invoke(delegate {
+				window.DownloadsViewer.Update(fileReceiver);
+			});
 		}
 
 		private void AddUpload (object sender) {
 			FileSender fileSender = sender as FileSender;
-			window.UploadsViewer.Add(fileSender);
+			Gtk.Application.Invoke(delegate {
+				window.UploadsViewer.Add(fileSender);
+			});
 		}
 
 		private void DelUpload (object sender) {
 			FileSender fileSender = sender as FileSender;
-			window.UploadsViewer.Remove(fileSender);
+			Gtk.Application.Invoke(delegate {
+				window.UploadsViewer.Remove(fileSender);
+			});
 		}
 
 
 		private void UpdateUpload (object sender) {
 			FileSender fileSender = sender as FileSender;
-			window.UploadsViewer.Update(fileSender);
+			Gtk.Application.Invoke(delegate {
+				window.UploadsViewer.Update(fileSender);
+			});
 		}
 
 		private void OnRemove (object sender) {
@@ -112,7 +124,7 @@ namespace NyFolder.Plugins.DownloadManager.GUI {
 				FileReceiver fr = (FileReceiver) window.DownloadsViewer.Store.Lookup(iter);
 				if (fr != null) {
 					Protocol.DownloadManager.Abort(fr);
-					window.DownloadsViewer.Store.Remove(fr);
+					window.DownloadsViewer.Remove(fr);
 				}
 			}
 		}
@@ -125,7 +137,7 @@ namespace NyFolder.Plugins.DownloadManager.GUI {
 				FileSender fs = (FileSender) window.UploadsViewer.Store.Lookup(iter);
 				if (fs != null) {
 					Protocol.UploadManager.Abort(fs);
-					window.UploadsViewer.Store.Remove(fs);
+					window.UploadsViewer.Remove(fs);
 				}
 			}
 		}

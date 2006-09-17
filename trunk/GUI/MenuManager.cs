@@ -158,6 +158,13 @@ namespace NyFolder.GUI {
 			EnsureUpdate();
 		}
 
+		public void AddMenus (string ui, ToggleActionEntry[] entries) {
+			AddUiFromString(ui);
+			actionGroup.Add(entries);
+			EnsureUpdate();
+		}
+
+
 		public void SetSensitive (string path, bool sensitive) {
 			Widget widget = GetWidget(path);
 			if (widget != null) widget.Sensitive = sensitive;

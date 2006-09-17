@@ -5,6 +5,10 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/     
 
+ * 17 Sep 2006 - Matteo Bertozzi
+	- ReWrited Protocol.FileReceiver -99% Mem Used :)
+	- Fixed GUI.Dnd Windows Path
+
  * 16 Sep 2006 - Matteo Bertozzi
 	- Fixed GUI.Glue.FolderManager.OnSwitchPage()
 	- Fixed Remove Folder Store Method

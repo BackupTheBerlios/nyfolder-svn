@@ -306,16 +306,9 @@ namespace NyFolder.GUI.Glue {
 		// ===================================================
 		private void OnAcceptFileEvent (PeerSocket peer, XmlRequest xml) {
 			try {
-				if (peer == null) Debug.Log("NULL Peer");
-				if (xml == null) Debug.Log("NULL Xml");
 				string path = (string) xml.Attributes["path"];
-				if (path == null) Debug.Log("NULL Path");
 				UserInfo userInfo = peer.Info as UserInfo;
-				if (userInfo == null) 
-					Debug.Log("NULL User Info: {0} {1}", peer.GetRemoteIP(), peer.Sock.Handle);
-				Console.WriteLine("[ ST ] Add Upload Manager");
 				UploadManager.Add(userInfo, path);
-				Console.WriteLine("[ ED ] Add Upload Manager");
 			} catch (Exception e) {
 				Glue.Dialogs.MessageError("Accept File", "Peer Ip: " + 
 										  peer.GetRemoteIP().ToString() + "\n" +

@@ -85,29 +85,38 @@ namespace NyFolder.Plugins.DownloadManager {
 			P2PManager.StatusChanged -= new BoolEventHandler(OnP2PStatusChanged);			
 
 			// Destroy Download Manager Window
-			if (this.guiGlue != null) this.guiGlue = null;
-			if (this.dlWindow != null) {
-				this.dlWindow.Destroy();
-				this.dlWindow = null;
-			}
+			OnDlWinClose(null, null);
 		}
 
 		protected void OnP2PStatusChanged (object sender, bool isOnline) {
-			SetSensitiveMenu(isOnline);			
+			SetSensitiveMenu(isOnline);
+
+			if (isOnline == false) {
+				// Destroy Download Manager Window
+				OnDlWinClose(null, null);
+			}
 		}
 
 		protected void OnDlManager (object sender, EventArgs args) {
 			if (this.dlWindow == null) {
 				this.dlWindow = new GUI.Window();
-				this.guiGlue = new GUI.Glue(this.dlWindow);
 				this.dlWindow.DeleteEvent += new DeleteEventHandler(OnDlWinClose);
+				this.guiGlue = new GUI.Glue(this.dlWindow);
 			}
 			this.dlWindow.ShowAll();
 		}
 
 		protected void OnDlWinClose (object sender, DeleteEventArgs args) {
-			this.guiGlue = null;
-			this.dlWindow = null;
+			if (this.guiGlue != null) {
+				this.guiGlue.Dispose();
+				this.guiGlue = null;
+			}
+
+			if (this.dlWindow != null) {
+				this.dlWindow.DeleteEvent -= new DeleteEventHandler(OnDlWinClose);
+				this.dlWindow.Destroy();
+				this.dlWindow = null;
+			}
 		}
 
 		// ============================================

@@ -16,15 +16,15 @@
 
  - URGENT ToDo List
 ==============================
- - Fix DND Path When Send
-
+ - Fix DND Windows Path When Send
 
  - ToDo List
 ==============================
  * Add Event To "Peer Change Avatar"
 
- - Fix List
+ - Fix/ReWrite List
 ==============================
  * File Sender/Receiver Class
  * Upload/Download Manager Class
+ * CMD Manager, Bad Bad Bad!!!
 

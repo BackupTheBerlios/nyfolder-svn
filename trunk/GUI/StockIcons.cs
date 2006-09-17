@@ -36,7 +36,8 @@ namespace NyFolder.GUI {
 			"Send",
 			"StockMyFolder",
 			"StockNetwork",
-			"Proxy"
+			"Proxy",
+			"NyFolderIcon"
 		};
 
 		private static readonly string[] stock_images_names = {

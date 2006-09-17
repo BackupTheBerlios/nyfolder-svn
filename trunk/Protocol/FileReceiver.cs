@@ -38,7 +38,6 @@ namespace NyFolder.Protocol {
 		// PRIVATE Members
 		// ============================================
 		private BinaryWriter binaryWriter;
-		private Hashtable fileContent;
 		private PeerSocket peer;
 		private string fileName;
 		private long fileSaved;
@@ -46,13 +45,13 @@ namespace NyFolder.Protocol {
 
 		public FileReceiver (PeerSocket peer, XmlRequest xml, string name) {
 			this.peer = peer;
-
+			this.fileSaved = 0;
 			fileName = (string) xml.Attributes["name"];
 			fileSize = Int32.Parse((string) xml.Attributes["size"]);
-			fileContent = Hashtable.Synchronized(new Hashtable());
 
 			// Create File Stream
-			binaryWriter = new BinaryWriter(File.Create(name));
+			FileStream stream = FileUtils.CreateNullFile(name, fileSize);
+			binaryWriter = new BinaryWriter(stream);
 		}
 
 		~FileReceiver() {
@@ -63,25 +62,19 @@ namespace NyFolder.Protocol {
 		// PUBLIC Methods
 		// ============================================
 		public void Append (XmlRequest xml) {
-			lock (fileContent) {
-				int part = int.Parse((string) xml.Attributes["part"]);
-				byte[] data = Convert.FromBase64String(xml.BodyText);
-				fileSaved += data.Length;
+			int part = int.Parse((string) xml.Attributes["part"]);
+			byte[] data = Convert.FromBase64String(xml.BodyText);
+			fileSaved += data.Length;
 
-				// Add To Hashtable
-				fileContent.Add(part, data);
-			}
+			// Seek to Offset
+			binaryWriter.Seek((int)(part * FileSender.ChunkSize), SeekOrigin.Begin);
+			binaryWriter.Write(data, 0, data.Length);
 		}
 
-		public void Save () {
-			int numParts = fileContent.Count;
-
-			for (int i=0; i < numParts; i++) {
-				byte[] data = (byte[]) fileContent[i];
-				binaryWriter.Write(data, 0, data.Length);
-			}
-
+		public void Save() {
+			binaryWriter.Flush();
 			binaryWriter.Close();
+			binaryWriter = null;
 		}
 
 		// ============================================

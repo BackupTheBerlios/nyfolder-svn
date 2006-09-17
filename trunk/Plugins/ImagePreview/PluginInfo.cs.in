@@ -1,4 +1,4 @@
-/* [ Plugins/Talk/PluginInfo.cs  ] NyFolder Talk Plugin Info
+/* [ Plugins/ImagePreview/PluginInfo.cs  ] NyFolder Plugin Info
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -20,7 +20,7 @@
 
 using System;
 
-namespace NyFolder.Plugins.Talk {
+namespace NyFolder.Plugins.ImagePreview {
 	public class PluginInfo {
 		public const string Version = "@version@";
 		public const string Name = "@name@";

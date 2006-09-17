@@ -51,11 +51,13 @@ namespace NyFolder.Plugins.ImagePreview {
 		// PRIVATE Members
 		// ============================================
 		private NotebookViewer notebookViewer = null;
+		private bool started;
 
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
 		public ImagePreview() {
+			this.started = false;
 		}
 
 		~ImagePreview() {
@@ -119,6 +121,9 @@ namespace NyFolder.Plugins.ImagePreview {
 		// PROTECTED (Methods) Event Handlers
 		// ============================================
 		protected void OnMainWindowStarted (object sender) {
+			// Initialize GUI Components
+			InitializeMenu();
+
 			// Initialize Notebook Viewer Events
 			this.notebookViewer = this.nyFolder.Window.NotebookViewer;
 			this.notebookViewer.FileAdded += new ObjectEventHandler(OnFileAdded);
@@ -128,6 +133,8 @@ namespace NyFolder.Plugins.ImagePreview {
 		}
 
 		protected void OnMainAppQuit (object sender) {
+			if (this.started == false) return;
+
 			// Notebook Viewer Events
 			this.notebookViewer.FileAdded -= new ObjectEventHandler(OnFileAdded);
 			this.notebookViewer = null;
@@ -172,9 +179,37 @@ namespace NyFolder.Plugins.ImagePreview {
 			}
 		}
 
+		protected void OnImagePreview (object sender, EventArgs args) {
+			Gtk.ToggleAction action = sender as Gtk.ToggleAction;
+
+			if (action.Active == true) {
+				this.notebookViewer.FileAdded += new ObjectEventHandler(OnFileAdded);
+			} else {
+				this.notebookViewer.FileAdded -= new ObjectEventHandler(OnFileAdded);
+			}
+		}
+
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		private void InitializeMenu() {
+			ToggleActionEntry[] entries = new ToggleActionEntry[] {
+				new ToggleActionEntry("ImagePreview", null, "Image Preview", null,
+									  null, new EventHandler(OnImagePreview), true)
+			};
+
+			
+			string ui = "<ui>" +
+						"  <menubar name='MenuBar'>" +
+						"    <menu action='ToolMenu'>" +
+						"      <menuitem action='ImagePreview' />" +
+						"    </menu>" +
+						"  </menubar>" +
+						"</ui>";
+
+			nyFolder.Window.Menu.AddMenus(ui, entries);
+		}
+
 		private bool IsImage (string extension) {
 			if (extension == String.Empty || extension == null || extension.Length <= 0)
 				return(false);
