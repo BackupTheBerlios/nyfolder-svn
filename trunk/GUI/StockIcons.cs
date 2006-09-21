@@ -31,7 +31,6 @@ using Niry.GUI.Gtk2;
 namespace NyFolder.GUI {
 	public static class StockIcons {
 		private static readonly string[] stock_icons = {
-			"Download",
 			"Logout",
 			"Send",
 			"StockMyFolder",
@@ -44,7 +43,6 @@ namespace NyFolder.GUI {
 			"Close",
 			"Channel",
 			"Directory",
-			"Download",
 			"Lock",
 			"Logout",
 			"Network",

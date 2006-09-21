@@ -170,7 +170,7 @@ namespace NyFolder.Protocol {
 				}
 
 				// Wait One Seconds first then send End
-				Thread.Sleep(1000);
+				Thread.Sleep(2000);
 
 				// Send File End
 				SendFileEnd(null);

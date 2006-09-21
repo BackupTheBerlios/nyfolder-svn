@@ -72,7 +72,6 @@ GLADE_RES = Glade/AcceptUserDialog.glade		\
 IMG_RES = 	Pixmaps/Channel.png						\
 			Pixmaps/Close.png						\
 			Pixmaps/Directory.png					\
-			Pixmaps/Download.png					\
 			Pixmaps/InsecureAuth.png				\
 			Pixmaps/Lock.png						\
 			Pixmaps/Logout.png						\
