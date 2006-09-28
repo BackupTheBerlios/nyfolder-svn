@@ -41,6 +41,8 @@ namespace NyFolder.GUI {
 		public event BoolEventHandler DirChanged = null;
 		public event SendFileHandler SaveFile = null;
 
+		public event ObjectEventHandler TabRemoved = null;
+
 		// ============================================
 		// PROTECTED Members
 		// ============================================
@@ -154,6 +156,9 @@ namespace NyFolder.GUI {
 				int npage = PageNum(folderViewer);
 				RemovePage(npage);
 
+				// Remove Tab Event
+				if (TabRemoved != null) TabRemoved(this, folderViewer);
+
 				// Show All (Refresh Notebook Viewer)
 				this.ShowAll();
 			}
@@ -211,6 +216,9 @@ namespace NyFolder.GUI {
 				// Remove Folder Viewer
 				int npage = PageNum(page);
 				RemovePage(npage);
+
+				// Remove Tab Event
+				if (TabRemoved != null) TabRemoved(this, page);
 
 				// Show All (Refresh Notebook Viewer)
 				this.ShowAll();

@@ -34,7 +34,7 @@ namespace NyFolder.Plugins.NetworkBootstrap {
 
 			this.xmlWriter = new XmlTextWriter(this.stringWriter);
 			this.xmlWriter.Formatting = Formatting.Indented;
-			this.xmlWriter.WriteStartElement(null, "peerlist", null);
+			xmlWriter.WriteStartElement(null, "peerlist", null);
 		}
 
 		~ResponseWriter() {
@@ -66,9 +66,11 @@ namespace NyFolder.Plugins.NetworkBootstrap {
 		}
 
 		private void WriteAttribute (string attrName, object attrValue) {
-			this.xmlWriter.WriteStartAttribute(null, attrName, null);
-			this.xmlWriter.WriteString(attrValue.ToString());
-			this.xmlWriter.WriteEndAttribute();
+			if (attrValue != null) {
+				this.xmlWriter.WriteStartAttribute(null, attrName, null);
+				this.xmlWriter.WriteString(attrValue.ToString());
+				this.xmlWriter.WriteEndAttribute();
+			}
 		}
 	}
 }

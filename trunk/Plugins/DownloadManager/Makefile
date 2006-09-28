@@ -13,18 +13,20 @@ PKGS = $(PKG_GTK) $(PKG_NIRY) $(PKG_NYFOLDER_PLUGIN)
 
 # ===================================== NyFolder Info ======================
 NAME = Download Manager
-VERSION = 0.1
+VERSION = 0.2
 AUTHOR = Matteo Bertozzi
 # ==========================================================================
 
 SRC = 	PluginInfo.cs				\
 		DownloadManager.cs			\
-		GUI/FileProgressStore.cs	\
 		GUI/FileProgressViewer.cs	\
+		GUI/FileProgressObject.cs	\
 		GUI/Glue.cs					\
 		GUI/Window.cs
 
-IMG_RES = 	Pixmaps/Download.png
+IMG_RES = 	Pixmaps/DlTrash.png		\
+		Pixmaps/Download.png	\
+		Pixmaps/Upload.png
 
 # Sources & Resources
 RESOURCES = $(IMG_RES)

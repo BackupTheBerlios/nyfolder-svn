@@ -45,6 +45,7 @@ namespace NyFolder.GUI {
 		private Gtk.VBox vboxRight;
 		private Gtk.VBox vboxLeft;
 		private Gtk.VBox vboxMain;
+		private Gtk.HBox hboxMenu;
 		private Gtk.HBox hbox;
 
 		// ============================================
@@ -65,9 +66,13 @@ namespace NyFolder.GUI {
 			this.menuManager.Activated += new EventHandler(OnMenuActivated);
 			this.AddAccelGroup(this.menuManager.AccelGroup);
 
+			// Initialize HBox Menu
+			this.hboxMenu = new Gtk.HBox(false, 0);
+			this.vboxMain.PackStart(hboxMenu, false, false, 0);
+
 			// Initialize MenuBar
 			Gtk.MenuBar menuBar = this.MenuBar;
-			this.vboxMain.PackStart(menuBar, false, false, 0);
+			this.hboxMenu.PackStart(menuBar, false, false, 0);
 
 			// Initialize HBox
 			this.hbox = new Gtk.HBox();

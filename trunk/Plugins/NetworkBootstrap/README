@@ -3,3 +3,8 @@
 	<peer name='Theo' secure='false' ip='127.0.0.1' port='7085' />
 	<peer name='Theo@nyfolder.berlios.de' secure='true' />
 </peerlist>
+
+TODO:
+	* Peer Menu
+		- bool - Get Peer
+		- bool - Ask Peer Connection

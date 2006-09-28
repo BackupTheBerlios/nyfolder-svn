@@ -21,6 +21,8 @@
 using Gtk;
 
 using System;
+using System.Threading;
+using System.Collections;
 
 using Niry;
 using Niry.Utils;
@@ -30,6 +32,7 @@ using NyFolder;
 using NyFolder.GUI;
 using NyFolder.Utils;
 using NyFolder.Protocol;
+using NyFolder.GUI.Glue;
 
 namespace NyFolder.Plugins.NetworkBootstrap {
 	public class NetworkBootstrap : Plugin {
@@ -50,14 +53,6 @@ namespace NyFolder.Plugins.NetworkBootstrap {
 		// PUBLIC Constructors
 		// ============================================
 		public NetworkBootstrap() {
-			ResponseReader xml = new ResponseReader(
-				"<peerlist>\n" +
-				"<peer name='Theo' secure='false' ip='127.0.0.1' port='7085' />\n" +
-				"<peer name='Theo@nyfolder.berlios.de' secure='true' />\n" +
-				"</peerlist>");
-			foreach (ResponseElement element in xml.Elements) {
-				Console.WriteLine(element.Attributes["name"]);
-			}
 		}
 
 		~NetworkBootstrap() {
@@ -77,18 +72,51 @@ namespace NyFolder.Plugins.NetworkBootstrap {
 		// ============================================
 		protected void OnMainWindowStarted (object sender) {
 			// Initialize Protocol Events
-			P2PManager.StatusChanged += new BoolEventHandler(OnP2PStatusChanged);
+			NetworkManager.AddProtocolEvent += new SetProtocolEventHandler(OnAddProtocolCmd);
+			NetworkManager.DelProtocolEvent += new SetProtocolEventHandler(OnDelProtocolCmd);
 		}
 
 		protected void OnMainAppQuit (object sender) {
 			// Initialize Protocol Events
-			P2PManager.StatusChanged -= new BoolEventHandler(OnP2PStatusChanged);
+			NetworkManager.AddProtocolEvent -= new SetProtocolEventHandler(OnAddProtocolCmd);
+			NetworkManager.DelProtocolEvent -= new SetProtocolEventHandler(OnDelProtocolCmd);
 		}
 
-		protected void OnP2PStatusChanged (object sender, bool status) {
-			if (status == false) return;
+		protected void OnAddProtocolCmd (P2PManager p2p, CmdManager cmd) {
+			CmdManager.LoginEvent += new ProtocolLoginHandler(OnPeerLogin);
+			CmdManager.GetEvent += new ProtocolHandler(OnGetEvent);
+			CmdManager.UnknownEvent += new ProtocolHandler(OnUnknownEvent);
+		}
 
-			// Request All Peer Connected to...
+		protected void OnDelProtocolCmd (P2PManager p2p, CmdManager cmd) {
+			CmdManager.LoginEvent -= new ProtocolLoginHandler(OnPeerLogin);
+			CmdManager.GetEvent -= new ProtocolHandler(OnGetEvent);
+			CmdManager.UnknownEvent -= new ProtocolHandler(OnUnknownEvent);
+		}
+
+		// TODO: Add OnAddUser
+		protected void OnPeerLogin (PeerSocket peer, UserInfo userInfo) {
+			// Waiting Peer Initialization Time, Bad Bad Bad!!!
+			Thread.Sleep(6000);
+			// Request Peer List
+			RequestPeerList(peer);
+		}
+
+		protected void OnGetEvent (PeerSocket peer, XmlRequest xml) {
+			if (xml.Attributes["what"].Equals("peerlist") == true) {
+				SendPeerList(peer);
+			}
+		}
+
+		protected void OnUnknownEvent (PeerSocket peer, XmlRequest xml) {
+			if (xml.FirstTag != "peerlist") return;
+
+			ResponseReader reader = new ResponseReader(xml.BodyText);
+			ArrayList peerList = reader.Elements;
+			foreach (Hashtable elem in peerList) {
+				if (IsInMyList(elem) == true) continue;
+				Console.WriteLine(" - {0} {1}", elem["name"], elem["secure"]);
+			}
 		}
 
 		// ============================================
@@ -98,7 +126,47 @@ namespace NyFolder.Plugins.NetworkBootstrap {
 			XmlRequest xml = new XmlRequest();
 			xml.FirstTag = "get";
 			xml.Attributes.Add("what", "peerlist");
-			Console.WriteLine(xml.GenerateXml());
+			peer.Send(xml.GenerateXml());
+		}
+
+		private void SendPeerList (PeerSocket peer) {
+			XmlRequest xml = new XmlRequest();
+			xml.FirstTag = "peerlist";
+			xml.BodyText = GeneratePeerList();		
+			peer.Send(xml.GenerateXml());
+		}
+
+		private string GeneratePeerList() {
+			ResponseWriter peerList = new ResponseWriter();
+
+			foreach (UserInfo userInfo in P2PManager.KnownPeers.Keys) {
+				if (userInfo.SecureAuthentication == true) {
+					peerList.Add(userInfo.Name);
+				} else {
+					peerList.Add(userInfo.Name, userInfo.Ip, userInfo.Port);
+				}
+			}
+
+			return(peerList.ToString());
+		}
+
+		private bool IsInMyList (Hashtable user) {
+			foreach (UserInfo userInfo in P2PManager.KnownPeers.Keys) {
+				if ((string) user["name"] != userInfo.Name) continue;
+
+				if (bool.Parse((string) user["secure"]) == true) {
+					if (userInfo.SecureAuthentication == true)
+						return(true);
+				} else {
+					if (userInfo.SecureAuthentication == false && 
+						userInfo.Ip == (string) user["ip"] &&
+						userInfo.Port == int.Parse((string) user["port"]))
+					{
+						return(true);
+					}
+				}
+			}
+			return(false);
 		}
 
 		// ============================================

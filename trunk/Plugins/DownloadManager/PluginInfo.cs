@@ -22,7 +22,7 @@ using System;
 
 namespace NyFolder.Plugins.Talk {
 	public class PluginInfo {
-		public const string Version = "0.1";
+		public const string Version = "0.2";
 		public const string Name = "Download Manager";
 		public const string Author = "Matteo Bertozzi";
 

@@ -42,15 +42,13 @@ namespace NyFolder.Plugins.DownloadManager.GUI {
 		// ============================================
 		// PROTECTED Members
 		// ============================================
-		protected FileProgressViewer fpViewerDownload;
-		protected FileProgressViewer fpViewerUpload;
+		protected FileProgressViewer fpViewer;
 		protected Gtk.HButtonBox hbuttonBox;
 		protected Gtk.VBox vbox;
 
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private Gtk.VPaned vpaned;
 
 		// ============================================
 		// PUBLIC Constructors
@@ -63,30 +61,10 @@ namespace NyFolder.Plugins.DownloadManager.GUI {
 			this.vbox = new Gtk.VBox(false, 2);
 			this.Add(this.vbox);
 
-			// Initialize VPaned
-			this.vpaned = new Gtk.VPaned();
-			this.vbox.PackStart(this.vpaned, true, true, 2);
-
-			// Initialize Download Part
-			this.fpViewerDownload = new FileProgressViewer("Downloads");
-			this.vpaned.Pack1(this.fpViewerDownload, true, true);
-
-			// Initialize Upload Part
-			this.fpViewerUpload = new FileProgressViewer("Uploads");
-			this.vpaned.Pack2(this.fpViewerUpload, true, true);
-
-			// Initialize HSeparator
-			this.vbox.PackStart(new Gtk.HSeparator(), false, false, 2);
-
-			// Initialize ToolBar
-			this.hbuttonBox = new Gtk.HButtonBox();
-			this.hbuttonBox.Layout = Gtk.ButtonBoxStyle.End;
-			this.vbox.PackStart(this.hbuttonBox, false, false, 2);
-
-			// Remove
-			Gtk.Button button = new Gtk.Button(Gtk.Stock.Remove);
-			button.Clicked += new EventHandler(OnRemove);
-			this.hbuttonBox.PackEnd(button, false, false, 2);
+			// Initialize File Progress Part
+			this.fpViewer = new FileProgressViewer();
+			this.fpViewer.Delete += new BlankEventHandler(OnDeleteClicked);
+			this.vbox.PackStart(this.fpViewer, true, true, 2);
 
 			// Show All
 			this.ShowAll();
@@ -100,12 +78,11 @@ namespace NyFolder.Plugins.DownloadManager.GUI {
 		// PRIVATE (Methods) Event Handlers
 		// ============================================
 
-
 		// ============================================
 		// PRIVATE (Methods) Menu Events Handler
 		// ============================================
-		private void OnRemove (object sender, EventArgs args) {
-			if (RemoveEvent != null) RemoveEvent(this);
+		private void OnDeleteClicked (object sender) {
+			if (RemoveEvent != null) RemoveEvent(sender);
 		}
 
 		// ============================================
@@ -115,12 +92,8 @@ namespace NyFolder.Plugins.DownloadManager.GUI {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
-		public FileProgressViewer DownloadsViewer {
-			get { return(this.fpViewerDownload); }
-		}
-
-		public FileProgressViewer UploadsViewer {
-			get { return(this.fpViewerUpload); }
+		public FileProgressViewer Viewer {
+			get { return(this.fpViewer); }
 		}
 	}
 }

@@ -70,35 +70,35 @@ namespace NyFolder.Plugins.DownloadManager.GUI {
 		private void AddDownload (object sender) {
 			FileReceiver fileReceiver = sender as FileReceiver;
 			Gtk.Application.Invoke(delegate {
-				window.DownloadsViewer.Add(fileReceiver);
+				window.Viewer.Add(fileReceiver);
 			});
 		}
 
 		private void DelDownload (object sender) {
 			FileReceiver fileReceiver = sender as FileReceiver;
 			Gtk.Application.Invoke(delegate {
-				window.DownloadsViewer.Remove(fileReceiver);
+				window.Viewer.Remove(fileReceiver);
 			});
 		}
 
 		private void UpdateDownload (object sender) {
 			FileReceiver fileReceiver = sender as FileReceiver;
 			Gtk.Application.Invoke(delegate {
-				window.DownloadsViewer.Update(fileReceiver);
+				window.Viewer.Update(fileReceiver);
 			});
 		}
 
 		private void AddUpload (object sender) {
 			FileSender fileSender = sender as FileSender;
 			Gtk.Application.Invoke(delegate {
-				window.UploadsViewer.Add(fileSender);
+				window.Viewer.Add(fileSender);
 			});
 		}
 
 		private void DelUpload (object sender) {
 			FileSender fileSender = sender as FileSender;
 			Gtk.Application.Invoke(delegate {
-				window.UploadsViewer.Remove(fileSender);
+				window.Viewer.Remove(fileSender);
 			});
 		}
 
@@ -106,39 +106,28 @@ namespace NyFolder.Plugins.DownloadManager.GUI {
 		private void UpdateUpload (object sender) {
 			FileSender fileSender = sender as FileSender;
 			Gtk.Application.Invoke(delegate {
-				window.UploadsViewer.Update(fileSender);
+				window.Viewer.Update(fileSender);
 			});
 		}
 
 		private void OnRemove (object sender) {
 			Gtk.Application.Invoke(delegate {
-				RemoveDownloads();
-				RemoveUploads();
+				Remove(sender);
 			});
 		}
 
-		private void RemoveDownloads() {
-			foreach (TreePath path in window.DownloadsViewer.Selection.GetSelectedRows()) {
-				TreeIter iter;
-				window.DownloadsViewer.Store.GetIter(out iter, path);
-				FileReceiver fr = (FileReceiver) window.DownloadsViewer.Store.Lookup(iter);
-				if (fr != null) {
-					Protocol.DownloadManager.Abort(fr);
-					window.DownloadsViewer.Remove(fr);
-				}
-			}
-		}
+		private void Remove (object sender) {
+			FileProgressObject fileProgress = (FileProgressObject) sender;
+			object fileInfo = fileProgress.FileInfo;
 
-		private void RemoveUploads() {
-			foreach (TreePath path in window.UploadsViewer.Selection.GetSelectedRows()) {
-				TreeIter iter;
-				window.UploadsViewer.Store.GetIter(out iter, path);
-
-				FileSender fs = (FileSender) window.UploadsViewer.Store.Lookup(iter);
-				if (fs != null) {
-					Protocol.UploadManager.Abort(fs);
-					window.UploadsViewer.Remove(fs);
-				}
+			if (fileInfo.GetType() == typeof(FileSender)) {
+				FileSender fs = (FileSender) fileInfo;
+				Protocol.UploadManager.Abort(fs);
+				window.Viewer.Remove(fs);
+			} else if (fileInfo.GetType() == typeof(FileReceiver)) {
+				FileReceiver fr = (FileReceiver) fileInfo;
+				Protocol.DownloadManager.Abort(fr);
+				window.Viewer.Remove(fr);
 			}
 		}
 	}

@@ -21,6 +21,9 @@
 using Gtk;
 
 using System;
+using System.Collections;
+
+using Niry;
 
 using NyFolder;
 using NyFolder.Utils;
@@ -31,27 +34,27 @@ namespace NyFolder.Plugins.DownloadManager.GUI {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
+		public event BlankEventHandler Delete = null;
 
 		// ============================================
 		// PROTECTED Members
 		// ============================================
+		protected Hashtable progressObjects = null;
 
 		// ============================================
 		// PRIVATE Members
 		// ============================================
 		private Gtk.ScrolledWindow scrolledWindow;
-		private FileProgressStore store;
-		private Gtk.TreeView treeView;
+		private Gtk.VBox vbox;
 
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
-		public FileProgressViewer (string title) {
-			Gtk.Label label = new Gtk.Label("<span size='large'><b>" + title + "</b></span>");
-			label.UseMarkup = true;
+		public FileProgressViewer() {
+			// Initialize Progress Objects Hashtable
+			this.progressObjects = new Hashtable();
 
 			// Initialize Frame
-			this.LabelWidget = label;
 			this.Shadow = Gtk.ShadowType.None;
 			this.ShadowType = Gtk.ShadowType.None;
 
@@ -62,33 +65,9 @@ namespace NyFolder.Plugins.DownloadManager.GUI {
 			this.scrolledWindow.HscrollbarPolicy = Gtk.PolicyType.Automatic;
 			this.scrolledWindow.VscrollbarPolicy = Gtk.PolicyType.Always;
 
-			// Initialize TreeView
-			this.store = new FileProgressStore();
-			this.treeView = new Gtk.TreeView(store);
-			this.scrolledWindow.Add(this.treeView);
-
-			TreeViewColumn col;
-
-			// UserInfo
-			col = treeView.AppendColumn("User", new CellRendererText(), "text", 0);
-			col.Resizable = true;
-			col.Spacing = 2;
-
-			// FileName
-			col = treeView.AppendColumn("FileName", new CellRendererText(), "text", 1);
-			col.Resizable = true;
-			col.Spacing = 2;
-
-			// Progress
-			col = treeView.AppendColumn("Progress", new CellRendererProgress(), "value", 2);
-			col.Resizable = true;
-			col.Expand = true;
-			col.Spacing = 2;
-
-			// FileSize
-			col = treeView.AppendColumn("Size", new CellRendererText(), "text", 3);
-			col.Resizable = true;
-			col.Spacing = 2;
+			// Initialize VBox
+			this.vbox = new Gtk.VBox(false, 2);
+			this.scrolledWindow.AddWithViewport(this.vbox);
 
 			this.ShowAll();
 		}
@@ -97,56 +76,83 @@ namespace NyFolder.Plugins.DownloadManager.GUI {
 		// PUBLIC Methods
 		// ============================================
 		public void Clear() {
-			store.Clear();
+			this.vbox.Forall(new Callback(this.Remove));
+			this.progressObjects.Clear();
 		}
 
 		public void Add (FileSender fileSender) {
-			store.Add(fileSender);
+			FileProgressObject widget = AddFileProgress(fileSender);
+			this.vbox.PackStart(widget, false, false, 2);
 			this.ShowAll();
 		}
 
 		public void Add (FileReceiver fileReceiver) {
-			store.Add(fileReceiver);
+			FileProgressObject widget = AddFileProgress(fileReceiver);
+			this.vbox.PackStart(widget, false, false, 2);
 			this.ShowAll();
 		}
 
 		public void Remove (FileSender fileSender) {
-			store.Remove(fileSender);
-			this.ShowAll();
+			FileProgressObject widget = Lookup(fileSender);
+			if (widget != null) {
+				this.vbox.Remove(widget);
+				DelFileProgress(widget, fileSender);
+			}
 		}
 
 		public void Remove (FileReceiver fileReceiver) {
-			store.Remove(fileReceiver);
-			this.ShowAll();
+			FileProgressObject widget = Lookup(fileReceiver);
+			if (widget != null) {
+				this.vbox.Remove(widget);
+				DelFileProgress(widget, fileReceiver);
+			}
 		}
 
 		public void Update (FileSender fileSender) {
-			store.Update(fileSender);
-			this.ShowAll();
+			FileProgressObject widget = Lookup(fileSender);
+			if (widget != null) widget.Update();
 		}
 
 		public void Update (FileReceiver fileReceiver) {
-			store.Update(fileReceiver);
-			this.ShowAll();
+			FileProgressObject widget = Lookup(fileReceiver);
+			if (widget != null) widget.Update();
 		}
 
 		// ============================================
 		// PROTECTED (Methods) Event Handlers
 		// ============================================
+		protected FileProgressObject AddFileProgress (FileSender fileSender) {
+			FileProgressObject widget = new FileProgressObject(fileSender);
+			widget.Delete += new BlankEventHandler(OnDeleteClicked);
+			this.progressObjects.Add(fileSender, widget);
+			return(widget);
+		}
+
+		protected FileProgressObject AddFileProgress (FileReceiver fileReceiver) {
+			FileProgressObject widget = new FileProgressObject(fileReceiver);
+			widget.Delete += new BlankEventHandler(OnDeleteClicked);
+			this.progressObjects.Add(fileReceiver, widget);
+			return(widget);
+		}
+
+		protected void DelFileProgress (FileProgressObject widget, object fileInfo) {
+			widget.Delete -= new BlankEventHandler(OnDeleteClicked);
+			this.progressObjects.Remove(fileInfo);
+		}
+
+		protected FileProgressObject Lookup (object fileInfo) {
+			return((FileProgressObject) this.progressObjects[fileInfo]);
+		}
 
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		private void OnDeleteClicked (object sender) {
+			if (Delete != null) Delete(sender);
+		}
 
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
-		public FileProgressStore Store {
-			get { return(this.store); }
-		}
-
-		public TreeSelection Selection {
-			get { return(this.treeView.Selection); }
-		}
 	}
 }

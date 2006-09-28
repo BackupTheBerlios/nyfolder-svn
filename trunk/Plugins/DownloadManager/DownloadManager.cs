@@ -52,6 +52,18 @@ namespace NyFolder.Plugins.DownloadManager {
 		// ============================================
 		public DownloadManager() {
 			this.dlWindow = null;
+
+			// Initialize Talk Stock
+			Gdk.Pixbuf pixbuf;
+			pixbuf = new Gdk.Pixbuf(null, "Download.png");
+			StockIcons.AddToStock("Download", pixbuf);
+			StockIcons.AddToStockImages("Download", pixbuf);
+
+			pixbuf = new Gdk.Pixbuf(null, "Upload.png");
+			StockIcons.AddToStockImages("Upload", pixbuf);
+
+			pixbuf = new Gdk.Pixbuf(null, "DlTrash.png");
+			StockIcons.AddToStockImages("DlTrash", pixbuf);
 		}
 
 		~DownloadManager() {

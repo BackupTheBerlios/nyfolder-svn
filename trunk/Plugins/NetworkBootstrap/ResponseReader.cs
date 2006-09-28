@@ -25,14 +25,6 @@ using System.Text;
 using System.Collections;
 
 namespace NyFolder.Plugins.NetworkBootstrap {
-	public class ResponseElement {
-		public Hashtable Attributes;
-
-		public ResponseElement () {
-			this.Attributes = new Hashtable();
-		}
-	}
-	
 	public class ResponseReader {
 		protected XmlTextReader xmlReader = null;		
 		protected ArrayList elements = null;
@@ -50,19 +42,18 @@ namespace NyFolder.Plugins.NetworkBootstrap {
 		
 		private void Parse () {			
 			this.elements = new ArrayList();
-			ResponseElement xmlElement = null;			
+			Hashtable xmlElement = null;			
 				
 			while (this.xmlReader.Read()) {
 				if (this.xmlReader.NodeType == XmlNodeType.Element && 
 					this.xmlReader.HasAttributes &&
 					this.xmlReader.Name == "peer") 
 				{
-					xmlElement = new ResponseElement();
+					xmlElement = new Hashtable();
 
 					for (int i=0; i < xmlReader.AttributeCount; i++) {
 						this.xmlReader.MoveToAttribute(i);
-						xmlElement.Attributes.Add(this.xmlReader.Name, 
-												  this.xmlReader.Value);
+						xmlElement.Add(xmlReader.Name, xmlReader.Value);
 					}
 												
 					this.elements.Add(xmlElement);
