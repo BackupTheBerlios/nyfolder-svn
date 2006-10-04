@@ -38,6 +38,7 @@ namespace NyFolder.Protocol {
 		public DownloadManagerException (string msg, Exception inner) : base(msg, inner) {}
 	}
 
+	/// Download Manager
 	public static class DownloadManager {
 		// ============================================
 		// PUBLIC Events
@@ -56,11 +57,13 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Initialize Download Manager
 		public static void Initialize() {
 			recvFileList = Hashtable.Synchronized(new Hashtable());
 			acceptList = Hashtable.Synchronized(new Hashtable());
 		}
 
+		/// Uninitialize Download Manager
 		public static void Clear() {
 			foreach (Hashtable peerTable in recvFileList.Values) {
 				foreach (FileReceiver fileReceiver in peerTable.Values)
@@ -76,6 +79,7 @@ namespace NyFolder.Protocol {
 			acceptList = null;
 		}
 
+		/// Add File To Accept List
 		public static void AddToAcceptList (PeerSocket peer, string path, string savePath) {
 			Hashtable peerList = acceptList[peer] as Hashtable;
 
@@ -87,6 +91,7 @@ namespace NyFolder.Protocol {
 			acceptList[peer] = peerList;
 		}
 
+		/// Remove file from Accept list and prepare to Receve it
 		public static void InitFile (PeerSocket peer, XmlRequest xml) {
 			FileReceiver fileRecv = LookupFileReceiver(peer, xml);
 
@@ -107,6 +112,7 @@ namespace NyFolder.Protocol {
 			if (Added != null) Added(fileRecv);
 		}
 
+		/// Get File Part
 		public static void GetFilePart (PeerSocket peer, XmlRequest xml) {
 			FileReceiver fileRecv = LookupFileReceiver(peer, xml);
 
@@ -126,6 +132,7 @@ namespace NyFolder.Protocol {
 			}
 		}
 
+		/// File is Ended, Save it
 		public static void SaveFile (PeerSocket peer, XmlRequest xml) {
 			FileReceiver fileRecv = LookupFileReceiver(peer, xml);
 
@@ -142,11 +149,13 @@ namespace NyFolder.Protocol {
 			}			
 		}
 
+		/// Remove file from Download Manager
 		public static void Remove (PeerSocket peer, XmlRequest xml) {
 			FileReceiver fileRecv = LookupFileReceiver(peer, xml);
 			if (fileRecv != null) Remove(fileRecv);
 		}
 
+		/// Remove file from Download Manager
 		public static void Remove (FileReceiver fileReceiver) {
 			fileReceiver.Save();
 			RemoveFileReceiver(fileReceiver.Peer, fileReceiver.FileName);
@@ -156,6 +165,7 @@ namespace NyFolder.Protocol {
 			if (Finished != null) Finished(fileReceiver);
 		}
 
+		/// Abort file Download
 		public static void Abort (FileReceiver fileReceiver) {
 			SendFileAbort(fileReceiver.Peer, 
 						  fileReceiver.FileName, fileReceiver.FileSize);
@@ -208,10 +218,12 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Number of Downloads
 		public static int NDownloads {
 			get { return(numDownloads); }
 		}
 
+		/// Get Receiving File List
 		public static Hashtable ReceivingFileList {
 			get { return(recvFileList); }
 		}

@@ -59,6 +59,7 @@ namespace NyFolder.Protocol {
 		}
 	}
 
+	/// File Sender
 	public class FileSender {
 		// ============================================
 		// PUBLIC Consts
@@ -84,6 +85,7 @@ namespace NyFolder.Protocol {
 		private string fileName;
 		private Thread thread;
 
+		/// Create New File Sender
 		public FileSender (PeerSocket peer, string fileName) {
 			this.peer = peer;
 			this.fileContent = null;
@@ -96,6 +98,7 @@ namespace NyFolder.Protocol {
 			thread = null;
 		}
 
+		/// Create New File Sender
 		public FileSender (PeerSocket peer, string path, string displayName) {
 			this.peer = peer;
 			this.fileContent = null;
@@ -111,12 +114,14 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Start to Send File
 		public void Start() {
 			thread = new Thread(new ThreadStart(StartSendingFile));
 			thread.Name = "Send File " + fileName;
 			thread.Start();
 		}
 
+		/// Stop File Sending
 		public void Stop() {
 			if (ended == true) return;
 			if (thread.IsAlive) {
@@ -242,22 +247,27 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Peer Receiver
 		public PeerSocket Peer {
 			get { return(this.peer); }
 		}
 
+		/// Get File Name
 		public string FileName {
 			get { return(this.fileName); }
 		}
 
+		/// Get File Size
 		public long FileSize {
 			get { return(this.fileSize); }
 		}
 
+		/// Get File Sended Size
 		public long FileSendedSize {
 			get { return(this.sendedSize); }
 		}
 
+		/// Get Sended Percentage
 		public int SendedPercent {
 			get { return(this.sendedPercent); }
 		}

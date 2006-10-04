@@ -25,6 +25,7 @@ using NyFolder;
 using NyFolder.Protocol;
 
 namespace NyFolder.GUI {
+	/// Network Store
 	public class NetworkStore : Gtk.ListStore {
 		// ============================================
 		// PUBLIC CONST Members
@@ -52,6 +53,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Add New Peer
 		public void Add (UserInfo userInfo) {
 			// Setup Pixbuf
 			Gdk.Pixbuf pixbuf;
@@ -64,38 +66,45 @@ namespace NyFolder.GUI {
 			this.AppendValues(userInfo, userInfo.Name, pixbuf);
 		}
 
+		/// Remove Peer
 		public void Remove (UserInfo userInfo) {
 			this.rmUser = userInfo;
 			this.Foreach(RemoveForeach);
 			this.rmUser = null;
 		}
 
+		/// Return Peer UserInfo at TreePath position.
 		public UserInfo GetUserInfo (TreePath path) {
 			TreeIter iter;
 			GetIter(out iter, path);
 			return((UserInfo) GetValue(iter, COL_USER_INFO));
 		}
 
+		/// Return Peer UserInfo at TreeIter position.
 		public UserInfo GetUserInfo (TreeIter iter) {
 			return((UserInfo) GetValue(iter, COL_USER_INFO));
 		}
 
+		/// Return Peer Name at TreePath position.
 		public string GetName (TreePath path) {
 			TreeIter iter;
 			GetIter(out iter, path);
 			return((string) GetValue(iter, COL_NAME));
 		}
 
+		/// Return Peer Name at TreeIter position.
 		public string GetName (TreeIter iter) {
 			return((string) GetValue(iter, COL_NAME));
 		}
 
+		/// Return Pixbuf Icon stored at TreePath position. 
 		public Gdk.Pixbuf GetPixbuf (TreePath path) {
 			TreeIter iter;
 			GetIter(out iter, path);
 			return((Gdk.Pixbuf) GetValue(iter, COL_PIXBUF));
 		}
 
+		/// Return Pixbuf Icon stored at TreeIter position. 
 		public Gdk.Pixbuf GetPixbuf (TreeIter iter) {
 			return((Gdk.Pixbuf) GetValue(iter, COL_PIXBUF));
 		}

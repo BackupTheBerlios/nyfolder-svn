@@ -37,6 +37,7 @@ namespace NyFolder.Protocol {
 		public UploadManagerException (string msg, Exception inner) : base(msg, inner) {}
 	}
 
+	/// Upload Manager
 	public static class UploadManager {
 		// ============================================
 		// PUBLIC Events
@@ -54,11 +55,13 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Initialize Upload Manager
 		public static void Initialize() {
 			uploads = Hashtable.Synchronized(new Hashtable());
 			numUploads = 0;
 		}
 
+		/// Uninitialize Upload Manager
 		public static void Clear() {
 			foreach (PeerSocket peer in uploads.Keys) {
 				foreach (FileSender fileSender in (ArrayList) uploads[peer]) {
@@ -75,6 +78,7 @@ namespace NyFolder.Protocol {
 			numUploads = 0;
 		}
 
+		/// Add Upload
 		public static void Add (UserInfo userInfo, string path) {
 			if (uploads == null)
 				throw(new UploadManagerException("Upload Manager Not Initialized"));
@@ -114,6 +118,7 @@ namespace NyFolder.Protocol {
 			if (Added != null) Added(fileSender);
 		}
 
+		/// Remove Upload
 		public static void Remove (UserInfo userInfo, string path) {
 			if (uploads == null)
 				throw(new UploadManagerException("Upload Manager Not Initialized"));
@@ -123,6 +128,7 @@ namespace NyFolder.Protocol {
 			Remove(peer, path);
 		}
 
+		/// Remove Upload
 		public static void Remove (PeerSocket peer, string path) {
 			UserInfo userInfo = peer.Info as UserInfo;
 
@@ -142,6 +148,7 @@ namespace NyFolder.Protocol {
 			if (fileSender != null) Remove(fileSender);
 		}
 
+		/// Remove Upload
 		public static void Remove (FileSender fileSender) {
 			ArrayList fileSenderList = uploads[fileSender.Peer] as ArrayList;
 
@@ -160,6 +167,7 @@ namespace NyFolder.Protocol {
 			if (Finished != null) Finished(fileSender);
 		}
 
+		/// Abort Upload
 		public static void Abort (FileSender fileSender) {
 			SendFileAbort(fileSender.Peer, 
 						  fileSender.FileName, fileSender.FileSize);
@@ -198,10 +206,12 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Number of Uploads
 		public static int NUploads {
 			get { return(numUploads); }
 		}
 
+		/// Get Upload File List
 		public static Hashtable UploadsFileList {
 			get { return(uploads); }
 		}

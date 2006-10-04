@@ -44,21 +44,31 @@ namespace NyFolder.Plugins.Talk {
 		
 		private static string[,] emoticons = {
 			{"face-angel", "0:-)"},
+			{"face-angel", "0:)"},
 			{"face-crying", ":'("},
 			{"face-devil-grin", ">:-)"},
+			{"face-devil-grin", ">:)"},
 			{"face-devil-sad", ">:-("},
+			{"face-devil-sad", ">:("},
 			{"face-glasses", "B-)"},
+			{"face-glasses", "B)"},
 			{"face-kiss", ":-*"},
+			{"face-kiss", ":*"},
 			{"face-monkey", ":-(|)"},
+			{"face-monkey", ":(|)"},
 			{"face-plain", ":-|"},
+			{"face-plain", ":|"},
 			{"face-sad", ":-("},
 			{"face-sad", ":("},
 			{"face-smile", ":)"},
 			{"face-smile-big", ":-D"},
 			{"face-smile-big", ":D"},
 			{"face-smirk", ":-!"},
+			{"face-smirk", ":!"},
 			{"face-surprise", ":-0"},
-			{"face-wink", ";-)"}
+			{"face-surprise", ":0"},
+			{"face-wink", ";-)"},
+			{"face-wink", ";)"}
 		};
 		
 		// ============================================

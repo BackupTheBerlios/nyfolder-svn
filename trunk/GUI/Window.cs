@@ -25,6 +25,7 @@ using Niry;
 using Niry.GUI.Gtk2;
 
 namespace NyFolder.GUI {
+	/// NyFolder Main Window
 	public class Window : Gtk.Window {
 		// ============================================
 		// PUBLIC Events
@@ -51,6 +52,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
+		/// Create New NyFolder Window
 		public Window() : base(Info.Name + " " + Info.Version) {
 			// Initialize Window
 			this.SetDefaultSize(620, 320);
@@ -158,26 +160,32 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Window Menu & Toolbar Manager
 		public MenuManager Menu {
 			get { return(this.menuManager); }
 		}
 
+		/// Get Window MenuBar
 		public Gtk.MenuBar MenuBar {
 			get { return((Gtk.MenuBar) this.menuManager.GetWidget("/MenuBar")); }
 		}
 
+		/// Get Window ToolBar
 		public Gtk.Toolbar ToolBar {
 			get { return((Gtk.Toolbar) menuManager.GetWidget("/ToolBar")); }
 		}
 
+		/// Get Window User Panel
 		public UserPanel UserPanel {
 			get { return(this.userPanel); }
 		}
 
+		/// Get Window Notebook Viewer
 		public NotebookViewer NotebookViewer {
 			get { return(this.notebookViewer); }
 		}
 
+		/// Get Window Status Bar
 		public Gtk.Statusbar StatusBar {
 			get { return(this.statusBar); }
 		}

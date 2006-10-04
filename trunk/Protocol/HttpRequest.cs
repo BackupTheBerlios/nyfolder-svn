@@ -33,6 +33,7 @@ using NyFolder;
 using NyFolder.Utils;
 
 namespace NyFolder.Protocol {
+	/// Web Server Interaction
 	public sealed class HttpRequest {
 		// ============================================
 		// PRIVATE STATIC Members
@@ -49,6 +50,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC STATIC Methods
 		// ============================================
+		/// Get User IP
 		public static string Ip (UserInfo userInfo) {
 			// Make Url & Request
 			string url = MakeUrl(userInfo, "GetIp.php", null);
@@ -62,6 +64,7 @@ namespace NyFolder.Protocol {
 			throw(new Exception(xml.FirstTag + ": " + xml.BodyText));
 		}
 
+		/// Get User Port
 		public static int Port (UserInfo userInfo) {
 			// Make Url & Request
 			string url = MakeUrl(userInfo, "GetPort.php", null);
@@ -75,6 +78,7 @@ namespace NyFolder.Protocol {
 			throw(new Exception(xml.FirstTag + ": " + xml.BodyText));
 		}
 
+		/// Check User Authentication
 		public static bool Authentication (UserInfo userInfo) {
 			// Set Options
 			Hashtable options = new Hashtable();
@@ -92,7 +96,7 @@ namespace NyFolder.Protocol {
 			return(false);
 		}
 
-		// Return: IpWeb & Magic
+		/// Do Login and return IpWeb & Magic
 		public static bool Login (UserInfo userInfo, string password) {
 			// Set Options
 			Hashtable options = new Hashtable();
@@ -113,6 +117,7 @@ namespace NyFolder.Protocol {
 			throw(new Exception(xml.FirstTag + ": " + xml.BodyText));
 		}
 
+		/// Logout On Server
 		public static void Logout (UserInfo userInfo) {
 			// Set Options
 			Hashtable options = new Hashtable();
@@ -129,6 +134,7 @@ namespace NyFolder.Protocol {
 			}
 		}
 
+		/// Connect on Server
 		public static void Connect (UserInfo userInfo, int port) {
 			// Set Options
 			Hashtable options = new Hashtable();
@@ -146,6 +152,7 @@ namespace NyFolder.Protocol {
 			}
 		}
 
+		/// Disconnect from Server
 		public static void Disconnect (UserInfo userInfo) {
 			// Set Options
 			Hashtable options = new Hashtable();
@@ -162,6 +169,7 @@ namespace NyFolder.Protocol {
 			}
 		}
 
+		/// Update My Server Status
 		public static void Update (UserInfo userInfo) {
 			// Set Options
 			Hashtable options = new Hashtable();

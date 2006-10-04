@@ -28,6 +28,7 @@ namespace NyFolder.Protocol {
 		public UserInfoException (string msg, Exception inner) : base(msg, inner) {}
 	}
 
+	/// Rapresent User (Informations)
 	public class UserInfo {
 		// ============================================
 		// PROTECTED Members
@@ -66,6 +67,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods (HttpRequest Required)
 		// ============================================
+		/// Fetch Ip and Port from Web Server (Require Secure Auth)
 		public void GetIpAndPort() {
 			if (secureAuth == true) {
 				this.ip = HttpRequest.Ip(this);
@@ -73,6 +75,7 @@ namespace NyFolder.Protocol {
 			}
 		}
 
+		/// Set User Ip and Port
 		public void SetIpAndPort (string ip, int port) {
 			this.ip = ip;
 			this.port = port;
@@ -81,6 +84,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Get User Name without Domain (name@domain)
 		public string GetName() {
 			// username@domain
 			int domainStart = name.LastIndexOf('@');
@@ -88,6 +92,7 @@ namespace NyFolder.Protocol {
 			return(name.Substring(0, domainStart));
 		}
 
+		/// Get User Domain (name@domain)
 		public string GetDomain() {
 			// username@domain
 			int domainStart = name.LastIndexOf('@');
@@ -102,25 +107,30 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Informations Hashtable
 		public Hashtable Informations {
 			get { return(this.informations); }
 		}
 		
+		/// Get or Set User Username
 		public string Name {
 			get { return(this.name); }
 			set { this.name = value; }
 		}
 
+		/// Get or Set User IP
 		public string Ip {
 			get { return(this.ip); }
 			set { this.ip = value; }
 		}
 
+		/// Get or Set User Port
 		public int Port {
 			get { return(this.port); }
 			set { this.port = value; }
 		}
 
+		/// Get or Set if User uses Secure Auth
 		public bool SecureAuthentication {
 			get { return(this.secureAuth); }
 			set { this.secureAuth = value; }

@@ -98,6 +98,7 @@ namespace NyFolder.GUI.Dialogs {
 		}
 	}
 
+	/// Login Dialog
 	public class Login : LoginDialog {
 		// ============================================
 		// PROTECTED Members
@@ -108,6 +109,7 @@ namespace NyFolder.GUI.Dialogs {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
+		/// Create New Login Dialog
 		public Login() {
 			SetDefaultSize(240, 355);
 			DefaultIcon = StockIcons.GetPixbuf("NyFolderIcon");
@@ -139,6 +141,7 @@ namespace NyFolder.GUI.Dialogs {
 			ShowAll();
 		}
 
+		/// Return true if Input is Valid
 		public bool ValidateInput() {
 			// Check NULL Username
 			if (Username == "" || Username == null) {
@@ -163,6 +166,7 @@ namespace NyFolder.GUI.Dialogs {
 			return(true);
 		}
 
+		/// Check Login, Return null if Login failed
 		public UserInfo CheckLogin() {
 			MyInfo.Initialize(Username, SecureAuthentication);
 
@@ -245,6 +249,7 @@ namespace NyFolder.GUI.Dialogs {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get or Set Secure Authentication Check Button
 		public bool SecureAuthentication {
 			set { checkSecureAuth.Active = value; }
 			get { return(checkSecureAuth.Active); }

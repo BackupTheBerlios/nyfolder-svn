@@ -23,6 +23,7 @@ using Glade;
 using System;
 
 namespace NyFolder.GUI.Dialogs {
+	/// Add Peer Dialog
 	public class AddPeer {
 		[Glade.WidgetAttribute]
 		private Gtk.Dialog dialog;
@@ -39,7 +40,7 @@ namespace NyFolder.GUI.Dialogs {
 		[Glade.WidgetAttribute]
 		private Gtk.Expander expander;
 
-
+		/// Create New Add Peer Dialog
 		public AddPeer() {
 			XML xml = new XML(null, "AddPeerDialog.glade", "dialog", null);
 			xml.Autoconnect(this);
@@ -54,10 +55,12 @@ namespace NyFolder.GUI.Dialogs {
 			OnCheckSecureAuthToggled(checkSecureAuth, null);
 		}
 
+		/// Run Dialog
 		public ResponseType Run() {
 			return((ResponseType) dialog.Run());
 		}
 
+		/// Destroy Dialog
 		public void Destroy() {
 			dialog.Destroy();
 		}
@@ -116,21 +119,25 @@ namespace NyFolder.GUI.Dialogs {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get or Set User UserName
 		public string Username {
 			set { entryUserName.Text = value; }
 			get { return(entryUserName.Text == "" ? null : entryUserName.Text); }
 		}
 
+		/// Get or Set User Ip
 		public string Ip {
 			set { entryIP.Text = value; }
 			get { return(entryIP.Text == "" ? null : entryIP.Text); }
 		}
 
+		/// Get or Set User Port
 		public int Port {
 			set { spinPort.Value = value; }
 			get { return(spinPort.ValueAsInt); }
 		}
 
+		/// Get or Set if User has Secure Authentication
 		public bool SecureAuthentication {
 			set { checkSecureAuth.Active = value; }
 			get { return(checkSecureAuth.Active); }

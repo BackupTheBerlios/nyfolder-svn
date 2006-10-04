@@ -29,6 +29,7 @@ using Niry;
 using Niry.GUI.Gtk2;
 
 namespace NyFolder.GUI {
+	/// NyFolder Stock Icons
 	public static class StockIcons {
 		private static readonly string[] stock_icons = {
 			"Logout",
@@ -129,6 +130,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Initialize NyFolder Stock Icons (Only Main() Call This)
 		public static void Initialize () {
 			Gtk.IconFactory factory = new Gtk.IconFactory();
 			factory.AddDefault();
@@ -148,6 +150,7 @@ namespace NyFolder.GUI {
 			}
 		}
 		
+		/// Add New Pixbuf to Stock
 		public static void AddToStock (string name, Gdk.Pixbuf pixbuf) {
 			Gtk.IconFactory factory = new Gtk.IconFactory();
 			factory.AddDefault();
@@ -155,34 +158,42 @@ namespace NyFolder.GUI {
 			factory.Add(name, iconset);
 		}
 
+		/// Add New Pixbuf to Stock Images
 		public static void AddToStockImages (string name, Gdk.Pixbuf pixbuf) {
 			stock_images.Add(name, pixbuf);
 		}
 
+		/// Get Pixbuf from Stock Images
 		public static Gdk.Pixbuf GetPixbuf (string name) {
 			return((Gdk.Pixbuf) stock_images[name]);
 		}
 
+		/// Get and Resize Pixbuf from Stock Images
 		public static Gdk.Pixbuf GetPixbuf (string name, int size) {
 			return(ImageUtils.Resize((Gdk.Pixbuf) stock_images[name], size, size));
 		}
 
+		/// Get and Resize Pixbuf from Stock Images
 		public static Gdk.Pixbuf GetPixbuf (string name, int width, int height) {
 			return(ImageUtils.Resize((Gdk.Pixbuf) stock_images[name], width, height));
 		}
 
+		/// Get and Resize Image from Stock Images
 		public static Gtk.Image GetImage (string name) {
 			return(new Gtk.Image((Gdk.Pixbuf) stock_images[name]));
 		}
 
+		/// Get and Resize Image from Stock Images
 		public static Gtk.Image GetImage (string name, int size) {
 			return(new Gtk.Image(GetPixbuf(name, size, size)));
 		}
 
+		/// Get and Resize Image from Stock Images
 		public static Gtk.Image GetImage (string name, int width, int height) {
 			return(new Gtk.Image(GetPixbuf(name, width, height)));
 		}
 
+		/// Get File Icon Pixbuf from File Extension
 		public static Gdk.Pixbuf GetFileIconPixbuf (string ext) {
 			string type = "FileType" + ext;
 			if (ext == null || IsPresent(type) == false) 
@@ -190,6 +201,7 @@ namespace NyFolder.GUI {
 			return(GetPixbuf(type));
 		}
 
+		/// Get File Icon Image from File Extension
 		public static Gtk.Image GetFileIconImage (string ext) {
 			string type = "FileType" + ext;
 			if (ext == null || IsPresent(type) == false) 
@@ -197,6 +209,7 @@ namespace NyFolder.GUI {
 			return(GetImage(type));
 		}
 
+		/// Return true if Stock Image Name is into Image Stock
 		public static bool IsPresent (string name) {
 			return(stock_images.ContainsKey(name));
 		}

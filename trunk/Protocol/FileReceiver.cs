@@ -33,6 +33,7 @@ using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.Protocol {
+	/// File Receiver
 	public class FileReceiver {
 		// ============================================
 		// PRIVATE Members
@@ -43,6 +44,7 @@ namespace NyFolder.Protocol {
 		private long fileSaved;
 		private long fileSize;
 
+		/// Create New File Receiver
 		public FileReceiver (PeerSocket peer, XmlRequest xml, string name) {
 			this.peer = peer;
 			this.fileSaved = 0;
@@ -61,6 +63,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Add File Part
 		public void Append (XmlRequest xml) {
 			int part = int.Parse((string) xml.Attributes["part"]);
 			byte[] data = Convert.FromBase64String(xml.BodyText);
@@ -71,6 +74,7 @@ namespace NyFolder.Protocol {
 			binaryWriter.Write(data, 0, data.Length);
 		}
 
+		/// Save File
 		public void Save() {
 			binaryWriter.Flush();
 			binaryWriter.Close();
@@ -84,22 +88,27 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Peer Sender
 		public PeerSocket Peer {
 			get { return(this.peer); }
 		}
 
+		/// Get File Name
 		public string FileName {
 			get { return(this.fileName); }
 		}
 
+		/// Get File Size
 		public long FileSize {
 			get { return(this.fileSize); }
 		}
 
+		/// Get File Saved Size
 		public long FileSavedSize {
 			get { return(this.fileSaved); }
 		}
 
+		/// Get Received Percentage
 		public int ReceivedPercent {
 			get { return((int) (((double) fileSaved / (double) fileSize) * 100)); }
 		}

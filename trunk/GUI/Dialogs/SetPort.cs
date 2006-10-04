@@ -26,6 +26,7 @@ using Niry;
 using Niry.Network;
 
 namespace NyFolder.GUI.Dialogs {
+	/// Set P2P Port Dialog
 	public class SetPort {
 		[Glade.WidgetAttribute]
 		private Gtk.Dialog dialog;
@@ -34,7 +35,7 @@ namespace NyFolder.GUI.Dialogs {
 		[Glade.WidgetAttribute]
 		private Gtk.SpinButton spinPort;
 
-
+		/// Create new Dialog
 		public SetPort() {
 			XML xml = new XML(null, "SetPortDialog.glade", "dialog", null);
 			xml.Autoconnect(this);
@@ -45,10 +46,12 @@ namespace NyFolder.GUI.Dialogs {
 			this.dialog.ShowAll();
 		}
 
+		/// Run Dialog
 		public ResponseType Run() {
 			return((ResponseType) dialog.Run());
 		}
 
+		/// Destroy Dialog
 		public void Destroy() {
 			dialog.Destroy();
 		}
@@ -56,6 +59,7 @@ namespace NyFolder.GUI.Dialogs {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get or Set P2P Port
 		public int Port {
 			set { spinPort.Value = value; }
 			get { return(spinPort.ValueAsInt); }

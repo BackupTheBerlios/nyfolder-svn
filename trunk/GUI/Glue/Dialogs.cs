@@ -34,8 +34,9 @@ using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.GUI.Glue {
+	/// Utility Dialogs
 	public static class Dialogs {
-		// Simple Message Error Dialog
+		/// Simple Message Error Dialog
 		public static void MessageError (string title, string message) {
 			MessageDialog dialog;
 
@@ -47,6 +48,7 @@ namespace NyFolder.GUI.Glue {
 			dialog.Destroy();
 		}
 
+		/// Simple Yes/No Question Dialog
 		public static bool QuestionDialog (string title, string message) {
 			MessageDialog dialog;
 			dialog = new MessageDialog(null, DialogFlags.Modal, MessageType.Question, 
@@ -58,6 +60,7 @@ namespace NyFolder.GUI.Glue {
 			return(response);
 		}
 
+		/// Save File Dialog
 		public static string SaveFile (string path, string fileName) {
 			FileChooserDialog dialog = new FileChooserDialog("Save File", null,
 															 FileChooserAction.Save);
@@ -89,6 +92,7 @@ namespace NyFolder.GUI.Glue {
 			return(filePath);
 		}
 
+		/// Replace Existing File Dialog
 		public static bool ReplaceExistingFile (string fileName) {
 			FileInfo fileInfo = new FileInfo(fileName);
 
@@ -102,7 +106,7 @@ namespace NyFolder.GUI.Glue {
 		}
 
 
-		// Run Proxy Settings Dialog & Save Configuration
+		/// Run Proxy Settings Dialog & Save Configuration
 		public static void ProxySettings() {
 			GUI.Dialogs.ProxySettings dialog = new GUI.Dialogs.ProxySettings();
 
@@ -133,7 +137,7 @@ namespace NyFolder.GUI.Glue {
 			dialog.Destroy();
 		}
 
-		// Run P2P SetPort & Save Configuration
+		/// Run P2P SetPort & Save Configuration
 		public static void SetP2PPort() {
 			GUI.Dialogs.SetPort dialog = new GUI.Dialogs.SetPort();
 
@@ -143,7 +147,7 @@ namespace NyFolder.GUI.Glue {
 			dialog.Destroy();
 		}
 
-		// Run Add Peer Dialog
+		/// Run Add Peer Dialog
 		public static UserInfo AddPeer() {
 			GUI.Dialogs.AddPeer dialog = new GUI.Dialogs.AddPeer();
 			ResponseType response;
@@ -176,6 +180,7 @@ namespace NyFolder.GUI.Glue {
 			return(null);
 		}
 
+		/// Run Remove Peer Dialog
 		public static UserInfo RemovePeer (NetworkViewer networkViewer) {
 			GUI.Dialogs.RemovePeer dialog = new GUI.Dialogs.RemovePeer();
 			ResponseType response = dialog.Run();

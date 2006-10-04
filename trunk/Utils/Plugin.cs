@@ -27,11 +27,17 @@ using NyFolder;
 using NyFolder.Protocol;
 
 namespace NyFolder.Utils {
+	/// Plugin Interface
 	public interface INyFolder {
+		/// Event Handler for Quitting Application 
 		event BlankEventHandler QuittingApplication;
+		/// Event Handler for Main Window Started
 		event BlankEventHandler MainWindowStarted;
 
+		/// Main Window
 		GUI.Window Window { get; }
+
+		/// My Infos
 		UserInfo MyInfo { get; }
 	}
 

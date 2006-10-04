@@ -26,6 +26,7 @@ using Niry;
 using Niry.Utils;
 
 namespace NyFolder.GUI {
+	/// Rapresent The User Shared Folder
 	public class FolderStore : Gtk.ListStore {
 		// ============================================
 		// PUBLIC CONST Members
@@ -69,6 +70,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Add an Existing File or Directory
 		public void Add (string path) {
 			if (Directory.Exists(path) == true) {
 				AddDirectory(path);
@@ -77,6 +79,7 @@ namespace NyFolder.GUI {
 			}
 		}
 
+		/// Add File
 		public void AddFile (string path) {
 			FileInfo fileInfo = new FileInfo(path);
 			string ext = GetIconTypeName(fileInfo);
@@ -89,6 +92,7 @@ namespace NyFolder.GUI {
 			if (FileAdded != null) FileAdded(this, iter);
 		}
 
+		/// Add Directory
 		public void AddDirectory (string path) {
 			DirectoryInfo dirInfo = new DirectoryInfo(path);
 			Gdk.Pixbuf pixbuf = StockIcons.GetPixbuf("Directory");
@@ -100,6 +104,7 @@ namespace NyFolder.GUI {
 			if (DirectoryAdded != null) DirectoryAdded(this, iter);
 		}
 
+		/// Insert Recursively Files and Directories found into path
 		public void Fill (string path) {
 			// Now Go Through The Directory and Extract All The File Information
 			if (Directory.Exists(path) == false)
@@ -121,11 +126,13 @@ namespace NyFolder.GUI {
 			}
 		}
 
+		/// Remove File or Directory
 		public void Remove (string path) {
 			Gtk.TreeIter iter = GetIter(path);
 			this.Remove(ref iter);
 		}
 
+		/// Return TreeIter relative to specified path
 		public Gtk.TreeIter GetIter (string path) {
 			this.fPath = path;
 			this.fIter = Gtk.TreeIter.Zero;
@@ -134,46 +141,55 @@ namespace NyFolder.GUI {
 			return(this.fIter);
 		}
 
+		/// Return File Path string stored at TreePath position
 		public string GetFilePath (TreePath path) {
 			TreeIter iter;
 			GetIter(out iter, path);
 			return((string) GetValue(iter, COL_PATH));
 		}
 
+		/// Return File Path string stored at TreeIter position
 		public string GetFilePath (TreeIter iter) {
 			return((string) GetValue(iter, COL_PATH));
 		}
 
+		/// Return File Name string stored at TreePath position
 		public string GetFileName (TreePath path) {
 			TreeIter iter;
 			GetIter(out iter, path);
 			return((string) GetValue(iter, COL_NAME));
 		}
 
+		/// Return File Name string stored at TreeIter position
 		public string GetFileName (TreeIter iter) {
 			return((string) GetValue(iter, COL_NAME));
 		}
 
+		/// Return File Icon Pixbuf stored at TreePath position
 		public Gdk.Pixbuf GetPixbuf (TreePath path) {
 			TreeIter iter;
 			GetIter(out iter, path);
 			return((Gdk.Pixbuf) GetValue(iter, COL_PIXBUF));
 		}
 
+		/// Return File Icon Pixbuf stored at TreeIter position
 		public Gdk.Pixbuf GetPixbuf (TreeIter iter) {
 			return((Gdk.Pixbuf) GetValue(iter, COL_PIXBUF));
 		}
 
+		/// Return true or false if file stored at TreePath position is a directory
 		public bool GetIsDirectory (TreePath path) {
 			TreeIter iter;
 			GetIter(out iter, path);
 			return((bool) GetValue(iter, COL_IS_DIRECTORY));
 		}
 
+		/// Return true or false if file stored at TreeIter position is a directory
 		public bool GetIsDirectory (TreeIter iter) {
 			return((bool) GetValue(iter, COL_IS_DIRECTORY));
 		}
 
+		/// Set New Icon Pixbuf for File at TreeIter Positions
 		public void SetPixbuf (TreeIter iter, Gdk.Pixbuf pixbuf) {
 			SetValue(iter, COL_PIXBUF, pixbuf);
 		}
@@ -181,6 +197,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PROTECTED Methods
 		// ============================================
+		/// Return string rapresenting File Icon Type
 		protected string GetIconTypeName (FileInfo fileInfo) {
 			string ext = fileInfo.Extension;
 			if (ext != null && ext != "") {
@@ -226,6 +243,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Set or Get if Show or Not Hidden File
 		public bool ShowHiddenFile {
 			get { return(this.showHiddenFile); }
 			set { this.showHiddenFile = value; }

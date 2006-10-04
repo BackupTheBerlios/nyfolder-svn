@@ -40,9 +40,9 @@ namespace NyFolder.Utils {
 		}
 
 		// ============================================
-		// PRIVATE Methods
+		// PUBLIC Methods
 		// ============================================
-		private void ScanAssemblyForPlugins (Assembly asm) {
+		public void ScanAssemblyForPlugins (Assembly asm) {
 			foreach (Type t in asm.GetTypes()) {				
 				if (t.IsSubclassOf(typeof(Plugin)) == true) {
 					Plugin plugin = (Plugin) Activator.CreateInstance(t);				
@@ -51,7 +51,7 @@ namespace NyFolder.Utils {
 			}
 		}
 
-		private void FindAssemblies (string dir) {
+		public void FindAssemblies (string dir) {
 			if (dir == null || dir == "") return;
 
 			DirectoryInfo info = new DirectoryInfo(dir);

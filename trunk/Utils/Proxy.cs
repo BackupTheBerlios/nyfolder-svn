@@ -25,6 +25,7 @@ using System.Net;
 using System.Text;
 
 namespace NyFolder.Utils {
+	/// Proxy Settings
 	public static class Proxy {
 		// ============================================
 		// PUBLIC Members
@@ -44,6 +45,7 @@ namespace NyFolder.Utils {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Initialize Proxy from Configuration File
 		public static void Initialize() {
 			try {
 				string file = Path.Combine(Utils.Paths.ConfigDirectory, ConfigFile);
@@ -58,6 +60,7 @@ namespace NyFolder.Utils {
 			}
 		}
 
+		/// Get WebProxy
 		public static WebProxy GetConfig() {
 			if (EnableProxy == false || Host == null)
 				return(null);
@@ -72,6 +75,7 @@ namespace NyFolder.Utils {
 			return(proxy);
 		}
 
+		/// Save Proxy Settings on Configuration File
 		public static void Save() {
 			string file = Path.Combine(Paths.ConfigDirectory, ConfigFile);
 			XmlTextWriter xmlWriter = new XmlTextWriter(file, Encoding.UTF8);

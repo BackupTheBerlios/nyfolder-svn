@@ -27,6 +27,7 @@ using Niry.GUI.Gtk2;
 namespace NyFolder.GUI {
 	public delegate void RightMenuHandler (object sender, PopupMenu menu);
 
+	/// Menu and Toolbar Manager
 	public sealed class MenuManager : Gtk.UIManager {
 		// ============================================
 		// PUBLIC Events
@@ -152,19 +153,21 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Update Menu with new Action Entries
 		public void AddMenus (string ui, ActionEntry[] entries) {
 			AddUiFromString(ui);
 			actionGroup.Add(entries);
 			EnsureUpdate();
 		}
 
+		/// Update Menu with new Toggled Action Entries
 		public void AddMenus (string ui, ToggleActionEntry[] entries) {
 			AddUiFromString(ui);
 			actionGroup.Add(entries);
 			EnsureUpdate();
 		}
 
-
+		/// Set Menu Widget Sensitive
 		public void SetSensitive (string path, bool sensitive) {
 			Widget widget = GetWidget(path);
 			if (widget != null) widget.Sensitive = sensitive;
@@ -180,6 +183,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Menu Group Action
 		public ActionGroup GroupAction {
 			get { return(this.actionGroup); }
 		}

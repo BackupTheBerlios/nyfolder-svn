@@ -27,9 +27,11 @@ using Niry.Utils;
 using NyFolder;
 
 namespace NyFolder.Utils {
+	/// NyFolder Files & Folder Paths
 	public static class Paths {
 		private static string home_directory = null;
 
+		/// Initialize NyFolder Paths (Only Main() call This)
 		public static void Initialize () {
 			home_directory = Environment.GetFolderPath(
 								Environment.SpecialFolder.Personal);
@@ -39,33 +41,39 @@ namespace NyFolder.Utils {
 			FileUtils.CreateDirectory(DefaultSharedDirectory);
 		}
 
+		/// Get User Shared Directory Path
 		public static string UserSharedDirectory (string username) {
 			string path = Path.Combine(DefaultSharedDirectory, username);
 			FileUtils.CreateDirectory(path);
 			return(path);
 		}
 
+		/// Get Current User Home Directory Path
 		public static string HomeDirectory {
 			get { return(home_directory); }
 		}
 
+		/// Get Current User Config Directory Path
 		public static string ConfigDirectory {
 			get { return(Path.Combine(home_directory, ".nyFolder")); }
 		}
 
+		/// Get Current User Plugin Directory Path
 		public static string UserPluginDirectory {
 			get { return(Path.Combine(ConfigDirectory, "Plugins")); }
 		}
 
+		/// Get Default Shared Directory
 		public static string DefaultSharedDirectory {
 			get {return(Path.Combine(ConfigDirectory, "Shared")); }
 		}
 
-		// NyFolder's (System's) Directory
+		/// NyFolder System Directory
 		public static string SystemDirectory {
 			get { return(NyFolder.Info.InstallDirectory); }
 		}
 
+		/// System's Plugin Directory
 		public static string SystemPluginDirectory {
 			get { return(Path.Combine(SystemDirectory, "Plugins")); }
 		}

@@ -29,6 +29,7 @@ using Niry.GUI.Gtk2;
 using NyFolder;
 
 namespace NyFolder.GUI.Dialogs {
+	/// NyFolder About Dialog
 	public class About : Gtk.Window {
 		private ScrollBox scrollBox;
 		private Gtk.Image imageLogo;
@@ -49,6 +50,7 @@ namespace NyFolder.GUI.Dialogs {
 			"Kde Look - http://kde-look.org"
 		};
 
+		/// Create New About Dialog
 		public About() : base("About " + Info.Name) {
 			// Initialize Dialog Window Options
 			this.SetDefaultSize(300, 275);

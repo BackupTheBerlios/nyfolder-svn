@@ -29,6 +29,7 @@ using NyFolder;
 using NyFolder.Protocol;
 
 namespace NyFolder.GUI {
+	/// Notebook Viewer
 	public class NotebookViewer : Gtk.Notebook {
 		// ============================================
 		// PUBLIC Events
@@ -87,10 +88,12 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Append User Folder Viewer
 		public int Append (UserInfo userInfo) {
 			return(Append(userInfo, userInfo.Name));
 		}
 
+		/// Append User Folder Viewer
 		public int Append (UserInfo userInfo, string label) {
 			FolderViewer folderViewer = LookupPage(userInfo);
 			int npage;
@@ -133,6 +136,7 @@ namespace NyFolder.GUI {
 			return(npage);
 		}
 
+		/// Remove User Folder Viewer
 		public void Remove (UserInfo userInfo) {
 			FolderViewer folderViewer = LookupPage(userInfo);
 			if (folderViewer != null) {
@@ -164,6 +168,7 @@ namespace NyFolder.GUI {
 			}
 		}
 
+		/// Remove All Users Folder Viewer
 		public void RemoveAll() {
 			foreach (UserInfo userInfo in this.pages)
 				Remove(userInfo);
@@ -171,10 +176,12 @@ namespace NyFolder.GUI {
 			this.tabs.Clear();
 		}
 
+		/// Return User Folder Viewer
 		public FolderViewer LookupPage (UserInfo userInfo) {
 			return((FolderViewer) this.pages[userInfo]);
 		}
 
+		/// Append Custom Widget
 		public int AppendCustom (Gtk.Widget page, string label, Gtk.Image icon) {
 			int npage;
 
@@ -203,6 +210,7 @@ namespace NyFolder.GUI {
 			return(npage);
 		}
 
+		/// Remove Custom Widget
 		public void RemoveCustom (Gtk.Widget page) {
 			if (page != null) {
 				// Remove TabLabel -> Page
@@ -225,6 +233,7 @@ namespace NyFolder.GUI {
 			}
 		}
 
+		/// Select Network Viewer Tab
 		public void SelectNetworkViewer() {
 			// Set Network Viewer as Current Page
 			CurrentPage = 0;
@@ -286,6 +295,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Network Viewer
 		public NetworkViewer NetworkViewer {
 			get { return(this.networkViewer); }
 		}

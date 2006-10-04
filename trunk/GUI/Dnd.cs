@@ -30,6 +30,7 @@ using System.Collections;
 using System.Text.RegularExpressions;
 
 namespace NyFolder.GUI {
+	/// Drag & Drop Utils
 	public static class Dnd {
 		// ============================================
 		// PUBLIC Events
@@ -59,11 +60,14 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+
+		/// Returns Strings Array with Dragged Uris
 		public static string[] GetDragReceivedUris (DragDataReceivedArgs args) {
 			string uris = Encoding.UTF8.GetString(args.SelectionData.Data);
 			return(Regex.Split(uris, "\r\n"));
 		}
 
+		/// Returns Strings Array with Dragged File Paths
 		public static object[] GetDragReceivedPaths (DragDataReceivedArgs args) {
 			string[] uris = GetDragReceivedUris(args);
 
@@ -103,6 +107,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Default Drag & Drop Target Entries
 		public static TargetEntry[] TargetTable {
 			get { return(dndTargetTable); }
 		}

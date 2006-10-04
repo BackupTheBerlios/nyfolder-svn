@@ -37,6 +37,7 @@ using NyFolder.Protocol;
 namespace NyFolder.GUI {
 	public delegate void FileSendEventHandler (object sender, string path, bool isDir);
 
+	/// User Shared Folder Viewer
 	public class FolderViewer : Gtk.ScrolledWindow {
 		// ============================================
 		// PUBLIC Events
@@ -67,6 +68,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
+		/// Create New Folder Viewer
 		public FolderViewer (UserInfo userInfo) {
 			// Initialize Scrolled Window
 			BorderWidth = 0;
@@ -124,6 +126,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Go Up, To Parent Directory
 		public void GoUp() {
 			// Directory's Path
 			if (currentDirectory == null || baseDirectory == null)
@@ -137,6 +140,7 @@ namespace NyFolder.GUI {
 			if (DirChanged != null) DirChanged(this, CanGoUp());
 		}
 
+		/// Go To Root (Home) Directory
 		public void GoHome() {
 			// Directory's Path
 			if (currentDirectory == null || baseDirectory == null)
@@ -149,6 +153,7 @@ namespace NyFolder.GUI {
 			if (DirChanged != null) DirChanged(this, false);
 		}
 
+		/// Refresh Folder Viewer and Folder Store
 		public void Refresh() {
 			// Directory's Path
 			if (currentDirectory == null || baseDirectory == null)
@@ -166,6 +171,7 @@ namespace NyFolder.GUI {
 			}
 		}
 
+		/// Fill Folder Viewer and Folder Store
 		public void Fill (string path, string fileList) {
 			currentDirectory = new DirectoryInfo(path);
 
@@ -185,6 +191,7 @@ namespace NyFolder.GUI {
 			this.ShowAll();
 		}
 
+		/// Return true if Current Directory isn't Root (Home) Directory
 		public bool CanGoUp() {
 			return(!currentDirectory.FullName.Equals(baseDirectory));
 		}

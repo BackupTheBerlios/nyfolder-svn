@@ -36,6 +36,7 @@ namespace NyFolder.GUI {
 	public delegate void PeerSelectedHandler (object sender, UserInfo userInfo);
 	public delegate void SendFileHandler (object sender, UserInfo userInfo, string path);
 
+	/// Network Viewer
 	public class NetworkViewer : Gtk.ScrolledWindow {
 		// ============================================
 		// PUBLIC Events
@@ -88,6 +89,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Refresh Network Viewer and Network Store
 		public void Refresh() {
 			store.Clear();
 
@@ -98,18 +100,22 @@ namespace NyFolder.GUI {
 				store.Add(userInfo);
 		}
 
+		/// Add New Peer
 		public void Add (UserInfo userInfo) {
 			store.Add(userInfo);
 		}
 
+		/// Remove Peer
 		public void Remove (UserInfo userInfo) {
 			store.Remove(userInfo);
 		}
 
+		/// Remove All Peers into Network Store
 		public void RemoveAll() {
 			store.Clear();
 		}
 
+		/// Return UserInfo of specified Username
 		public UserInfo GetUserInfo (string username) {
 			foreach (object[] row in this.store) {
 				if (username.Equals(row[NetworkStore.COL_NAME]) == true)
@@ -186,10 +192,12 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Selected Items TreePath
 		public TreePath[] SelectedItems {
 			get { return(this.iconView.SelectedItems); }
 		}
 
+		/// Get Network Store
 		public NetworkStore Store {
 			get { return(this.store); }
 		}

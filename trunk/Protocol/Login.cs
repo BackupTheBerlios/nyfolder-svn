@@ -26,6 +26,7 @@ using Niry.Utils;
 using Niry.Network;
 
 namespace NyFolder.Protocol {
+	/// Login Checker
 	public class Login {
 		// ============================================
 		// PROTECTED Members
@@ -35,10 +36,12 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
+		/// Create New Login Checker
 		public Login (UserInfo userInfo) {
 			this.userInfo = userInfo;
 		}
 
+		/// Create New Login Checker
 		public Login (PeerSocket peer, XmlRequest xml) {
 			// Get UserName
 			string userName = (string) xml.Attributes["name"];
@@ -60,11 +63,13 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Check Secure Login
 		public bool CheckSecureLogin (string password) {
 			if (password == null) return(false);
 			return(HttpRequest.Login(userInfo, password));
 		}
 
+		/// Authenticate User
 		public bool Authentication() {
 			if (userInfo.SecureAuthentication == false)
 				return(true);
@@ -90,6 +95,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// User
 		public UserInfo User {
 			get { return(this.userInfo); }
 		}

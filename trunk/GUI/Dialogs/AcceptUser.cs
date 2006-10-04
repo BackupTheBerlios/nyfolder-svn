@@ -29,6 +29,7 @@ using NyFolder;
 using NyFolder.Protocol;
 
 namespace NyFolder.GUI.Dialogs {
+	/// Accept User Dialog
 	public class AcceptUser {
 		[Glade.WidgetAttribute]
 		private Gtk.Dialog dialog;
@@ -41,6 +42,7 @@ namespace NyFolder.GUI.Dialogs {
 		[Glade.WidgetAttribute]
 		private Gtk.Entry entryIP;
 
+		/// Create New Accept User Dialog
 		public AcceptUser (PeerSocket peer) {
 			XML xml = new XML(null, "AcceptUserDialog.glade", "dialog", null);
 			xml.Autoconnect(this);
@@ -68,10 +70,12 @@ namespace NyFolder.GUI.Dialogs {
 			this.dialog.ShowAll();
 		}
 
+		/// Run Dialog
 		public ResponseType Run() {
 			return((ResponseType) dialog.Run());
 		}
 
+		/// Destroy Dialog
 		public void Destroy() {
 			dialog.Destroy();
 		}

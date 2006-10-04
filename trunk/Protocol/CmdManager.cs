@@ -129,6 +129,7 @@ namespace NyFolder.Protocol {
 		}
 	}
 
+	/// Command Manager
 	public class CmdManager {
 		// ============================================
 		// PUBLIC Events
@@ -169,6 +170,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Get Command Manager Instance
 		public static CmdManager GetInstance() {
 			if (manager == null)
 				manager = new CmdManager();
@@ -186,6 +188,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC STATIC Methods (Commands)
 		// ============================================
+		/// Send Login
 		public static void Login (PeerSocket peer, UserInfo userInfo) {
 			XmlRequest xmlRequest = new XmlRequest();
 			xmlRequest.FirstTag = "login";
@@ -198,6 +201,7 @@ namespace NyFolder.Protocol {
 			peer.Send(xmlRequest.GenerateXml());
 		}
 
+		/// Send Error
 		public static void Error (PeerSocket peer, string message) {
 			XmlRequest xmlRequest = new XmlRequest();
 			xmlRequest.FirstTag = "error";
@@ -205,12 +209,14 @@ namespace NyFolder.Protocol {
 			peer.Send(xmlRequest.GenerateXml());
 		}
 
+		/// Send Error
 		public static void Error (PeerSocket peer, string f, params object[] objs) {
 			StringBuilder message = new StringBuilder();
 			message.AppendFormat(f, objs);
 			Error(peer, message.ToString());
 		}
 
+		/// Request Folder
 		public static void RequestFolder (PeerSocket peer, string path) {
 			XmlRequest xmlRequest = new XmlRequest();
 			xmlRequest.FirstTag = "get";
@@ -219,6 +225,7 @@ namespace NyFolder.Protocol {
 			peer.Send(xmlRequest.GenerateXml());
 		}
 
+		/// Request File
 		public static void RequestFile (PeerSocket peer, string path) {
 			XmlRequest xmlRequest = new XmlRequest();
 			xmlRequest.FirstTag = "get";
@@ -227,6 +234,7 @@ namespace NyFolder.Protocol {
 			peer.Send(xmlRequest.GenerateXml());
 		}
 
+		/// Ask Send File
 		public static void AskSendFile (PeerSocket peer, string path) {
 			FileInfo fileInfo = new FileInfo(path);
 
@@ -240,11 +248,13 @@ namespace NyFolder.Protocol {
 			peer.Send(xmlRequest.GenerateXml());
 		}
 
+		/// Accept File
 		public static void AcceptFile (PeerSocket peer, XmlRequest xmlAsk) {
 			xmlAsk.FirstTag = "accept";
 			peer.Send(xmlAsk.GenerateXml());
 		}
 
+		/// Accept File Request
 		public static void AcceptFile (PeerSocket peer, string path) {
 			string name = Path.GetFileName(path);
 
@@ -257,6 +267,7 @@ namespace NyFolder.Protocol {
 			peer.Send(xmlRequest.GenerateXml());
 		}
 
+		/// Send My File List
 		public static void SendFileList (PeerSocket peer, string path) {
 			XmlRequest xmlRequest = new XmlRequest();
 			xmlRequest.FirstTag = "snd";

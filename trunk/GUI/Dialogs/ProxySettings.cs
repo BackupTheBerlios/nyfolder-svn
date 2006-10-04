@@ -24,6 +24,7 @@ using Glade;
 using Niry;
 
 namespace NyFolder.GUI.Dialogs {
+	/// Proxy Settings Dialog
 	public class ProxySettings {
 		[Glade.WidgetAttribute]
 		private Gtk.Dialog dialog;
@@ -33,6 +34,7 @@ namespace NyFolder.GUI.Dialogs {
 		private Gtk.VBox vbox;
 		private Niry.GUI.Gtk2.ProxySettings proxy;
 
+		/// Create New Proxy Settings Dialog
 		public ProxySettings() {
 			XML xml = new XML(null, "ProxySettingsDialog.glade", "dialog", null);
 			xml.Autoconnect(this);
@@ -44,10 +46,12 @@ namespace NyFolder.GUI.Dialogs {
 			this.dialog.ShowAll();
 		}
 
+		/// Run Dialog
 		public ResponseType Run() {
 			return((ResponseType) dialog.Run());
 		}
 
+		/// Destroy Dialog
 		public void Destroy() {
 			dialog.Destroy();
 		}
@@ -55,31 +59,37 @@ namespace NyFolder.GUI.Dialogs {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get or Set if Proxy is Enabled
 		public bool EnableProxy {
 			set { proxy.EnableProxy = value; }
 			get { return(proxy.EnableProxy); }
 		}
 
+		/// Get or Set if Proxy uses Auth
 		public bool UseProxyAuth {
 			set { proxy.UseProxyAuth = value; }
 			get { return(proxy.UseProxyAuth); }
 		}
 
+		/// Get or Set Proxy Hostname
 		public string Host {
 			set { proxy.Host = value; }
 			get { return(proxy.Host); }
 		}
 
+		/// Get or Set Proxy Port
 		public int Port {
 			set { proxy.Port = value; }
 			get { return(proxy.Port); }
 		}
 
+		/// Get or Set Proxy Auth Username
 		public string Username {
 			set { proxy.Username = value; }
 			get { return(proxy.Username); }
 		}
 
+		/// Get or Set Proxy Auth Password
 		public string Password {
 			set { proxy.Password = value; }
 			get { return(proxy.Password); }

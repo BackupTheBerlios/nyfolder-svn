@@ -28,6 +28,7 @@ using NyFolder;
 using NyFolder.Protocol;
 
 namespace NyFolder.GUI.Dialogs {
+	/// Remove Peer Dialog
 	public class RemovePeer {
 		[Glade.WidgetAttribute]
 		private Gtk.ComboBox comboPeers;
@@ -38,6 +39,7 @@ namespace NyFolder.GUI.Dialogs {
 		[Glade.WidgetAttribute]
 		private Gtk.Image image;
 
+		/// Create New Remove Peer Dialog
 		public RemovePeer() {
 			XML xml = new XML(null, "RemovePeerDialog.glade", "dialog", null);
 			xml.Autoconnect(this);
@@ -55,14 +57,17 @@ namespace NyFolder.GUI.Dialogs {
 			this.dialog.ShowAll();
 		}
 
+		/// Run Dialog
 		public ResponseType Run() {
 			return((ResponseType) dialog.Run());
 		}
 
+		/// Destroy Dialog
 		public void Destroy() {
 			dialog.Destroy();
 		}
 
+		/// Get Selected Peer and Return his name, or null if no one is selected.
 		public string GetPeerSelected() {
 			TreeIter iter;
 			if (comboPeers.GetActiveIter(out iter))

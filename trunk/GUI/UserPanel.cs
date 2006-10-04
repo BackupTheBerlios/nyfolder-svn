@@ -31,6 +31,7 @@ using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.GUI {
+	/// User Panel
 	public class UserPanel : Gtk.VBox {
 		// ============================================
 		// PROTECTED Members
@@ -115,6 +116,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Set Online Status and Change Status Image
 		public void SetOnlineStatusIcon (bool online) {
 			bool secure = myInfo.SecureAuthentication;
 			FolderImage = StockIcons.GetPixbuf("MyFolder" + 
@@ -122,6 +124,7 @@ namespace NyFolder.GUI {
 											   ((secure) ? "" : "Insecure"));
 		}
 
+		/// Update Shared Files Num
 		public void UpdateSharedFilesNum() {
 			try {
 				UserInfo userInfo = MyInfo.GetInstance();
@@ -131,6 +134,7 @@ namespace NyFolder.GUI {
 			} catch {}
 		}
 
+		/// Update Downloads Num
 		public void UpdateDownloadNum (object sender) {
 			Application.Invoke(delegate {
 				try {
@@ -140,6 +144,7 @@ namespace NyFolder.GUI {
 			});
 		}
 
+		/// Update Uploads Num
 		public void UpdateUploadNum (object sender) {
 			Application.Invoke(delegate {
 				try {
@@ -207,11 +212,13 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get or Set Folder Image
 		public Gdk.Pixbuf FolderImage {
 			get { return(this.imageFolder.Pixbuf); }
 			set { this.imageFolder.Pixbuf = value; }
 		}
 
+		/// Get Folder Button
 		public Gtk.Button FolderButton {
 			get { return(this.folderButton); }
 		}

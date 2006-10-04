@@ -31,6 +31,7 @@ using NyFolder.Utils;
 namespace NyFolder.Protocol {
 	public delegate void LoginEventHandler (UserInfo info, bool status, string msg);
 
+	/// Rapresent Current Logged in User
 	public static class MyInfo {
 		// ============================================
 		// PUBLIC Events
@@ -63,6 +64,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods (HttpRequest Required)
 		// ============================================
+		/// Do Login on Web Server (Require Secure Auth)
 		public static void Login (string password) {
 			if (myInfo == null) {
 				string message = "Login Failed, MyInfo is not Initialized";
@@ -90,6 +92,7 @@ namespace NyFolder.Protocol {
 			thread.Start();			
 		}
 
+		/// Do Logout on Web Server (Require Secure Auth)
 		public static void Logout() {
 			if (myInfo == null) return;
 
@@ -111,6 +114,7 @@ namespace NyFolder.Protocol {
 			}
 		}
 
+		/// Connect to Web Server (Require Secure Auth)
 		public static void ConnectToWebServer (int port) {
 			if (myInfo == null) return;
 
@@ -122,6 +126,7 @@ namespace NyFolder.Protocol {
 			HttpRequest.Connect(myInfo, port);
 		}
 
+		/// Disconnect to Web Server (Require Secure Auth)
 		public static void DisconnectFromWebServer() {
 			if (myInfo == null) return;
 
@@ -178,6 +183,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Username
 		public static string Name {
 			get { return(myInfo.Name); }
 		}
