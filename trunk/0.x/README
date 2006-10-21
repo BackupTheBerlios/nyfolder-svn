@@ -1,0 +1,29 @@
+            _______         ___________    .__       .___            
+            \      \ ___.__.\_   _____/___ |  |    __| _/___________ 
+            /   |   <   |  | |    __)/  _ \|  |   / __ |/ __ \_  __ \
+           /    |    \___  | |     \(  <_> )  |__/ /_/ \  ___/|  | \/
+           \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
+                   \/\/          \/ README             \/    \/     
+
+ * IMPORTANTE
+	Ogni Riga di Codice che e' dentro ad un evento e lavora sull'interfaccia
+	Gtk2 deve essere racchiusa tra:
+	-------------------------------------------
+		Gtk.Application.Invoke(delegate {
+			...
+		});
+	-------------------------------------------
+
+
+=====================
+    HTTP Protocol	
+=====================
+	- L'Utente Si Logga sul Server
+		Param: UserName, Password
+		Return: Magic, Ip
+
+	- L'Utente Esegue la Connect
+		Param: UserName, Magic
+		Return: Ok/Error
+
+	- L'Utente si Collega al Server di un altro utente e chiede l'autenticazione

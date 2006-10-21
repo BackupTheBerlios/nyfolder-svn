@@ -1,0 +1,71 @@
+            _______         ___________    .__       .___            
+            \      \ ___.__.\_   _____/___ |  |    __| _/___________ 
+            /   |   <   |  | |    __)/  _ \|  |   / __ |/ __ \_  __ \
+           /    |    \___  | |     \(  <_> )  |__/ /_/ \  ___/|  | \/
+           \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
+                   \/\/          \/ ChangeLog         \/    \/     
+
+ * 17 Sep 2006 - Matteo Bertozzi
+	- ReWrited Protocol.FileReceiver -99% Mem Used :)
+	- Fixed GUI.Dnd Windows Paths
+	- Fixed GUI.Glue.NetworkManager user Remove
+	- Removed Not Important Debug.Log Messages
+	- Now We're Ready to Set as RC1
+
+ * 16 Sep 2006 - Matteo Bertozzi
+	- Fixed GUI.Glue.FolderManager.OnSwitchPage()
+	- Fixed Remove Folder Store Method
+
+ * 15 Sep 2006 - Matteo Bertozzi
+	- Added GUI.Dnd Static Class and Fixed Network Viewer to Use it
+	- Added Send File with DND into User Folder
+
+ * 14 Sep 2006 - Matteo Bertozzi
+	- Added Event QuittingApplication to INyFolder Interface (and Main.cs)
+	- Added Quit() Method To Main.cs and Fixed Main 'Finally'
+	- Added Send Abort & Recv Abort Protocol Command
+	- Fixed Network Manager
+
+ * 11 Sep 2006 - Matteo Bertozzi
+	- Added Different "MyFolder" Image for Secure/Insecure Connection
+	- Added Menu Send into My Folder Viewer
+	- Added Logout Options to Main Window
+	- Added NetworkViewer Refresh Method
+	- Fixed 'Ask Send' Message Error
+	- Fixed Protocol.DownloadManager.Clear()
+	- Added Event 'Added'/'Finished' To DownloadManager & UploadManager
+	- Fixed UserPanel to Use Download & Upload Manager Events to update labes
+
+ * 10 Sep 2006 - Matteo Bertozzi
+	- Fixed DND on Windows (Used args.SelectionData.Data instead .Text)
+	- ReFixed Login Secure/Insecure Connection...
+
+ * 09 Sep 2006 - Matteo Bertozzi
+	- Download Manager is Now a Plugin ToDo
+	- Fixed Protocol.MyInfo, Added Timer to Update Web Status
+	- Added Update() To Protocol.HttpRequest (Web Status Update)
+	- Fixed GUI.Glue.NetworkManager, Connect/Disconnect Error Message
+	- Fixed Protocol.UserInfo.GetIpAndPort()
+	- Added Static Method GenerateMagic() in Protocol.Login
+	- Fixed Protocol.CmdManager.Login()
+
+ * 08 Sep 2006 - Matteo Bertozzi
+	- Fixed GUI.UserPanel (User Name & Domain Label)
+
+ * 07 Sep 2006 - Matteo Bertozzi
+	- Fixed GUI.Dialogs.Login for do Secure Login
+	- Fixed GUI.Glue.NetworkManager for Web Server Connect/Disconnect
+	- Added Some Methods to Protocol.MyInfo
+	- Fixed Protocol.HttpRequest
+	- Working on Web Server Services... Not Complete
+ 
+ * 06 Sep 2006 - Matteo Bertozzi
+	- Rewrited FileSender & FileReceiver
+	- Fixed Download Manager
+	- Fixed GUI Glue Protocol Manager
+	- Fixed Command Manager Xml Parse Error 
+	- Fixed Send/Receive File, Now Seems Working 
+	- Added Handler to Right Click "File Save", Seems Working
+	- Added GUI.Dialogs.DownloadManager We have to FIX Uploads Methods
+	- Added GUI.Glue.ReplaceExistingFile()
+	- Fixed GUI.Glue.Dialogs.SaveFile() to Ask if Replace Existing file

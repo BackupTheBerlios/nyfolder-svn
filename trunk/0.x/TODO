@@ -1,0 +1,33 @@
+            _______         ___________    .__       .___            
+            \      \ ___.__.\_   _____/___ |  |    __| _/___________ 
+            /   |   <   |  | |    __)/  _ \|  |   / __ |/ __ \_  __ \
+           /    |    \___  | |     \(  <_> )  |__/ /_/ \  ___/|  | \/
+           \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
+                   \/\/          \/ TODO               \/    \/       
+
+ * IMPORTANTE
+	Ogni Riga di Codice che e' dentro ad un evento e lavora sull'interfaccia
+	Gtk2 deve essere racchiusa tra:
+	-------------------------------------------
+		Gtk.Application.Invoke(delegate {
+			...
+		});
+	-------------------------------------------
+
+ - URGENT ToDo List
+==============================
+ - Download Manager BUG OnEnd File ?
+
+ - ToDo List
+==============================
+ * Add Event To "Peer Change Avatar"
+
+ - Fix/ReWrite List
+==============================
+ * File Sender/Receiver Class
+ * Upload/Download Manager Class
+ * CMD Manager, Bad Bad Bad!!!
+ * ReWrite Plugin Manager
+	* Check Double Loaded Plugin...
+	* Plugins Panel...
+ * Add "New Features Event" for Login Dialog
