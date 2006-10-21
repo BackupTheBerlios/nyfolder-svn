@@ -1,0 +1,21 @@
+            _______         ___________    .__       .___            
+            \      \ ___.__.\_   _____/___ |  |    __| _/___________ 
+            /   |   <   |  | |    __)/  _ \|  |   / __ |/ __ \_  __ \
+           /    |    \___  | |     \(  <_> )  |__/ /_/ \  ___/|  | \/
+           \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
+                   \/\/          \/ TODO               \/    \/       
+
+Note:	All Event Handler That Works with The GUI have to do this first
+		-------------------------------------------
+			Gtk.Application.Invoke(delegate {
+				...Event Handler Code...
+			});
+		-------------------------------------------
+
+
+Splash Screen:
+	- Start Thread at The Main Begin
+	- Catch 
+
+Login
+	- Automatic Login (Skip Login Dialog)

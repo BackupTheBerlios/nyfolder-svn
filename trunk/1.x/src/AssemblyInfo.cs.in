@@ -1,0 +1,9 @@
+using System.Reflection;
+using System.Runtime.CompilerServices;
+
+[assembly: AssemblyVersion("@version@")]
+[assembly: AssemblyTitle ("NyFolder")]
+[assembly: AssemblyProduct ("NyFolder")]
+[assembly: AssemblyDescription ("NyFolder File Sharing")]
+[assembly: AssemblyCopyright ("Copyright (C) Matteo Bertozzi 2005-2006")]
+[assembly: AssemblyCompany ("Matteo Bertozzi")]

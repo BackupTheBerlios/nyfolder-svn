@@ -1,0 +1,18 @@
+            _______         ___________    .__       .___            
+            \      \ ___.__.\_   _____/___ |  |    __| _/___________ 
+            /   |   <   |  | |    __)/  _ \|  |   / __ |/ __ \_  __ \
+           /    |    \___  | |     \(  <_> )  |__/ /_/ \  ___/|  | \/
+           \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
+                   \/\/          \/ ChangeLog         \/    \/
+
+ * 21 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
+	Splitted NyFolderApp Class from Main.cs 
+	ReWrited Main with the new Init + Splash System
+
+ * 20 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
+	ReWrited Plugin System and Plugin Manager, Now We Have The Plugin
+	Priority Options and Event for a future Startup Splash Screen.
+
+ * 19 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
+ 	Starting Working on NyFolder 1.0 with Gtk 2.10
+
