@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+using Gtk;
+
 using System;
 using System.Text;
 
@@ -25,9 +27,9 @@ using NyFolder;
 using NyFolder.Utils;
 using NyFolder.GUI.Base;
 
-namespace NyFolder.Dialogs.Login {
+namespace NyFolder.GUI.Dialogs.LoginDialog {
 	/// Login Dialog Menu Manager
-	public class MenuManager : UIManager {
+	public class MenuManager : NyFolder.GUI.Base.UIManager {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
@@ -40,7 +42,7 @@ namespace NyFolder.Dialogs.Login {
 		// PRIVATE Methods
 		// ============================================
 		private string GetUIString() {
-			StringBuilder sb = new sb();
+			StringBuilder sb = new StringBuilder();
 			sb.Append("<ui>");
 			sb.Append("  <menubar name='MenuBar'>");
 			sb.Append("    <menu action='FileMenu'>");

@@ -18,7 +18,15 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-namespace NyFolder.Dialogs.Login {
+using Gtk;
+
+using System;
+
+using NyFolder;
+using NyFolder.GUI;
+using NyFolder.Protocol;
+
+namespace NyFolder.GUI.Dialogs.LoginDialog {
 	public class ProgressDialog : Gtk.Dialog {
 		// ============================================
 		// PRIVATE Members

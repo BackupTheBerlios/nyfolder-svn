@@ -33,6 +33,13 @@ using NyFolder.Protocol;
 using NyFolder.PluginLib;
 
 namespace NyFolder {
+	public class NyFolderExit : Exception {
+		/// Create New NyFolder Exit Exception
+		public NyFolderExit (string msg) : base(msg) {}
+		/// Create New NyFolder Exit Exception
+		public NyFolderExit (string msg, Exception inner) : base(msg, inner) {}
+	}
+
 	public sealed class NyFolderApp : INyFolder {
 		// ============================================
 		// PUBLIC Events
@@ -114,7 +121,7 @@ namespace NyFolder {
 			mainWindow.Destroy();
 			mainWindow = null;
 
-			Gtk.Application.Quit();
+			throw(new NyFolderExit("Logout"));
 		}
 
 		// ============================================
@@ -129,9 +136,9 @@ namespace NyFolder {
 			Debug.Log("Shared Path: {0}", Paths.UserSharedDirectory(myInfo.Name));
 
 			// Add GUI Glue
-			new GUI.Glue.FolderManager(mainWindow.Menu, mainWindow.UserPanel, mainWindow.NotebookViewer);
-			new GUI.Glue.NetworkManager(mainWindow.Menu, mainWindow.UserPanel, mainWindow.NotebookViewer);
-			new GUI.Glue.ProtocolManager(mainWindow.NotebookViewer);
+//			new GUI.Glue.FolderManager(mainWindow.Menu, mainWindow.UserPanel, mainWindow.NotebookViewer);
+//			new GUI.Glue.NetworkManager(mainWindow.Menu, mainWindow.UserPanel, mainWindow.NotebookViewer);
+//			new GUI.Glue.ProtocolManager(mainWindow.NotebookViewer);
 
 			// NyFolder Window ShowAll
 			mainWindow.ShowAll();

@@ -22,13 +22,17 @@ using Gtk;
 
 using System;
 
+using Niry;
+using Niry.Utils;
+using Niry.GUI.Gtk2;
+
 using NyFolder;
 using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.GUI.Dialogs {
 	/// Login Dialog
-	public class Login {
+	public class Login : Niry.GUI.Gtk2.LoginDialog {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
@@ -37,7 +41,7 @@ namespace NyFolder.GUI.Dialogs {
 		// PROTECTED Members
 		// ============================================
 		protected Gtk.CheckButton checkSecureAuth;
-		protected Login.MenuManager menuManager;
+		protected LoginDialog.MenuManager menuManager;
 
 		// ============================================
 		// PRIVATE Members
@@ -56,14 +60,16 @@ namespace NyFolder.GUI.Dialogs {
 			Title = Info.Name + " Login";
 			Logo = StockIcons.GetPixbuf("NyFolderLogo", 240, 140);
 
+			// Initialize Menu Manager
+			this.menuManager = new LoginDialog.MenuManager();
+
 			// Initialize Menu's HBox
 			this.hboxMenu = new Gtk.HBox(false, 0);
 			VBox.PackStart(this.hboxMenu, false, false, 0);
-			this.VBox.ReorderChild(this.menuBar, 0);
+			this.VBox.ReorderChild(this.hboxMenu, 0);
 
-			// Initialize Menu Manager
-			this.menuManager = new MenuManager();
-			this.hboxMenu.PackStart(this.menuManager, false, false, 0);
+			/// Initialize MenuBar
+			this.hboxMenu.PackStart(this.MenuBar, false, false, 0);
 			this.menuManager.Activated += new EventHandler(OnMenuActivated);
 			this.AddAccelGroup(this.menuManager.AccelGroup);
 
@@ -120,7 +126,7 @@ namespace NyFolder.GUI.Dialogs {
 				return(MyInfo.GetInstance());
 
 			// Login Progress Dialog
-			LoginProgressDialog dialog = new LoginProgressDialog(Password);
+			LoginDialog.ProgressDialog dialog = new LoginDialog.ProgressDialog(Password);
 			ResponseType response = (ResponseType) dialog.Run();
 			string responseMsg = dialog.ResponseMessage;
 			dialog.Destroy();
@@ -144,7 +150,7 @@ namespace NyFolder.GUI.Dialogs {
 				switch (action.Name) {
 					// File Menu
 					case "ProxySettings":
-						Glue.Dialogs.ProxySettings();
+						//Glue.Dialogs.ProxySettings();
 						break;
 					case "Quit":
 						Gtk.Application.Quit();
@@ -157,12 +163,19 @@ namespace NyFolder.GUI.Dialogs {
 			});
 		}
 
+		private void OnCheckSecureAuthToggled (object sender, EventArgs args) {
+			CheckButton checkButton = sender as CheckButton;
+			this.labelPassword.Sensitive = checkButton.Active;
+			this.entryPassword.Sensitive = checkButton.Active;
+			this.checkRememberPassword.Sensitive = checkButton.Active;
+		}
+
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
 		private void ShowErrorMessage (string title, string message) {
 			WindowUtils.Shake(this, 2);
-			Glue.Dialogs.MessageError(title, message);
+			//Glue.Dialogs.MessageError(title, message);
 		}
 
 		// ============================================
@@ -175,7 +188,7 @@ namespace NyFolder.GUI.Dialogs {
 		}
 
 		/// Get The Menu Manager
-		public Login.MenuManager Menu {
+		public LoginDialog.MenuManager Menu {
 			get { return(this.menuManager); }
 		}
 

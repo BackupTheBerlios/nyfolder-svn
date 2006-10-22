@@ -104,40 +104,88 @@ namespace NyFolder {
 		// ============================================
 		//             APPLICATION MAIN
 		// ============================================
+		// Horrible Main :D
 		public static int Main (string[] args) {
+			try {
+				// Initialize Gtk Support
+				if (Gtk.Application.InitCheck("NyFolder.exe", ref args) == false) {
+					PrintErrorMessage("You Don't Have Gtk Support Here...");
+					return(1);
+				}
+
+				// Run Splash Screen and Initialize Components
+				SplashInit();
+			} catch (Exception e) {
+				if (nyFolder != null) nyFolder.Quit();
+				if (p2pManager != null) p2pManager.Kill();
+
+				// Print Error Message
+				PrintErrorMessage(e);
+				return(1);
+			}
+
 			do {
-				// Set 'No Restart' Application
-				NyFolderApp.Restart = false;
-
 				try {
-					// Initialize Gtk Support
-					Gtk.Application.Init();					
-
-					// Run Splash Screen and Initialize Components
-					SplashInit();
+					// Set 'No Restart' Application
+					NyFolderApp.Restart = false;
 
 					// Run NyFolder Application
 					nyFolder.Run();
 
 					// Run Gtk Main
 					Gtk.Application.Run();
+				} catch (NyFolderExit) {
+					// This is Logout Event :D
 				} catch (Exception e) {
-					Console.WriteLine("{0} {1} Error:", Info.Name, Info.Version);
-					Console.WriteLine("Type:     {0}", e.GetType());
-					Console.WriteLine("Source:   {0}", e.Source);
-					Console.WriteLine("Message:  {0}", e.Message);
-					Console.WriteLine("Compiler: {0}", Info.Compiler);
-					Console.WriteLine("Stack Trace:");
-					Console.WriteLine(e.StackTrace);
-					Console.WriteLine();
-					Console.WriteLine("Please, Report Bug(s) To Matteo Bertozzi <theo.bertozzi@gmail.com>");
+					PrintErrorMessage(e);
 					return(1);
 				} finally {
-					if (nyFolder != null) nyFolder.Quit();
-					if (p2pManager != null) p2pManager.Kill();
+					if (NyFolderApp.Restart != true) {
+						if (nyFolder != null) nyFolder.Quit();
+						if (p2pManager != null) p2pManager.Kill();
+					}
 				}
 			} while (NyFolderApp.Restart == true);
 			return(0);
+		}
+
+		private static void PrintErrorHeader() {
+			Console.WriteLine(@"    _______         ___________    .__       .___");
+			Console.WriteLine(@"    \      \ ___.__.\_   _____/___ |  |    __| _/___________");
+			Console.WriteLine(@"    /   |   <   |  | |    __)/  _ \|  |   / __ |/ __ \_  __ \");
+			Console.WriteLine(@"   /    |    \___  | |     \(  <_> )  |__/ /_/ \  ___/|  | \/");
+			Console.WriteLine(@"   \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   ");
+			Console.WriteLine(@"           \/\/          \/ {0} Error       \/    \/", Info.Version);
+			Console.WriteLine("==================================================================");
+			Console.WriteLine("Compiler: {0}", Info.Compiler);
+			Console.WriteLine("OS Version:  {0}", Environment.OSVersion.Version);
+			Console.WriteLine("OS Platform: {0}", Environment.OSVersion.Platform);
+			Console.WriteLine("==================================================================");
+		}
+
+		private static void PrintException (Exception e) {
+			Console.WriteLine("Type:     {0}", e.GetType());
+			Console.WriteLine("Source:   {0}", e.Source);
+			Console.WriteLine("Message:  {0}", e.Message);
+			Console.WriteLine("Stack Trace:");
+			Console.WriteLine(e.StackTrace);
+		}
+
+		private static void PrintErrorFooter() {
+			Console.WriteLine("==================================================================");
+			Console.WriteLine("Please, Report Bug(s) To Matteo Bertozzi <theo.bertozzi@gmail.com>");
+		}
+
+		private static void PrintErrorMessage (Exception e) {
+			PrintErrorHeader();
+			PrintException(e);
+			PrintErrorFooter();
+		}
+
+		private static void PrintErrorMessage (string message) {
+			PrintErrorHeader();
+			Console.WriteLine(message);
+			PrintErrorFooter();
 		}
 	}
 }

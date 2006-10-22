@@ -21,7 +21,12 @@
 using Gtk;
 using System;
 
+using Niry;
+using Niry.GUI.Gtk2;
+
 namespace NyFolder.GUI.Base {
+	public delegate void RightMenuHandler (object sender, PopupMenu menu);
+
 	public abstract class UIManager : Gtk.UIManager {
 		// ============================================
 		// PUBLIC Events
@@ -64,9 +69,19 @@ namespace NyFolder.GUI.Base {
 		}
 
 		/// Update Menu with new Radio Action Entries
-		public void AddMenus (string ui, RadioActionEntry[] entries) {
+		public void AddMenus (string ui, RadioActionEntry[] entries, 
+							  int values, ChangedHandler changed)
+		{
 			AddUiFromString(ui);
-			actionGroup.Add(entries);
+			actionGroup.Add(entries, values, changed);
+			EnsureUpdate();
+		}
+
+		/// Update Menu With new Action & Toggle Action Entries
+		public void AddMenus (string ui, ActionEntry[] e, ToggleActionEntry[] te) {
+			AddUiFromString(ui);
+			actionGroup.Add(e);
+			actionGroup.Add(te);
 			EnsureUpdate();
 		}
 
@@ -77,9 +92,9 @@ namespace NyFolder.GUI.Base {
 		}
 
 		// ============================================
-		// PRIVATE (Methods) Event Handlers
+		// PUBLIC (Methods) Event Handlers
 		// ============================================
-		private void ActionActivated (object sender, EventArgs args) {
+		public void ActionActivated (object sender, EventArgs args) {
 			if (Activated != null) Activated(sender, args);				
 		}
 
