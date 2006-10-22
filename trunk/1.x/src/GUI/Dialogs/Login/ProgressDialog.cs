@@ -32,7 +32,7 @@ namespace NyFolder.Dialogs.Login {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
-		public LoginProgressDialog (string password) :
+		public ProgressDialog (string password) :
 			base(MyInfo.Name + " Login", null, DialogFlags.Modal)
 		{
 			// Initialize Dialog Options

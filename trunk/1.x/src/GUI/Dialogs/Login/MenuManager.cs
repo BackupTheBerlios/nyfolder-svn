@@ -32,7 +32,7 @@ namespace NyFolder.Dialogs.Login {
 		// PUBLIC Constructors
 		// ============================================
 		/// Create New Login Dialog UIManager
-		public Menu() : base("LoginMenuGroup") {
+		public MenuManager() : base("LoginMenuGroup") {
 			AddMenus(GetUIString(), GetActionEntries());
 		}
 

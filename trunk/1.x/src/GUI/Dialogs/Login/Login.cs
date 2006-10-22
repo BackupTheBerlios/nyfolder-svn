@@ -129,8 +129,8 @@ namespace NyFolder.GUI.Dialogs {
 			if (response == ResponseType.Ok)
 				return(MyInfo.GetInstance());
 
-			string title = "Login Error");
-			if (responseMsg == null) responseMsg = "Unknown Error...");
+			string title = "Login Error";
+			if (responseMsg == null) responseMsg = "Unknown Error...";
 			ShowErrorMessage(title, responseMsg);
 			return(null);
 		}
