@@ -5,6 +5,9 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/
 
+ * 22 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
+	Added Login Dialog, and Created An Abstract UIManager Class
+
  * 21 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Splitted NyFolderApp Class from Main.cs 
 	ReWrited Main with the new Init + Splash System
