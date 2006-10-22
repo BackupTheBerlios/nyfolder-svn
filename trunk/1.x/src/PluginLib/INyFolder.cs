@@ -42,6 +42,15 @@ namespace NyFolder.PluginLib {
 		event BlankEventHandler LoginDialogClosed;
 
 		// ============================================
+		// PUBLIC Methods
+		// ============================================
+		/// Quit The Application, Call Gtk.Application.Quit() after This
+		void Quit();
+
+		/// Logout From the Current Account (Go To Login Dialog)
+		void Logout();
+
+		// ============================================
 		// PUBLIC Properties
 		// ============================================
 		/// Get NyFolder Main Window or null

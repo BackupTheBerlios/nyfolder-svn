@@ -1,0 +1,71 @@
+# Makefile for NyFolder
+# Author: Matteo Bertozzi <theo.bertozzi@gmail.com>
+# ===================================================
+
+CC = gmcs
+CFLAGS = 
+
+PKG_GTK = -pkg:gtk-sharp-2.0
+PKG_CAIRO = -r:Mono.Cairo.dll
+PKG_GLADE = -pkg:glade-sharp-2.0
+PKG_SQLITE = -r:System.Data.dll -r:Mono.Data.SqliteClient.dll
+PKG_NIRY = -r:niry-sharp.dll
+PKG_NF_PLUGIN = -r:nyfolder-plugin.dll
+PKGS = $(PKG_GTK) $(PKG_CAIRO) $(PKG_GLADE) $(PKG_SQLITE) $(PKG_NIRY) $(PKG_NF_PLUGIN)
+
+# ============================== Plugin Infos ====
+NAME = 
+VERSION = 
+AUTHORS = 
+WEB = 
+PRIORITY =
+DESCRIPTION =
+COPYRIGHT =
+COMPANY =
+# ==================================================
+PLUGIN_DLL = nyfolder-plugin.dll
+
+SRC_Base = 		AssemblyInfo.cs	\
+				Info.cs
+SRC_Plugin =	
+
+RES_Glade =	
+RES_Images = 	
+
+SRC = $(SRC_Base) $(SRC_Plugin)
+RESOURCES = $(RES_Glade) $(RES_Images)
+
+Plugin: PluginInfo $(SRC) $(RESOURCES)
+	@echo
+	@echo "$(NAME) Plugin (DLL)"
+	@echo "======================================================="
+	$(CC) $(CFLAGS) -target:library $(PKGS) $(SRC) $(RESOURCES:%=-resource:%) -out:$(PLUGIN_DLL)
+	@echo "======================================================="
+	@echo "$(CC) -target:library MyPlugin.cs -r:$(NYFOLDER_DLL)"
+	@echo "======================================================="
+	@echo
+
+PluginInfo: Info.cs.in AssemblyInfo.cs.in 
+	@echo
+	@echo "Name: $(NAME)"
+	@echo "Version: $(VERSION)"
+	@echo "Compiler: $(COMPILER)"
+	@echo "======================================================="
+	sed -e "s|\@name\@|${NAME}|" 				\
+		-e "s|\@version\@|${VERSION}|" 			\
+	    -e "s|\@compiler\@|${AUTHORS}|" 		\
+		-e "s|\@version\@|${WEB}|" 				\
+	    -e "s|\@compiler\@|${PRIORITY}|" 		\
+		 Info.cs.in > Info.cs
+	@echo "======================================================="
+	@echo
+	sed -e "s|\@name\@|${NAME}|" 				\
+		-e "s|\@version\@|${VERSION}|" 			\
+	    -e "s|\@description\@|${DESCRIPTION}|" 	\
+		-e "s|\@copyright\@|${COPYRIGHT}|" 		\
+	    -e "s|\@company\@|${COMPANY}|" 		\
+		AssemblyInfo.cs.in > AssemblyInfo.cs
+	@echo
+
+clean:
+	rm -f $(PLUGIN_DLL) Info.cs AssemblyInfo.cs

@@ -32,6 +32,7 @@ namespace NyFolder.GUI {
 		// PUBLIC Events
 		// ============================================
 		public BlankEventHandler Logout = null;
+		public BlankEventHandler Quit = null;
 
 		// ============================================
 		// PROTECTED Members
@@ -140,7 +141,7 @@ namespace NyFolder.GUI {
 //						}
 						break;
 					case "Quit":
-						Gtk.Application.Quit();
+						if (Quit != null) Quit(this);
 						break;
 					// View Menu
 					case "ViewToolBar":

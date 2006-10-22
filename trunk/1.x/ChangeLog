@@ -6,7 +6,9 @@
                    \/\/          \/ ChangeLog         \/    \/
 
  * 22 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
-	Added Login Dialog, and Created An Abstract UIManager Class
+	Added Login Dialog, and Created An Abstract UIManager Class,
+	Bad Modified Main() and Added Quit() and Logout() Methods to INyFolder
+	Created TrayIcon Plugin.
 
  * 21 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Splitted NyFolderApp Class from Main.cs 

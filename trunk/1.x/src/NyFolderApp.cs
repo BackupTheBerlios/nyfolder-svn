@@ -87,18 +87,37 @@ namespace NyFolder {
 			loginDialog.Response += new ResponseHandler(OnLoginResponse);
 		}
 
+		/// Quit The Application
 		public void Quit() {
+			Restart = false;
+
 			// Quitting Event
-			if (LoginDialogClosed != null) LoginDialogClosed(loginDialog);
-			if (MainWindowClosed != null) MainWindowClosed(mainWindow);
+			if (loginDialog != null && LoginDialogClosed != null) {
+				LoginDialogClosed(loginDialog);
+				loginDialog.Hide();
+				loginDialog.Destroy();
+			}
+			loginDialog = null;
+			
+			if (mainWindow != null && MainWindowClosed != null) {
+				MainWindowClosed(mainWindow);
+				mainWindow.Hide();
+				mainWindow.Destroy();
+			}
+			mainWindow = null;
 
 			// Do User Logout
-			Logout();
+			Protocol.MyInfo.Logout();			
 		}
 
+		/// Logout From the Current Account (Go To Login Dialog)
 		public void Logout() {
-			// Disconnect User From Http Server
-			Protocol.MyInfo.Logout();
+			// Destroy Main Window
+			mainWindow.Destroy();
+			Quit();
+
+			Restart = true;
+			throw(new NyFolderExit("Logout"));
 		}
 
 		// ============================================
@@ -114,14 +133,11 @@ namespace NyFolder {
 		}
 
 		private void OnLogout (object sender) {
-			Restart = true;
+			Logout();
+		}
 
-			// Destroy Main Window
-			if (MainWindowClosed != null) MainWindowClosed(mainWindow);
-			mainWindow.Destroy();
-			mainWindow = null;
-
-			throw(new NyFolderExit("Logout"));
+		private void OnQuit (object sender) {
+			Quit();
 		}
 
 		// ============================================
@@ -130,6 +146,7 @@ namespace NyFolder {
 		private void RunMainWindow() {
 			// Start NyFolder Window
 			mainWindow = new GUI.Window();
+			mainWindow.Quit += new BlankEventHandler(OnQuit);
 			mainWindow.Logout += new BlankEventHandler(OnLogout);
 
 			Debug.Log("Logged In as {0}", myInfo.Name);
@@ -154,6 +171,7 @@ namespace NyFolder {
 			if ((myInfo = dialog.CheckLogin()) != null) {
 				if (LoginDialogClosed != null) LoginDialogClosed(loginDialog);
 				dialog.Destroy();
+				loginDialog = null;
 			}
 		}
 
