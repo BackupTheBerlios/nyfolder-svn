@@ -161,6 +161,11 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get The Menu HBox
+		public Gtk.HBox MenuBarHBox {
+			get { return(this.hboxMenu); }
+		}
+
 		/// Get Window Menu & Toolbar Manager
 		public MenuManager Menu {
 			get { return(this.menuManager); }

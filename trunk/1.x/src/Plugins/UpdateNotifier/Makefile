@@ -1,4 +1,4 @@
-# Makefile for NyFolder
+# Makefile for NyFolder Plugin
 # Author: Matteo Bertozzi <theo.bertozzi@gmail.com>
 # ===================================================
 
@@ -12,12 +12,12 @@ PKG_NF_PLUGIN = -r:../../nyfolder-plugin.dll
 PKGS = $(PKG_GTK) $(PKG_CAIRO) $(PKG_NIRY) $(PKG_NF_PLUGIN)
 
 # ============================== Plugin Infos ====
-NAME = TrayIcon
+NAME = Update Notifier
 VERSION = 0.1
 AUTHORS = \"Matteo Bertozzi\"
 WEB = http://nyfolder.berlios.de
 PRIORITY = -20
-DESCRIPTION = NyFolder Tray Icon
+DESCRIPTION = NyFolder Update Notifier
 COPYRIGHT = (C) Copyright Matteo Bertozzi 2006
 COMPANY = Matteo Bertozzi
 # ==================================================
@@ -25,10 +25,11 @@ PLUGIN_DLL = nf-trayicon.dll
 
 SRC_Base = 		AssemblyInfo.cs	\
 				Info.cs
-SRC_Plugin =	src/TrayIcon.cs
+SRC_Plugin =	src/UpdateNotifier.cs	\
+				src/UpdateInfo.cs
 
 RES_Glade =	
-RES_Images = 	Pixmaps/TrayIcon.png
+RES_Images = 	Pixmaps/UpdateNotifier.png
 
 SRC = $(SRC_Base) $(SRC_Plugin)
 RESOURCES = $(RES_Glade) $(RES_Images)
