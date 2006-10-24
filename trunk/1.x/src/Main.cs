@@ -45,6 +45,7 @@ namespace NyFolder {
 			// Initialize Splash Screen
 			Gdk.Pixbuf splashPixbuf = new Gdk.Pixbuf(null, "NFSplash.png");
 			SplashScreen splash = new SplashScreen("NyFolder", splashPixbuf);
+			splash.TextColor = new Cairo.Color(0xff, 0xff, 0xff, 1.0);
 			splash.Run();
 
 			splash.Update("Initializing Application...", 1, 10);
