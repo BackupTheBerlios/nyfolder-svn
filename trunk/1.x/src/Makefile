@@ -41,7 +41,9 @@ SRC_GUI_Main =	GUI/Dnd.cs				\
 
 SRC_GUI_Glue = 	
 
-SRC_GUI_Base =	GUI/Base/UIManager.cs
+SRC_GUI_Base =	GUI/Base/GladeDialog.cs	\
+				GUI/Base/GladeWindow.cs	\
+				GUI/Base/UIManager.cs
 
 
 SRC_GUI = $(SRC_GUI_Base) $(SRC_GUI_Main) $(SRC_GUI_Dialogs) $(SRC_GUI_Glue)

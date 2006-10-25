@@ -40,6 +40,7 @@ namespace NyFolder {
 		public NyFolderExit (string msg, Exception inner) : base(msg, inner) {}
 	}
 
+	/// NyFolder Main Application
 	public sealed class NyFolderApp : INyFolder {
 		// ============================================
 		// PUBLIC Events

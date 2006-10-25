@@ -43,13 +43,19 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
+		/// Event Raised When user add a Directory
 		public event ObjectEventHandler DirectoryAdded = null;
+		/// Event Raised When user add a File
 		public event ObjectEventHandler FileAdded = null;
-
+		/// Event Raised When folder Refresh is requested
 		public event StringEventHandler FolderRefresh = null;
+		/// Event Raised When i say "Transfer File"...
 		public event FileSendEventHandler FileSend = null;
+		/// Event Raised When user Change Directory
 		public event BoolEventHandler DirChanged = null;
+		/// Event Raised When Mouse Right Key is Pressed
 		public event RightMenuHandler RightMenu = null;
+		/// Event Raised When Menu "Save File" is Pressed
 		public event StringEventHandler SaveFile = null;
 
 		// ============================================
@@ -323,14 +329,17 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Return The Selected Items
 		public TreePath[] SelectedItems {
 			get { return(this.iconView.SelectedItems); }
 		}
 
+		/// Return The Folder's File List
 		public FolderStore Store {
 			get { return(this.store); }
 		}
 
+		/// Return The Folder's User Informations
 		public UserInfo UserInfo {
 			get { return(this.userInfo); }
 		}
