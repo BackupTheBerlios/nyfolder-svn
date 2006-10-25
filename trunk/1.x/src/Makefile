@@ -23,6 +23,7 @@ SRC_Base = 		AssemblyInfo.cs	\
 				Info.cs				\
 
 SRC_GUI_Dialogs =	GUI/Dialogs/About.cs					\
+					GUI/Dialogs/SetPort.cs					\
 					GUI/Dialogs/Login/Login.cs				\
 					GUI/Dialogs/Login/MenuManager.cs		\
 					GUI/Dialogs/Login/ProgressDialog.cs
@@ -62,7 +63,7 @@ SRC_PluginLib =	PluginLib/Plugin.cs			\
 SRC_Utils = 	Utils/Paths.cs	\
 				Utils/Proxy.cs
 
-RES_Glade =	
+RES_Glade =		Glade/SetPortDialog.glade
 RES_Images = 	Pixmaps/FileTypes/FileTypeAc3.png			\
 				Pixmaps/FileTypes/FileTypeAiff.png			\
 				Pixmaps/FileTypes/FileTypeArj.png			\
