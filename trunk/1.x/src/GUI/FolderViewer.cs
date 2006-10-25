@@ -201,17 +201,23 @@ namespace NyFolder.GUI {
 		// PROTECTED (Methods) Event Handlers
 		// ============================================
 		protected void OnDragDataReceived (object sender, DragDataReceivedArgs args) {
-			if (this.userInfo == MyInfo.GetInstance())
-				return;
-
 			// Get Drop Paths
 			object[] filesPath = Dnd.GetDragReceivedPaths(args);
-			foreach (string filePath in filesPath) {
-				PeerSocket peer = (PeerSocket) P2PManager.KnownPeers[userInfo];
-				bool fisDir = FileUtils.IsDirectory(filePath);
 
-				Debug.Log("Send To '{0}' URI: '{1}'", userInfo.Name, filePath);
-				if (FileSend != null) FileSend(peer, filePath, fisDir);
+			if (this.userInfo == MyInfo.GetInstance()) {
+				// Copy Selected Files Into Directory
+				foreach (string filePath in filesPath) {
+					FileUtils.CopyAll(filePath, currentDirectory.FullName);
+				}
+			} else {
+				// Send Files
+				foreach (string filePath in filesPath) {
+					PeerSocket peer = (PeerSocket) P2PManager.KnownPeers[userInfo];
+					bool fisDir = FileUtils.IsDirectory(filePath);
+	
+					Debug.Log("Send To '{0}' URI: '{1}'", userInfo.Name, filePath);
+					if (FileSend != null) FileSend(peer, filePath, fisDir);
+				}
 			}
 
 			Drag.Finish(args.Context, true, false, args.Time);
