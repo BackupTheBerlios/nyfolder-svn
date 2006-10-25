@@ -8,6 +8,7 @@
  * 25 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Added Copy Files & Directories Drag & Drop, into My Folder.
 	Now You can add your shared file, simply using dnd.
+	Added Dialogs using new Glade Abstract class.
 
  * 22 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Added Login Dialog, and Created An Abstract UIManager Class,

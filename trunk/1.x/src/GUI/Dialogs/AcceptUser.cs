@@ -1,4 +1,4 @@
-/* [ GUI/Dialogs/SetPort.cs ] NyFolder Set P2P Port Dialog
+/* [ GUI/Dialogs/AcceptUser.cs ] NyFolder Accept User Dialog
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -26,36 +26,46 @@ using Niry;
 using Niry.Network;
 
 using NyFolder;
+using NyFolder.Protocol;
 using NyFolder.GUI.Base;
 
 namespace NyFolder.GUI.Dialogs {
-	/// Set P2P Port Dialog
-	public class SetPort : GladeDialog {
+	/// Proxy Settings Dialog
+	public class AcceptUser : GladeDialog {
 		// ============================================
-		// PRIVATE Members
+		// PRIVATE GLADE Members
 		// ============================================
-		[Glade.WidgetAttribute] private Gtk.SpinButton spinPort;
+		[Glade.WidgetAttribute] private Gtk.Label labelTitle;
+		[Glade.WidgetAttribute] private Gtk.Entry entryName;
+		[Glade.WidgetAttribute] private Gtk.Entry entryIP;
 		[Glade.WidgetAttribute] private Gtk.Image image;
 
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
-		/// Create New P2P Port Dialog
-		public SetPort() : base("dialog", "SetPortDialog.glade") {
-			// Set Current Default P2PManager Port
-			Port = P2PManager.Port;
+		/// Create New Proxy Settings Dialog
+		public AcceptUser (PeerSocket peer) : 
+			base("dialog", "AcceptUserDialog.glade")
+		{
+			// Get UserInfo
+			UserInfo userInfo = peer.Info as UserInfo;
 
-			// Initialize Dialog Image
-			this.image.Pixbuf = StockIcons.GetPixbuf("Channel", 48);
-		}
+			// Initialize GUI
+			this.labelTitle.Text = "<span size='x-large'><b>Accept User</b> (";
+			if (userInfo.SecureAuthentication == true) {
+				this.image.Pixbuf = StockIcons.GetPixbuf("SecureAuth");
+				this.labelTitle.Text += "Secure";
+				this.Dialog.Title += " (Secure Authentication)";
+			} else {
+				this.image.Pixbuf = StockIcons.GetPixbuf("InsecureAuth");
+				this.labelTitle.Text += "Insecure";
+				this.Dialog.Title += " (Insecure Authentication)";
+			}
+			this.labelTitle.Text += ")</span>";
+			this.labelTitle.UseMarkup = true;
 
-		// ============================================
-		// PUBLIC Properties
-		// ============================================
-		/// Get or Set P2P Port
-		public int Port {
-			set { spinPort.Value = value; }
-			get { return(spinPort.ValueAsInt); }
+			entryName.Text = userInfo.Name;
+			entryIP.Text = peer.GetRemoteIP().ToString();
 		}
 	}
 }

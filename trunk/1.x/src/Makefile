@@ -23,10 +23,14 @@ SRC_Base = 		AssemblyInfo.cs	\
 				Info.cs				\
 
 SRC_GUI_Dialogs =	GUI/Dialogs/About.cs					\
-					GUI/Dialogs/SetPort.cs					\
+					GUI/Dialogs/AcceptUser.cs				\
+					GUI/Dialogs/AddPeer.cs					\
 					GUI/Dialogs/Login/Login.cs				\
 					GUI/Dialogs/Login/MenuManager.cs		\
-					GUI/Dialogs/Login/ProgressDialog.cs
+					GUI/Dialogs/Login/ProgressDialog.cs		\
+					GUI/Dialogs/ProxySettings.cs			\
+					GUI/Dialogs/RemovePeer.cs				\
+					GUI/Dialogs/SetPort.cs
 
 SRC_GUI_Main =	GUI/Dnd.cs				\
 				GUI/FolderStore.cs		\
@@ -42,7 +46,8 @@ SRC_GUI_Main =	GUI/Dnd.cs				\
 
 SRC_GUI_Glue = 	
 
-SRC_GUI_Base =	GUI/Base/GladeDialog.cs	\
+SRC_GUI_Base =	GUI/Base/Dialogs.cs		\
+				GUI/Base/GladeDialog.cs	\
 				GUI/Base/GladeWindow.cs	\
 				GUI/Base/UIManager.cs
 
@@ -63,7 +68,12 @@ SRC_PluginLib =	PluginLib/Plugin.cs			\
 SRC_Utils = 	Utils/Paths.cs	\
 				Utils/Proxy.cs
 
-RES_Glade =		Glade/SetPortDialog.glade
+RES_Glade =		Glade/AcceptUserDialog.glade		\
+				Glade/AddPeerDialog.glade			\
+				Glade/RemovePeerDialog.glade		\
+				Glade/SetPortDialog.glade			\
+				Glade/ProxySettingsDialog.glade
+
 RES_Images = 	Pixmaps/FileTypes/FileTypeAc3.png			\
 				Pixmaps/FileTypes/FileTypeAiff.png			\
 				Pixmaps/FileTypes/FileTypeArj.png			\

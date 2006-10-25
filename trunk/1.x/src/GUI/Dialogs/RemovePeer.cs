@@ -1,4 +1,4 @@
-/* [ GUI/Dialogs/SetPort.cs ] NyFolder Set P2P Port Dialog
+/* [ GUI/Dialogs/RemovePeer.cs ] NyFolder Remove Peer Dialog
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -26,36 +26,46 @@ using Niry;
 using Niry.Network;
 
 using NyFolder;
+using NyFolder.Protocol;
 using NyFolder.GUI.Base;
 
 namespace NyFolder.GUI.Dialogs {
-	/// Set P2P Port Dialog
-	public class SetPort : GladeDialog {
+	/// Remove Peer Dialog
+	public class RemovePeer : GladeDialog {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		[Glade.WidgetAttribute] private Gtk.SpinButton spinPort;
+		[Glade.WidgetAttribute] private Gtk.ComboBox comboPeers;
+		[Glade.WidgetAttribute] private Gtk.VBox vboxMain;
 		[Glade.WidgetAttribute] private Gtk.Image image;
 
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
-		/// Create New P2P Port Dialog
-		public SetPort() : base("dialog", "SetPortDialog.glade") {
-			// Set Current Default P2PManager Port
-			Port = P2PManager.Port;
+		/// Create New "Remove Peer" Dialog
+		public RemovePeer() : base("dialog", "RemovePeerDialog.glade") {
+			this.comboPeers = ComboBox.NewText();
+			this.vboxMain.PackStart(this.comboPeers, false, false, 2);
+
+			// Add Peers
+			if (P2PManager.KnownPeers != null) {
+				foreach (UserInfo userInfo in P2PManager.KnownPeers.Keys)
+					this.comboPeers.AppendText(userInfo.Name);
+			}
 
 			// Initialize Dialog Image
-			this.image.Pixbuf = StockIcons.GetPixbuf("Channel", 48);
+			this.image.Pixbuf = StockIcons.GetPixbuf("Network", 48);
 		}
 
 		// ============================================
-		// PUBLIC Properties
+		// PUBLIC Methods
 		// ============================================
-		/// Get or Set P2P Port
-		public int Port {
-			set { spinPort.Value = value; }
-			get { return(spinPort.ValueAsInt); }
+		/// Get Selected Peer and Return his name, or null if no one is selected.
+		public string GetPeerSelected() {
+			TreeIter iter;
+			if (comboPeers.GetActiveIter(out iter))
+				return((string) comboPeers.Model.GetValue(iter, 0));
+			return(null);
 		}
 	}
 }
