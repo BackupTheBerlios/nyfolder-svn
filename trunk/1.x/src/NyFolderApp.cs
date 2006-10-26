@@ -154,7 +154,7 @@ namespace NyFolder {
 			Debug.Log("Shared Path: {0}", Paths.UserSharedDirectory(myInfo.Name));
 
 			// Add GUI Glue
-//			new GUI.Glue.FolderManager(mainWindow.Menu, mainWindow.UserPanel, mainWindow.NotebookViewer);
+			new GUI.Glue.FolderManager(mainWindow);
 //			new GUI.Glue.NetworkManager(mainWindow.Menu, mainWindow.UserPanel, mainWindow.NotebookViewer);
 //			new GUI.Glue.ProtocolManager(mainWindow.NotebookViewer);
 

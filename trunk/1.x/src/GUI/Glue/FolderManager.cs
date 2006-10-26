@@ -34,10 +34,6 @@ using NyFolder.Protocol;
 namespace NyFolder.GUI.Glue {
 	public sealed class FolderManager {
 		// ============================================
-		// PUBLIC Events
-		// ============================================
-
-		// ============================================
 		// PRIVATE Members
 		// ============================================
 		private NotebookViewer notebookViewer;
@@ -144,35 +140,37 @@ namespace NyFolder.GUI.Glue {
 			this.menuManager.SetSensitive("/ToolBar/GoHome", sensitive);
 		}
 
-		public void FolderViewerGoUp() {
-			// Skif Network Viewer
-			if (this.notebookViewer.CurrentPage == 0)
-				return;
-
-			// Go Up
-			FolderViewer folderViewer = notebookViewer.CurrentPageWidget as FolderViewer;
-			folderViewer.GoUp();
+		// ============================================
+		// PRIVATE Methods (Notebook, Folder, Network Viewer)
+		// ============================================
+		private void FolderViewerGoUp() {
+			Gtk.Widget page = notebookViewer.CurrentPageWidget;
+			if (page.GetType() == typeof(FolderViewer)) {
+				// Go Up if is Folder Viewer
+				FolderViewer folderViewer = page as FolderViewer;
+				folderViewer.GoUp();
+			}
 		}
 
-		public void FolderViewerGoHome() {
-			// Skif Network Viewer
-			if (this.notebookViewer.CurrentPage == 0)
-				return;
-
-			// Go Up
-			FolderViewer folderViewer = notebookViewer.CurrentPageWidget as FolderViewer;
-			folderViewer.GoHome();
+		private void FolderViewerGoHome() {
+			Gtk.Widget page = notebookViewer.CurrentPageWidget;
+			if (page.GetType() == typeof(FolderViewer)) {
+				// Go Home if is Folder Viewer
+				FolderViewer folderViewer = page as FolderViewer;
+				folderViewer.GoHome();
+			}
 		}
 
-		public void FolderViewerRefresh() {
-			// Skif Network Viewer
-			if (this.notebookViewer.CurrentPage == 0) {
-				NetworkViewer nv = notebookViewer.CurrentPageWidget as NetworkViewer;
-				nv.Refresh();
-			} else {
-				// Go Up
-				FolderViewer fv = notebookViewer.CurrentPageWidget as FolderViewer;
-				fv.Refresh();
+		private void FolderViewerRefresh() {
+			Gtk.Widget page = notebookViewer.CurrentPageWidget;
+			if (page.GetType() != typeof(NetworkViewer)) {
+				// Refresh Network Viewer
+				NetworkViewer networkViewer = page as NetworkViewer;
+				networkViewer.Refresh();
+			} else if (page.GetType() != typeof(FolderViewer)) {
+				// Refresh Folder Viewer
+				FolderViewer folderViewer = page as FolderViewer;
+				folderViewer.Refresh();
 			}
 		}
 	}
