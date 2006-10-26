@@ -28,6 +28,7 @@ using Niry.GUI.Gtk2;
 
 using NyFolder;
 using NyFolder.Utils;
+using NyFolder.Protocol;
 using NyFolder.PluginLib;
 
 namespace NyFolder {
@@ -48,13 +49,13 @@ namespace NyFolder {
 			splash.TextColor = new Cairo.Color(0xff, 0xff, 0xff, 1.0);
 			splash.Run();
 
-			splash.Update("Initializing Application...", 1, 10);
+			splash.Update("Initializing Application...", 1, 11);
 
 			InitBase(ref splash);
 			InitNetwork(ref splash);
 			InitApplication(ref splash);
 
-			splash.Update("Running Application...", 10, 10);
+			splash.Update("Running Application...", 11, 11);
 
 			// Destroy Splash Screen
 			splash.Dispose();
@@ -63,42 +64,46 @@ namespace NyFolder {
 		/// Initialize NyFolder Application, Paths, Proxy, Stock Icons...
 		private static void InitBase (ref SplashScreen splash) {
 			// Initialize NyFolder Paths
-			splash.Update("Initializing NyFolder Paths...", 2, 10);
+			splash.Update("Initializing NyFolder Paths...", 2, 11);
 			Paths.Initialize();
 
 			// Set Home Directory as Current Environment Path
-			splash.Update("Setting Current Environment Path...", 3, 10);
+			splash.Update("Setting Current Environment Path...", 3, 11);
 			Environment.CurrentDirectory = Paths.HomeDirectory;
 
 			// Initialize Proxy Settings
-			splash.Update("Initializing Proxy Settings...", 4, 10);
+			splash.Update("Initializing Proxy Settings...", 4, 11);
 			Proxy.Initialize();
 
 			// Initialize (Gtk GUI) Stock Icons
-			splash.Update("Initializing Stock Icons...", 5, 10);
+			splash.Update("Initializing Stock Icons...", 5, 11);
 			GUI.StockIcons.Initialize();
 		}
 
 		/// Initialize NyFolder P2PManager & Network Related
 		private static void InitNetwork (ref SplashScreen splash) {
 			// Initialize P2PManager
-			splash.Update("Initializing P2P Manager...", 6, 10);
+			splash.Update("Initializing P2P Manager...", 6, 11);
 			p2pManager = P2PManager.GetInstance();
+
+			// Initialize Command Manager
+			splash.Update("Initializing Protocol Manager...", 7, 11);
+			CmdManager.Initialize();
 		}
 
 		/// Initialize NyFolder Application + Plugins
 		private static void InitApplication (ref SplashScreen splash) {
 			// Initialize NyFolder Application
-			splash.Update("Initializing NyFolder...", 7, 10);
+			splash.Update("Initializing NyFolder...", 8, 11);
 			nyFolder = new NyFolderApp();
 			nyFolder.Initialize();
 
 			// Initialize Plugins
-			splash.Update("Initializing NyFolder Plugins...", 8, 10);
+			splash.Update("Initializing NyFolder Plugins...", 9, 11);
 			PluginManager.Initialize(nyFolder);
 
 			// Start Plugins
-			splash.Update("Starting NyFolder Plugins...", 9, 10);
+			splash.Update("Starting NyFolder Plugins...", 10, 11);
 			PluginManager.RunPlugins();
 		}
 

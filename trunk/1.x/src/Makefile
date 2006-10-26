@@ -55,7 +55,9 @@ SRC_GUI_Base =	GUI/Base/Dialogs.cs		\
 
 SRC_GUI = $(SRC_GUI_Base) $(SRC_GUI_Main) $(SRC_GUI_Dialogs) $(SRC_GUI_Glue)
 
-SRC_Protocol = 	Protocol/HttpRequest.cs		\
+SRC_Protocol = 	Protocol/CmdManager.cs		\
+				Protocol/CmdParser.cs		\
+				Protocol/HttpRequest.cs		\
 				Protocol/Login.cs			\
 				Protocol/MyInfo.cs			\
 				Protocol/UserInfo.cs		\
