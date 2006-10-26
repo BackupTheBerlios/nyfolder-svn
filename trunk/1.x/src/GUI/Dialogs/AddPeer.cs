@@ -23,6 +23,7 @@ using Gtk;
 using System;
 
 using Niry;
+using Niry.Utils;
 using Niry.Network;
 
 using NyFolder;
@@ -83,18 +84,18 @@ namespace NyFolder.GUI.Dialogs {
 			// Check Insecure Auth Forms
 			if (SecureAuthentication == false) {
 				if (Ip == null) {
+					Username = null;
 					string title = "Invalid Ip";
 					string message = "Please Set Ip, Null Ip Found";
 					Base.Dialogs.MessageError(title, message);
-					Username = "";
 					return;
 				}
 
 				if (Port == 0) {
+					Username = null;
 					string title = "Invalid Port";
 					string message = "Please Set Port, Null Port Found";
 					Base.Dialogs.MessageError(title, message);
-					Username = "";
 					return;
 				}
 			}
@@ -106,13 +107,13 @@ namespace NyFolder.GUI.Dialogs {
 		/// Get or Set User UserName
 		public string Username {
 			set { entryUserName.Text = value; }
-			get { return(entryUserName.Text == "" ? null : entryUserName.Text); }
+			get { return(TextUtils.IsEmpty(entryUserName.Text) ? null : entryUserName.Text); }
 		}
 
 		/// Get or Set User Ip
 		public string Ip {
 			set { entryIP.Text = value; }
-			get { return(entryIP.Text == "" ? null : entryIP.Text); }
+			get { return(TextUtils.IsEmpty(entryIP.Text) ? null : entryIP.Text); }
 		}
 
 		/// Get or Set User Port
