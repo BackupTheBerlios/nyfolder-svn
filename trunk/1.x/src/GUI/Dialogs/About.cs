@@ -47,7 +47,8 @@ namespace NyFolder.GUI.Dialogs {
 		protected string[] icons = new string[] {
 			"YellowIcon - http://yellowicon.com",
 			"Gnome Art - http://art.gnome.org",
-			"Kde Look - http://kde-look.org"
+			"Kde Look - http://kde-look.org",
+			"Oxygen - http://www.oxygen-icons.org"
 		};
 
 		/// Create New About Dialog

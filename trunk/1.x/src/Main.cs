@@ -49,13 +49,13 @@ namespace NyFolder {
 			splash.TextColor = new Cairo.Color(0xff, 0xff, 0xff, 1.0);
 			splash.Run();
 
-			splash.Update("Initializing Application...", 1, 11);
+			splash.Update("Initializing Application...", 1, 13);
 
 			InitBase(ref splash);
 			InitNetwork(ref splash);
 			InitApplication(ref splash);
 
-			splash.Update("Running Application...", 11, 11);
+			splash.Update("Running Application...", 13, 13);
 
 			// Destroy Splash Screen
 			splash.Dispose();
@@ -64,46 +64,54 @@ namespace NyFolder {
 		/// Initialize NyFolder Application, Paths, Proxy, Stock Icons...
 		private static void InitBase (ref SplashScreen splash) {
 			// Initialize NyFolder Paths
-			splash.Update("Initializing NyFolder Paths...", 2, 11);
+			splash.Update("Initializing NyFolder Paths...", 2, 13);
 			Paths.Initialize();
 
 			// Set Home Directory as Current Environment Path
-			splash.Update("Setting Current Environment Path...", 3, 11);
+			splash.Update("Setting Current Environment Path...", 3, 13);
 			Environment.CurrentDirectory = Paths.HomeDirectory;
 
 			// Initialize Proxy Settings
-			splash.Update("Initializing Proxy Settings...", 4, 11);
+			splash.Update("Initializing Proxy Settings...", 4, 13);
 			Proxy.Initialize();
 
 			// Initialize (Gtk GUI) Stock Icons
-			splash.Update("Initializing Stock Icons...", 5, 11);
+			splash.Update("Initializing Stock Icons...", 5, 13);
 			GUI.StockIcons.Initialize();
 		}
 
 		/// Initialize NyFolder P2PManager & Network Related
 		private static void InitNetwork (ref SplashScreen splash) {
 			// Initialize P2PManager
-			splash.Update("Initializing P2P Manager...", 6, 11);
+			splash.Update("Initializing P2P Manager...", 6, 13);
 			p2pManager = P2PManager.GetInstance();
 
+			// Initialize Download Manager
+			splash.Update("Initializing Download Manager...", 7, 13);
+			DownloadManager.Initialize();
+
+			// Initialize Upload Manager
+			splash.Update("Initializing Upload Manager...", 8, 13);
+			UploadManager.Initialize();
+
 			// Initialize Command Manager
-			splash.Update("Initializing Protocol Manager...", 7, 11);
+			splash.Update("Initializing Protocol Manager...", 9, 13);
 			CmdManager.Initialize();
 		}
 
 		/// Initialize NyFolder Application + Plugins
 		private static void InitApplication (ref SplashScreen splash) {
 			// Initialize NyFolder Application
-			splash.Update("Initializing NyFolder...", 8, 11);
+			splash.Update("Initializing NyFolder...", 10, 13);
 			nyFolder = new NyFolderApp();
 			nyFolder.Initialize();
 
 			// Initialize Plugins
-			splash.Update("Initializing NyFolder Plugins...", 9, 11);
+			splash.Update("Initializing NyFolder Plugins...", 11, 13);
 			PluginManager.Initialize(nyFolder);
 
 			// Start Plugins
-			splash.Update("Starting NyFolder Plugins...", 10, 11);
+			splash.Update("Starting NyFolder Plugins...", 12, 13);
 			PluginManager.RunPlugins();
 		}
 

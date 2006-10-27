@@ -46,6 +46,9 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Initialize Download Manager
+		public static void Initialize() {
+		}
 
 		// ============================================
 		// PRIVATE (Methods) Event Handlers
