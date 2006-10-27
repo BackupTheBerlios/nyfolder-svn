@@ -1,4 +1,4 @@
-/* [ /.cs ] NyFolder ()
+/* [ Protocol/DownloadManager.cs ] NyFolder Download Manager
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -27,30 +27,28 @@ using NyFolder;
 using NyFolder.Utils;
 using NyFolder.Protocol;
 
-namespace NyFolder. {
-	public class  {
+namespace NyFolder.Protocol {
+	/// Download Manager
+	public static class DownloadManager {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
-
-		// ============================================
-		// PROTECTED Members
-		// ============================================
+		public static event BlankEventHandler ReceivedPart = null;
+		public static event BlankEventHandler Finished = null;
+		public static event BlankEventHandler Aborted = null;
+		public static event BlankEventHandler Added = null;
 
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-
-		// ============================================
-		// PUBLIC Constructors
-		// ============================================
+		private static int numDownloads = 0;
 
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
 
 		// ============================================
-		// PROTECTED (Methods) Event Handlers
+		// PRIVATE (Methods) Event Handlers
 		// ============================================
 
 		// ============================================
@@ -60,5 +58,9 @@ namespace NyFolder. {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Number of Downloads
+		public static int NDownloads {
+			get { return(numDownloads); }
+		}
 	}
 }

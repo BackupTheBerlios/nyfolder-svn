@@ -72,16 +72,17 @@ namespace NyFolder.Protocol {
 			P2PManager.StatusChanged += new BoolEventHandler(OnP2PStatusChanged);
 		}
 
-		/// Raise Login Handler Event
-		public static void RaiseLoginEvent (PeerSocket peer, UserInfo info) {
-			if (LoginEvent != null) LoginEvent(peer, info);
-		}
+		/// Send Login
+		public static void Login (PeerSocket peer, UserInfo userInfo) {
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "login";
+			xmlRequest.Attributes.Add("name", userInfo.Name);
+			xmlRequest.Attributes.Add("secure", userInfo.SecureAuthentication.ToString());
 
-		/// Raise Protocol Handler Event
-		public static void RaiseProtocolEvent (ProtocolHandler handler, 
-											   PeerSocket peer, XmlRequest xml)
-		{
-			if (handler != null) handler(peer, xml);
+			string magic = Protocol.Login.GenerateMagic(peer);
+			xmlRequest.Attributes.Add("magic", magic);
+
+			peer.Send(xmlRequest.GenerateXml());
 		}
 
 		// ============================================
@@ -93,10 +94,10 @@ namespace NyFolder.Protocol {
 				// P2P Is Online
 				P2PManager.PeerReceived += new PeerEventHandler(OnReceived);
 
-				// Raise Add Protocol Event
+				// Raise Add Protocol Event Handler
 				if (AddProtocolEvent != null) AddProtocolEvent(p2pManager);
 			} else {
-				// Raise Delete Protocol Event
+				// Raise Delete Protocol Event Handler
 				if (DelProtocolEvent != null) DelProtocolEvent(p2pManager);
 
 				// P2P Is Offline

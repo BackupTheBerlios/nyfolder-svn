@@ -19,3 +19,16 @@ Splash Screen:
 
 Login
 	- Automatic Login (Skip Login Dialog)
+
+Database for Accepted User (Plugin)
+				if (userInfo.SecureAuthentication == true) {
+					// Check if User is Present into Db else Ask Accept
+//					if (Database.User.IsPresent(userInfo.Name) == false)
+						acceptUser = AcceptUser(peer);
+
+					// Add User To DB (Ask ?)
+//					if (acceptUser == true)
+//						Database.User.Add(userInfo.Name);
+				} else {
+					acceptUser = AcceptUser(peer);
+				}

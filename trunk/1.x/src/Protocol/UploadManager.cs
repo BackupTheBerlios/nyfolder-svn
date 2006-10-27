@@ -1,4 +1,4 @@
-/* [ /.cs ] NyFolder ()
+/* [ Protocol/UploadManager.cs ] NyFolder Upload Manager
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -27,30 +27,28 @@ using NyFolder;
 using NyFolder.Utils;
 using NyFolder.Protocol;
 
-namespace NyFolder. {
-	public class  {
+namespace NyFolder.Protocol {
+	/// Upload Manager
+	public static class UploadManager {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
-
-		// ============================================
-		// PROTECTED Members
-		// ============================================
+		public static event BlankEventHandler SendedPart = null;
+		public static event BlankEventHandler Finished = null;
+		public static event BlankEventHandler Aborted = null;
+		public static event BlankEventHandler Added = null;
 
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-
-		// ============================================
-		// PUBLIC Constructors
-		// ============================================
+		private static int numUploads = 0;
 
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
 
 		// ============================================
-		// PROTECTED (Methods) Event Handlers
+		// PRIVATE (Methods) Event Handlers
 		// ============================================
 
 		// ============================================
@@ -60,5 +58,9 @@ namespace NyFolder. {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Number of Uploads
+		public static int NUploads {
+			get { return(numUploads); }
+		}
 	}
 }

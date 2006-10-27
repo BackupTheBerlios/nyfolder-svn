@@ -96,7 +96,7 @@ namespace NyFolder.Protocol {
 							P2PManager.AddPeer(login.User, peer);
 	
 							// Start Login Event
-							CmdManager.RaiseLoginEvent(peer, login.User);
+							CmdManager.LoginEvent(peer, login.User);
 						} else {
 							Debug.Log("Auth Failed: {0}", peer.GetRemoteIP());
 						}

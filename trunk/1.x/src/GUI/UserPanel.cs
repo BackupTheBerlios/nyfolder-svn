@@ -89,7 +89,6 @@ namespace NyFolder.GUI {
 			this.UpdateSharedFilesNum();
 			this.PackStart(this.labelTFiles, false, false, 2);	
 
-#if false
 			// Update Labels Timeout
 			timeoutUpdateRet = true;
 			timeoutUpdate = GLib.Timeout.Add(10000, UpdateInfoLabels);
@@ -101,12 +100,11 @@ namespace NyFolder.GUI {
 			// Update Upload Label
 			UploadManager.Added += new BlankEventHandler(UpdateUploadNum);
 			UploadManager.Finished += new BlankEventHandler(UpdateUploadNum);
-#endif
 		}
 
 		~UserPanel() {
 			timeoutUpdateRet = false;
-#if false
+
 			// Update Download Label
 			DownloadManager.Added -= new BlankEventHandler(UpdateDownloadNum);
 			DownloadManager.Finished -= new BlankEventHandler(UpdateDownloadNum);
@@ -114,7 +112,6 @@ namespace NyFolder.GUI {
 			// Update Upload Label
 			UploadManager.Added -= new BlankEventHandler(UpdateUploadNum);
 			UploadManager.Finished -= new BlankEventHandler(UpdateUploadNum);
-#endif
 		}
 
 		// ============================================
@@ -140,26 +137,22 @@ namespace NyFolder.GUI {
 
 		/// Update Downloads Num
 		public void UpdateDownloadNum (object sender) {
-#if false
 			Gtk.Application.Invoke(delegate {
 				try {
 					int numDownload = DownloadManager.NDownloads;
 					this.labelDownload.Text = numDownload.ToString() + " Download";
 				} catch {}
 			});
-#endif
 		}
 
 		/// Update Uploads Num
 		public void UpdateUploadNum (object sender) {
-#if false
 			Gtk.Application.Invoke(delegate {
 				try {
 					int numUpload = UploadManager.NUploads;
 					this.labelUpload.Text = numUpload.ToString() + " Upload";
 				} catch {}
 			});
-#endif
 		}
 
 		// ============================================
