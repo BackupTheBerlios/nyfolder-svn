@@ -45,8 +45,7 @@ SRC_GUI_Main =	GUI/Dnd.cs				\
 				GUI/Window.cs
 
 SRC_GUI_Glue = 	GUI/Glue/Dialogs.cs			\
-				GUI/Glue/FolderManager.cs	\
-				GUI/Glue/NetworkManager.cs
+				GUI/Glue/FolderManager.cs
 
 SRC_GUI_Base =	GUI/Base/Dialogs.cs		\
 				GUI/Base/GladeDialog.cs	\
@@ -59,6 +58,8 @@ SRC_GUI = $(SRC_GUI_Base) $(SRC_GUI_Main) $(SRC_GUI_Dialogs) $(SRC_GUI_Glue)
 SRC_Protocol = 	Protocol/CmdManager.cs			\
 				Protocol/CmdParser.cs			\
 				Protocol/DownloadManager.cs		\
+				Protocol/FileInfo.cs			\
+				Protocol/FileList.cs			\
 				Protocol/HttpRequest.cs			\
 				Protocol/Login.cs				\
 				Protocol/MyInfo.cs				\

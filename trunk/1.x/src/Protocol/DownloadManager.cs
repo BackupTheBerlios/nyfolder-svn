@@ -22,6 +22,7 @@ using System;
 
 using Niry;
 using Niry.Utils;
+using Niry.Network;
 
 using NyFolder;
 using NyFolder.Utils;
@@ -41,13 +42,45 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
+		private static FileList acceptList = null;
+		private static FileList recvList = null;
+
 		private static int numDownloads = 0;
+		private static uint fileId = 0;
+
+		// ============================================
+		// PUBLIC (Init/Clear) Methods
+		// ============================================
+		/// Initialize Download Manager
+		public static void Initialize() {
+			// Create Thread-Safe File Lists Instances
+			acceptList = new FileList();
+			recvList = new FileList();
+		}
+
+		/// Abort All The Download in the List
+		public static void Clear() {
+			acceptList.RemoveAll();
+			recvList.RemoveAll();
+		}
 
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		/// Initialize Download Manager
-		public static void Initialize() {
+		public static void AddToAcceptList (PeerSocket peer, 
+											string path, string savePath)
+		{
+			// Initialize File Info
+			FileInfo fileInfo = new FileInfo(fileId, peer, path, savePath);
+			// Add To Accept List
+			acceptList.Add(peer, fileInfo);
+			// Update File Id
+			fileId++;
+		}
+
+		public static void RemoveFromAcceptList (PeerSocket peer, uint id) {
+			FileInfo fileInfo = new FileInfo(id, peer);
+			acceptList.Remove(peer, fileInfo);
 		}
 
 		// ============================================
@@ -64,6 +97,16 @@ namespace NyFolder.Protocol {
 		/// Get Number of Downloads
 		public static int NDownloads {
 			get { return(numDownloads); }
+		}
+
+		/// Get The Accept List
+		public static FileList AcceptList {
+			get { return(acceptList); }
+		}
+		
+		/// Get The Receiving List
+		public static FileList ReceivingList {
+			get { return(recvList); }
 		}
 	}
 }

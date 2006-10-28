@@ -26,7 +26,6 @@ using System.Text;
 
 using NyFolder;
 using NyFolder.Utils;
-using NyFolder.Protocol;
 
 namespace NyFolder.GUI.Base {
 	/// Utility Dialogs

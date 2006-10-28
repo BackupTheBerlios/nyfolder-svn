@@ -13,9 +13,7 @@ Note:	All Event Handler That Works with The GUI have to do this first
 		-------------------------------------------
 
 
-Splash Screen:
-	- Start Thread at The Main Begin
-	- Catch 
+No Splash Screen Options
 
 Login
 	- Automatic Login (Skip Login Dialog)

@@ -155,7 +155,7 @@ namespace NyFolder {
 
 			// Add GUI Glue
 			new GUI.Glue.FolderManager(mainWindow);
-			new GUI.Glue.NetworkManager(mainWindow);
+//			new GUI.Glue.NetworkManager(mainWindow);
 //			new GUI.Glue.ProtocolManager(mainWindow.NotebookViewer);
 
 			// NyFolder Window ShowAll

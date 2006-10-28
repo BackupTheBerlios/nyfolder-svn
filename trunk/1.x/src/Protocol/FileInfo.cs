@@ -1,4 +1,4 @@
-/* [ Protocol/UploadManager.cs ] NyFolder Upload Manager
+/* [ Protocol/FileInfo.cs ] NyFolder Protocol File Info
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -22,37 +22,58 @@ using System;
 
 using Niry;
 using Niry.Utils;
+using Niry.Network;
 
 using NyFolder;
 using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.Protocol {
-	/// Upload Manager
-	public static class UploadManager {
+	public class FileInfo : IComparable {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
-		public static event BlankEventHandler SendedPart = null;
-		public static event BlankEventHandler Finished = null;
-		public static event BlankEventHandler Aborted = null;
-		public static event BlankEventHandler Added = null;
+
+		// ============================================
+		// PROTECTED Members
+		// ============================================
+		private string originalName;
+		private string selectedName;
+		private PeerSocket peer;
 
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private static int numUploads = 0;
-		private static uint fileId = 0;
+		private uint id;
+
+		// ============================================
+		// PUBLIC Constructors
+		// ============================================
+		public FileInfo (uint id, PeerSocket peer) {
+			this.id = id;
+			this.peer = peer;
+		}
+
+		public FileInfo (uint id, PeerSocket peer, 
+						 string originalName, string selectedName)
+		{
+			this.id = id;
+			this.peer = peer;
+			this.originalName = originalName;
+			this.selectedName = selectedName;
+		}
 
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		/// Initialize Upload Manager
-		public static void Initialize() {
+		/// Compare Files Id
+		public int CompareTo (object obj) {
+			FileInfo fileInfo = (FileInfo) obj;
+			return((int) (this.id - fileInfo.Id));
 		}
 
 		// ============================================
-		// PRIVATE (Methods) Event Handlers
+		// PROTECTED (Methods) Event Handlers
 		// ============================================
 
 		// ============================================
@@ -62,9 +83,9 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
-		/// Get Number of Uploads
-		public static int NUploads {
-			get { return(numUploads); }
+		/// Get The File Id
+		public uint Id {
+			get { return(this.id); }
 		}
 	}
 }
