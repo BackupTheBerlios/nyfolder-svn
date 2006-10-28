@@ -51,6 +51,7 @@ namespace NyFolder.GUI.Dialogs {
 			// Add Proxy Settings Box
 			proxy = new Niry.GUI.Gtk2.ProxySettings();
 			this.vbox.PackStart(proxy, true, true, 2);
+			proxy.ShowAll();
 
 			// Initialize Dialog Image
 			this.image.Pixbuf = StockIcons.GetPixbuf("Proxy", 48);

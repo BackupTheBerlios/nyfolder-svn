@@ -150,7 +150,7 @@ namespace NyFolder.GUI.Dialogs {
 				switch (action.Name) {
 					// File Menu
 					case "ProxySettings":
-						//Glue.Dialogs.ProxySettings();
+						Glue.Dialogs.ProxySettings();
 						break;
 					case "Quit":
 						Gtk.Application.Quit();
@@ -175,7 +175,7 @@ namespace NyFolder.GUI.Dialogs {
 		// ============================================
 		private void ShowErrorMessage (string title, string message) {
 			WindowUtils.Shake(this, 2);
-			//Glue.Dialogs.MessageError(title, message);
+			Base.Dialogs.MessageError(title, message);
 		}
 
 		// ============================================

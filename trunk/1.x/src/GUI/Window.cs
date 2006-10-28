@@ -131,14 +131,14 @@ namespace NyFolder.GUI {
 				switch (action.Name) {
 					// File Menu
 					case "ProxySettings":
-//						Glue.Dialogs.ProxySettings();
+						Glue.Dialogs.ProxySettings();
 						break;
 					case "Logout":
-//						if (Glue.Dialogs.QuestionDialog("Logout", 
-//							"Do You Really Want To Logout ?")) 
-//						{
+						if (Base.Dialogs.QuestionDialog("Logout", 
+							"Do You Really Want To Logout ?")) 
+						{
 							if (Logout != null) Logout(this);
-//						}
+						}
 						break;
 					case "Quit":
 						if (Quit != null) Quit(this);
