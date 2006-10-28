@@ -87,5 +87,15 @@ namespace NyFolder.Protocol {
 		public uint Id {
 			get { return(this.id); }
 		}
+
+		// Get The Original File Name
+		public string OriginalName {
+			get { return(this.originalName); }
+		}
+
+		// Get The Selected File Name
+		public string SelectedName {
+			get { return(this.selectedName); }
+		}
 	}
 }
