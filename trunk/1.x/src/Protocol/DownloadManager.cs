@@ -83,6 +83,14 @@ namespace NyFolder.Protocol {
 			acceptList.Remove(peer, fileInfo);
 		}
 
+#if false
+		// TODO
+		public static void AddToReceivingList (PeerSocket peer, FileInfo fileInfo) {
+//			fileInfo.InitReception();
+			recvList.Add(peer, fileInfo);
+		}
+#endif
+
 		// ============================================
 		// PRIVATE (Methods) Event Handlers
 		// ============================================

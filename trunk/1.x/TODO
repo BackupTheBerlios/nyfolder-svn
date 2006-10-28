@@ -13,7 +13,8 @@ Note:	All Event Handler That Works with The GUI have to do this first
 		-------------------------------------------
 
 
-No Splash Screen Options
+ - No Splash Screen Options
+ - Pending Download Viewer (+ Remove Options)
 
 Login
 	- Automatic Login (Skip Login Dialog)
