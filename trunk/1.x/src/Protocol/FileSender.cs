@@ -50,6 +50,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
+		private string displayedName = null;
 		private byte[] fileContent = null;
 		private int sendedPercent = 0;
 		private Thread thread = null;
@@ -80,7 +81,7 @@ namespace NyFolder.Protocol {
 		/// Start Sending File
 		public void Start() {
 			thread = new Thread(new ThreadStart(StartSendingFile));
-			thread.Name = "Send File " + OriginalName;
+			thread.Name = "Send File " + DisplayedName;
 			thread.Start();
 		}
 
@@ -184,7 +185,7 @@ namespace NyFolder.Protocol {
 			xmlRequest.Attributes.Add("what", "file");
 			xmlRequest.Attributes.Add("id", Id);
 			xmlRequest.Attributes.Add("size", Size);
-			xmlRequest.Attributes.Add("name", OriginalName);
+			xmlRequest.Attributes.Add("name", DisplayedName);
 
 			// Send To Peer
 			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
@@ -224,6 +225,13 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Displayed File Name
+		public string DisplayedName {
+			get {
+				return((displayedName == null) ? OriginalName : displayedName);
+			}
+		}
+
 		/// Get The File Sended Size
 		public long SendedSize {
 			get { return(this.sendedSize); }
