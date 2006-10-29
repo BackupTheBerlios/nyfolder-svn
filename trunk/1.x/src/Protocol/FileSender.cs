@@ -44,10 +44,6 @@ namespace NyFolder.Protocol {
 		public const uint ChunkSize = 5120;	// 1024 it's ok
 
 		// ============================================
-		// PROTECTED Members
-		// ============================================
-
-		// ============================================
 		// PRIVATE Members
 		// ============================================
 		private string displayedName = null;
@@ -60,12 +56,28 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
+		/// Create New File Sender (Used Only for Compare)
 		public FileSender (uint id) : base(id) {
 		}
 
+		/// Create New File Sender
 		public FileSender (uint id, PeerSocket peer, string fileName) :
 			base(id, peer, fileName)
 		{
+			this.displayedName = null;
+		}
+
+		/// Create New File Sender
+		public FileSender  (uint id, PeerSocket peer, 
+							string fileName, string displayedName) :
+			base(id, peer, fileName)
+		{
+			this.displayedName = displayedName;
+		}
+
+		/// File Sender Distructor
+		~FileSender() {
+			Abort();
 		}
 
 		// ============================================
@@ -121,6 +133,7 @@ namespace NyFolder.Protocol {
 			}
 		}
 
+		/// Split and Send File In Parts of ChunkSize
 		private void SendFileParts() {
 			uint part = 0;
 			while (fileContent != null) {

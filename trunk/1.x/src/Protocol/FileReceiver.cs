@@ -51,12 +51,26 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
+		/// Create New File Receiver (Used Only for Compare)
 		public FileReceiver (uint id) : base(id) {
 		}
 
-		public FileReceiver (uint id, PeerSocket peer) : base(id, peer) {
+		/// Create New File Receiver
+		public FileReceiver (uint id, PeerSocket peer, string fileName) : 
+			base(id, peer, fileName)
+		{
+			this.saveName = null;
 		}
 
+		/// Create New File Receiver
+		public FileReceiver (uint id, PeerSocket peer, 
+							 string fileName, string saveAs) :
+			base(id, peer, fileName)
+		{
+			this.saveName = saveAs;
+		}
+
+		/// File Receiver Distructor
 		~FileReceiver() {
 			if (saveOnExit == true) Save();
 		}
