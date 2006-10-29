@@ -85,6 +85,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		/// Abort Sending Operation
 		public override void Abort() {
+			Debug.Log("FileSender.Abort()");
 			if (endSend == false && thread.IsAlive == true) {
 				thread.Abort();
 			}

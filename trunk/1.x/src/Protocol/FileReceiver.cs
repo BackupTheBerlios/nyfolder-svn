@@ -101,6 +101,7 @@ namespace NyFolder.Protocol {
 
 		/// Abort The Recv Operation
 		public override void Abort() {
+			Debug.Log("FileReceiver.Abort()");
 			Abort(null);
 		}
 		

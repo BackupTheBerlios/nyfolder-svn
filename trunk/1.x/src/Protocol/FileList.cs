@@ -73,8 +73,9 @@ namespace NyFolder.Protocol {
 
 		/// Remove all Peer's File List
 		public void RemoveAll() {
-			foreach (ArrayList fileList in this.data.Values)
+			foreach (ArrayList fileList in this.data.Values) {
 				fileList.Clear();
+			}
 			this.data.Clear();
 		}
 

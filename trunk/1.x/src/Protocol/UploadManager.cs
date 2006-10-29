@@ -64,8 +64,14 @@ namespace NyFolder.Protocol {
 		// PUBLIC Methods
 		// ============================================
 		public static void Send (PeerSocket peer, string path, string name) {
-			// Update File ID
-			fileId++;
+			// Create New File Sender && Update File ID
+			FileSender fileSender = new FileSender(fileId++, peer, path, name);
+
+			// Add File Sender To The Upload List
+			uploadList.Add(peer, fileSender);
+
+			// Start The File Sender
+			fileSender.Start();
 		}
 
 		public static void Abort (PeerSocket peer, uint id) {
