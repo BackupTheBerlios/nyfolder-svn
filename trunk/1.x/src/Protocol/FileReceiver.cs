@@ -101,8 +101,13 @@ namespace NyFolder.Protocol {
 
 		/// Abort The Recv Operation
 		public override void Abort() {
-			saveOnExit = false;
+			Abort(null);
+		}
+		
+		public void Abort (string msgerror) {
 			Save();
+			saveOnExit = false;
+			AbortRecvFile(msgerror);
 		}
 
 		/// Save File
@@ -115,6 +120,20 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		/// <abort what='recv-file' id='10' />
+		/// <abort what='recv-file' id='10'>Error Message</abort>
+		private void AbortRecvFile (string msgerror) {
+			// XmlRequest
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "abort";
+			if (msgerror != null)
+				xmlRequest.BodyText = "Sending Error: " + msgerror;
+			xmlRequest.Attributes.Add("what", "snd-file");
+			xmlRequest.Attributes.Add("id", Id);
+
+			// Send To Peer
+			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
+		}
 
 		// ============================================
 		// PUBLIC Properties
