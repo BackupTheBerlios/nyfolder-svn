@@ -65,11 +65,11 @@ namespace NyFolder.Protocol {
 		// ============================================
 		/// Initialize File
 		public void Init (XmlRequest xml) {
-			FileSize = long.Parse((string) xml.Attributes["size"]);
+			Size = long.Parse((string) xml.Attributes["size"]);
 			OriginalName = (string) xml.Attributes["name"];
 
 			// Create Null File and Open Binary Stream
-			FileStream stream = FileUtils.CreateNullFile(OriginalName, FileSize);
+			FileStream stream = FileUtils.CreateNullFile(OriginalName, Size);
 			binaryWriter = new BinaryWriter(stream);
 		}
 
@@ -105,13 +105,13 @@ namespace NyFolder.Protocol {
 		// PUBLIC Properties
 		// ============================================
 		/// Get File Saved Size
-		public long FileSavedSize {
+		public long SavedSize {
 			get { return(this.fileSaved); }
 		}
 
 		/// Get Received Percentage
 		public int ReceivedPercent {
-			get { return((int) ((fileSaved / (double) FileSize) * 100)); }
+			get { return((int) ((fileSaved / (double) Size) * 100)); }
 		}
 	}
 }

@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Threading;
 
 using Niry;
 using Niry.Utils;
@@ -47,6 +48,11 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
+		private string displayedName;
+		private Thread thread = null;
+		private int sendedPercent = 0;
+		private bool endSend = false;
+		private long sendedSize = 0;
 
 		// ============================================
 		// PUBLIC Constructors
@@ -57,18 +63,31 @@ namespace NyFolder.Protocol {
 		public FileSender (uint id, PeerSocket peer, string fileName) :
 			base(id, peer, fileName)
 		{
+			this.displayedName = null;
 		}
 
 		public FileSender (uint id, PeerSocket peer, 
-						   string fileName, string displayName) :
+						   string fileName, string displayedName) :
 			base(id, peer, fileName)
 		{
+			this.displayedName = displayedName;
 		}
 
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Abort Sending Operation
 		public override void Abort() {
+			if (endSend == false && thread.IsAlive == true) {
+				thread.Abort();
+			}
+		}
+
+		/// Start Sending File
+		public void Start() {
+			thread = new Thread(new ThreadStart(StartSendingFile));
+			thread.Name = "Send File " + DisplayedName;
+			thread.Start();
 		}
 
 		// ============================================
@@ -78,9 +97,33 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		private void StartSendingFile() {
+			try {
+			} catch (ThreadAbortException) {
+			} catch (Exception e) {
+			}
+		}
 
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Displayed File Name
+		public string DisplayedName {
+			get {
+				if (displayedName == null)
+					return(OriginalName);
+				return(displayedName);
+			}
+		}
+
+		/// Get The File Sended Size
+		public long SendedSize {
+			get { return(this.sendedSize); }
+		}
+
+		/// Get The File Sended Percent
+		public int SendedPercent {
+			get { return(this.sendedPercent); }
+		}
 	}
 }

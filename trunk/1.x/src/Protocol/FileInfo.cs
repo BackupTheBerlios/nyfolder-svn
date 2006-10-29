@@ -88,15 +88,15 @@ namespace NyFolder.Protocol {
 			get { return(this.id); }
 		}
 
+		/// Get The File Size
+		public long Size {
+			get { return(this.fileSize); }
+			protected set { this.fileSize = value; }
+		}
+
 		/// Get The Peer (File Owner)
 		public PeerSocket Peer {
 			get { return(this.peer); }
-		}
-
-		/// Get The File Size
-		public long FileSize {
-			get { return(this.fileSize); }
-			protected set { this.fileSize = value; }
 		}
 
 		// Get The Original File Name
