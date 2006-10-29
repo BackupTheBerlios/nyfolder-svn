@@ -55,7 +55,7 @@ namespace NyFolder.Utils {
 
 		/// Get Current User Config Directory Path
 		public static string ConfigDirectory {
-			get { return(Path.Combine(home_directory, ".nyFolder")); }
+			get { return(Path.Combine(home_directory, ".nyFolder-1.x")); }
 		}
 
 		/// Get Current User Plugin Directory Path

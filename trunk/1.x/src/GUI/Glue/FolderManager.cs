@@ -163,11 +163,11 @@ namespace NyFolder.GUI.Glue {
 
 		private void FolderViewerRefresh() {
 			Gtk.Widget page = notebookViewer.CurrentPageWidget;
-			if (page.GetType() != typeof(NetworkViewer)) {
+			if (page.GetType() == typeof(NetworkViewer)) {
 				// Refresh Network Viewer
 				NetworkViewer networkViewer = page as NetworkViewer;
 				networkViewer.Refresh();
-			} else if (page.GetType() != typeof(FolderViewer)) {
+			} else if (page.GetType() == typeof(FolderViewer)) {
 				// Refresh Folder Viewer
 				FolderViewer folderViewer = page as FolderViewer;
 				folderViewer.Refresh();

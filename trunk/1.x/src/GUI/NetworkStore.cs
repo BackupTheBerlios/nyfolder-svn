@@ -43,6 +43,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
+		/// Create New Network Store
 		public NetworkStore() : base(typeof(UserInfo), 
 									 typeof(string),
 									 typeof(Gdk.Pixbuf))
