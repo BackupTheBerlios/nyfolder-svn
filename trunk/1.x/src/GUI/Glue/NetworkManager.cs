@@ -62,6 +62,8 @@ namespace NyFolder.GUI.Glue {
 			// Add Event Handlers
 			menuManager.Activated += new EventHandler(OnMenuActivated);
 			networkViewer.ItemRemoved += new PeerSelectedHandler(OnPeerRemove);
+			CmdManager.AddProtocolEvent += new SetProtocolEventHandler(OnAddProtocolEvent);
+			CmdManager.DelProtocolEvent += new SetProtocolEventHandler(OnDelProtocolEvent);
 		}
 
 		// ============================================
@@ -104,12 +106,19 @@ namespace NyFolder.GUI.Glue {
 
 			if (action.Active == true) {
 				try {
-					//ConnectMyPeer();
+					P2PStartListening();
+					ConnectToWebServer();
 				} catch {
 					action.Active = false;
 				}				
 			} else {
-				//DisconnectMyPeer();
+				try {
+					DisconnectFromWebServer();
+					this.RemoveAllUsers();
+					this.p2pManager.StopListening();
+				} catch (Exception e) {
+					Base.Dialogs.MessageError("P2P Disconnection Error", e.Message);
+				}
 			}
 		}
 
@@ -144,27 +153,24 @@ namespace NyFolder.GUI.Glue {
 		// =============================================
 		// PRIVATE Methods (My Connection/Disconnection)
 		// =============================================
-#if false
+		private void OnAddProtocolEvent (P2PManager p2pManager) {
+			P2PManager.PeerError += new PeerEventHandler(OnPeerError);
+			CmdManager.LoginEvent += new ProtocolLoginHandler(OnPeerLogin);
+			P2PManager.PeerDisconnecting += new PeerEventHandler(OnPeerDisconnect);
+		}
+
+		private void OnDelProtocolEvent (P2PManager p2pManager) {
+			P2PManager.PeerError -= new PeerEventHandler(OnPeerError);
+			CmdManager.LoginEvent -= new ProtocolLoginHandler(OnPeerLogin);
+			P2PManager.PeerDisconnecting -= new PeerEventHandler(OnPeerDisconnect);
+		}
+
 		private void P2PStartListening() {
 			try {
 				// P2P Start Listening
 				this.p2pManager.StartListening();
 			} catch (Exception e) {
 				Base.Dialogs.MessageError("P2P Starting Error", e.Message);
-				// ReTrow Exception
-				throw(e);
-			}
-		}
-
-		private void InitFileTransfertManager() {
-			try {
-				// Initialize Download & Upload Manager
-				DownloadManager.Initialize();
-				UploadManager.Initialize();
-			} catch (Exception e) {
-				Base.Dialogs.MessageError("Download/Upload Manager Init", e.Message);
-				// P2P Stop Listening
-				this.p2pManager.StopListening();
 				// ReTrow Exception
 				throw(e);
 			}
@@ -185,28 +191,14 @@ namespace NyFolder.GUI.Glue {
 			}
 		}
 
-		private void ConnectMyPeer() {
-			P2PStartListening();
-			InitFileTransfertManager();
-
+		private void DisconnectFromWebServer() {			
 			try {
-				// Initialize Command Manager & Add Commands Handler
-				this.cmdManager.AddPeerEventsHandler();
-				this.AddProtocolEvents();
-
-				// Add Custom Command Handler
-				if (AddProtocolEvent != null) AddProtocolEvent(p2pManager, cmdManager);
+				// Disconnect From NyFolder Web Server
+				MyInfo.DisconnectFromWebServer();
 			} catch (Exception e) {
-				Base.Dialogs.MessageError("Add Protocol Events", e.Message);
-				// P2P Stop Listening
-				this.p2pManager.StopListening();
-				// ReTrow Exception
-				throw(e);
+				Base.Dialogs.MessageError("Disconnection From Web Server", e.Message);
 			}
-
-			ConnectToWebServer();
 		}
-#endif
 
 		// ============================================
 		// PRIVATE Methods

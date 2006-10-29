@@ -45,7 +45,8 @@ SRC_GUI_Main =	GUI/Dnd.cs				\
 				GUI/Window.cs
 
 SRC_GUI_Glue = 	GUI/Glue/Dialogs.cs			\
-				GUI/Glue/FolderManager.cs
+				GUI/Glue/FolderManager.cs	\
+				GUI/Glue/NetworkManager.cs
 
 SRC_GUI_Base =	GUI/Base/Dialogs.cs		\
 				GUI/Base/GladeDialog.cs	\
