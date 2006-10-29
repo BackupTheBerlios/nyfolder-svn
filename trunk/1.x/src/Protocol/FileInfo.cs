@@ -37,17 +37,21 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PROTECTED Members
 		// ============================================
-		private string originalName;
-		private PeerSocket peer;
 
 		// ============================================
 		// PRIVATE Members
 		// ============================================
+		private string originalName;
+		private PeerSocket peer;
+		private long fileSize;
 		private uint id;
 
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
+		public FileInfo (uint id) : this(id, null, null) {
+		}
+
 		public FileInfo (uint id, PeerSocket peer) : this(id, peer, null) {
 		}
 
@@ -60,6 +64,8 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		public abstract void Abort();
+
 		/// Compare Files Id
 		public int CompareTo (object obj) {
 			FileInfo fileInfo = (FileInfo) obj;
@@ -82,9 +88,15 @@ namespace NyFolder.Protocol {
 			get { return(this.id); }
 		}
 
-		// Get The Peer (File Owner)
+		/// Get The Peer (File Owner)
 		public PeerSocket Peer {
 			get { return(this.peer); }
+		}
+
+		/// Get The File Size
+		public long FileSize {
+			get { return(this.fileSize); }
+			protected set { this.fileSize = value; }
 		}
 
 		// Get The Original File Name

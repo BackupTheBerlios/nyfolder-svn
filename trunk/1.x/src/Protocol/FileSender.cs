@@ -29,10 +29,16 @@ using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.Protocol {
+	/// File Sender
 	public class FileSender : FileInfo {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
+
+		// ============================================
+		// PUBLIC Consts
+		// ============================================
+		public const uint ChunkSize = 5120;	// 1024 it's ok
 
 		// ============================================
 		// PROTECTED Members
@@ -45,6 +51,9 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
+		public FileSender (uint id) : base(id) {
+		}
+
 		public FileSender (uint id, PeerSocket peer, string fileName) :
 			base(id, peer, fileName)
 		{
@@ -59,6 +68,8 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		public override void Abort() {
+		}
 
 		// ============================================
 		// PROTECTED (Methods) Event Handlers

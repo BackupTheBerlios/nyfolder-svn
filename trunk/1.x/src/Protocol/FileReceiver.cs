@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.IO;
 
 using Niry;
 using Niry.Utils;
@@ -29,7 +30,8 @@ using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.Protocol {
-	public class FileReceiver : FileInfo {
+	/// File Receiver
+	public class FileReceiver : Protocol.FileInfo {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
@@ -41,18 +43,50 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
+		private BinaryWriter binaryWriter;
+		private bool saveOnExit = true;
+		private long fileSaved = 0;
 
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
+		public FileReceiver (uint id) : base(id) {
+		}
+
 		public FileReceiver (uint id, PeerSocket peer, string fileName) :
 			base(id, peer, fileName)
 		{
 		}
 
+		~FileReceiver() {
+			if (saveOnExit == true) Save();
+		}
+
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Append Data to The File
+		public void Append (XmlRequest xml) {
+			int part = int.Parse((string) xml.Attributes["part"]);
+			byte[] data = Convert.FromBase64String(xml.BodyText);
+			fileSaved += data.Length;
+
+			// Seek to Offset & Write Data
+			binaryWriter.Seek((int)(part * FileSender.ChunkSize), SeekOrigin.Begin);
+			binaryWriter.Write(data, 0, data.Length);
+		}
+
+		/// Abort The Recv Operation
+		public override void Abort() {
+			saveOnExit = false;
+		}
+
+		/// Save File
+		public void Save() {
+			binaryWriter.Flush();
+			binaryWriter.Close();
+			binaryWriter = null;
+		}
 
 		// ============================================
 		// PROTECTED (Methods) Event Handlers
@@ -65,5 +99,14 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get File Saved Size
+		public long FileSavedSize {
+			get { return(this.fileSaved); }
+		}
+
+		/// Get Received Percentage
+		public int ReceivedPercent {
+			get { return((int) ((fileSaved / (double) FileSize) * 100)); }
+		}
 	}
 }

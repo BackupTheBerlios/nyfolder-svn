@@ -72,20 +72,29 @@ namespace NyFolder.Protocol {
 											string path, string savePath)
 		{
 			// Initialize File Info
-			FileInfo fileInfo = new FileInfo(fileId, peer, path, savePath);
+			FileReceiver fileRecv = new FileReceiver(fileId, peer, path, savePath);
 			// Add To Accept List
-			acceptList.Add(peer, fileInfo);
+			acceptList.Add(peer, fileRecv);
 			// Update File Id
 			fileId++;
 		}
 
 		public static void RemoveFromAcceptList (PeerSocket peer, uint id) {
-			FileInfo fileInfo = new FileInfo(id, peer);
-			acceptList.Remove(peer, fileInfo);
+			FileReceiver fileRecv = new FileReceiver(id);
+			acceptList.Remove(peer, fileRecv);
 		}
 
 		// TODO
-		public static void AddToReceivingList (PeerSocket peer, FileInfo fileInfo) {
+		public static void AddDownload (PeerSocket peer,
+										FileReceiver fileRecv)
+		{
+//			fileInfo.InitReception();
+			recvList.Add(peer, fileInfo);
+		}
+
+		public static void RemoveDownload  (PeerSocket peer,
+											FileReceiver fileRecv)
+		{
 //			fileInfo.InitReception();
 			recvList.Add(peer, fileInfo);
 		}

@@ -41,6 +41,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
+		private static FileList uploadList = null;
 		private static int numUploads = 0;
 		private static uint fileId = 0;
 
@@ -49,6 +50,13 @@ namespace NyFolder.Protocol {
 		// ============================================
 		/// Initialize Upload Manager
 		public static void Initialize() {
+			// Create Thread-Safe File Lists Instances
+			uploadList = new FileList();
+		}
+
+		/// Abort All The Uploads in the List
+		public static void Clear() {
+			uploadList.RemoveAll();
 		}
 
 		// ============================================

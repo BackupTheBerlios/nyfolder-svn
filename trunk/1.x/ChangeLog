@@ -5,6 +5,10 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/
 
+ * 28/29 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
+	Starting ReWrite of Upload/Download Manager
+	Starting ReWrite of File Receiver/Sender with FileInfo as Abstract Class
+
  * 25 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Added Copy Files & Directories Drag & Drop, into My Folder.
 	Now You can add your shared file, simply using dnd.
