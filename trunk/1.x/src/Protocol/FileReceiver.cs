@@ -45,6 +45,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		private BinaryWriter binaryWriter = null;
 		private bool saveOnExit = true;
+		private string saveName = null;
 		private long fileSaved = 0;
 
 		// ============================================
@@ -104,6 +105,11 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Displayed File Name
+		public string SaveName {
+			get { return((saveName == null) ? OriginalName : saveName); }
+		}
+
 		/// Get File Saved Size
 		public long SavedSize {
 			get { return(this.fileSaved); }

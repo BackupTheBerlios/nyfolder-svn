@@ -35,6 +35,8 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
+		public ExceptionEventHandler EndSend = null;
+		public BlankEventHandler SendedPart = null;
 
 		// ============================================
 		// PUBLIC Consts
@@ -48,9 +50,9 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private string displayedName;
-		private Thread thread = null;
+		private byte[] fileContent = null;
 		private int sendedPercent = 0;
+		private Thread thread = null;
 		private bool endSend = false;
 		private long sendedSize = 0;
 
@@ -63,14 +65,6 @@ namespace NyFolder.Protocol {
 		public FileSender (uint id, PeerSocket peer, string fileName) :
 			base(id, peer, fileName)
 		{
-			this.displayedName = null;
-		}
-
-		public FileSender (uint id, PeerSocket peer, 
-						   string fileName, string displayedName) :
-			base(id, peer, fileName)
-		{
-			this.displayedName = displayedName;
 		}
 
 		// ============================================
@@ -86,36 +80,150 @@ namespace NyFolder.Protocol {
 		/// Start Sending File
 		public void Start() {
 			thread = new Thread(new ThreadStart(StartSendingFile));
-			thread.Name = "Send File " + DisplayedName;
+			thread.Name = "Send File " + OriginalName;
 			thread.Start();
 		}
 
 		// ============================================
-		// PROTECTED (Methods) Event Handlers
+		// PRIVATE (Thread) Methods
 		// ============================================
+		private void StartSendingFile() {
+			try {
+				// Initialize & Read Entire File
+				fileContent = FileUtils.ReadEntireFile(OriginalName);
+				Size = fileContent.Length;
+
+				SendFileStart();
+				SendFileParts();
+				SendFileEnd();
+
+				// Raise End Send Event
+				if (EndSend != null) EndSend(this, null);
+			} catch (ThreadAbortException) {
+				if (endSend == true) return;
+
+				// Send Abort Message
+				AbortSendFile();
+
+				// Raise End Send Event
+				if (EndSend != null) EndSend(this, null);
+			} catch (Exception e) {
+				if (endSend == true) return;
+
+				// Send Abort Message + Error
+				AbortSendFile(e.Message);
+
+				// Raise End Send Event
+				if (EndSend != null) EndSend(this, e);
+			} finally {
+				endSend = true;
+			}
+		}
+
+		private void SendFileParts() {
+			uint part = 0;
+			while (fileContent != null) {
+				long length = ChunkSize;
+				if (fileContent.Length < ChunkSize)
+					length = fileContent.Length;
+				
+				// Copy first 'ChunkSize` block and Send it
+				byte[] buffer = new byte[length];
+				Array.Copy(fileContent, buffer, length);
+
+				// Send File Part
+				SendFilePart(buffer, part++);
+
+				// Sended File Part
+				sendedSize = Size - fileContent.Length;
+				sendedPercent = (int) ((sendedSize / (double) Size) * 100);
+
+				// Raise Sended Part Event
+				if (SendedPart != null) SendedPart(this);
+
+				// Remove Sended Part From File
+				if (fileContent.Length > ChunkSize) {
+					buffer = fileContent;
+					length = buffer.Length - ChunkSize;
+					fileContent = new byte[length];
+					Array.Copy(buffer, ChunkSize, fileContent, 0, length);
+				} else {
+					fileContent = null;
+				}
+			}
+		}
 
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
-		private void StartSendingFile() {
-			try {
-			} catch (ThreadAbortException) {
-			} catch (Exception e) {
-			}
+		/// <snd what='file' id='10' part='0'>...</snd>
+		private void SendFilePart (byte[] data, uint npart) {
+			// Base64 Convert
+			string b64data = Convert.ToBase64String(data);
+
+			// XmlRequest
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "snd";
+			xmlRequest.BodyText = b64data;
+			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("id", Id);
+			xmlRequest.Attributes.Add("part", npart);
+
+			// Add md5sum
+			xmlRequest.AddAttributeMd5Sum();
+
+			// Send To Peer
+			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
+		}
+
+		/// <snd-start what='file' id='10' />  
+		private void SendFileStart() {
+			// XmlRequest
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "snd-start";
+			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("id", Id);
+			xmlRequest.Attributes.Add("size", Size);
+			xmlRequest.Attributes.Add("name", OriginalName);
+
+			// Send To Peer
+			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
+		}
+
+		/// <snd-end what='file' id='10 />
+		private void SendFileEnd() {
+			// XmlRequest
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "snd-end";
+			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("id", Id);
+
+			// Send To Peer
+			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
+		}
+
+		/// <abort what='snd-file' id='10' />
+		private void AbortSendFile() {
+			AbortSendFile(null);
+		}
+
+		/// <abort what='snd-file' id='10'>Error Message</abort>
+		private void AbortSendFile (string msgerror) {
+			// XmlRequest
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "abort";
+			if (msgerror != null)
+				xmlRequest.BodyText = "Sending Error: " + msgerror;
+			xmlRequest.Attributes.Add("what", "snd-file");
+			xmlRequest.Attributes.Add("id", Id);
+
+			// Send To Peer
+			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
 		}
 
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
-		/// Get Displayed File Name
-		public string DisplayedName {
-			get {
-				if (displayedName == null)
-					return(OriginalName);
-				return(displayedName);
-			}
-		}
-
 		/// Get The File Sended Size
 		public long SendedSize {
 			get { return(this.sendedSize); }
