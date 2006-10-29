@@ -217,19 +217,19 @@ namespace NyFolder.Protocol {
 			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
 		}
 
-		/// <abort what='snd-file' id='10' />
+		/// <snd-abort what='file' id='10' />
 		private void AbortSendFile() {
 			AbortSendFile(null);
 		}
 
-		/// <abort what='snd-file' id='10'>Error Message</abort>
+		/// <snd-abort what='file' id='10'>Error Message</abort>
 		private void AbortSendFile (string msgerror) {
 			// XmlRequest
 			XmlRequest xmlRequest = new XmlRequest();
-			xmlRequest.FirstTag = "abort";
+			xmlRequest.FirstTag = "snd-abort";
 			if (msgerror != null)
 				xmlRequest.BodyText = "Sending Error: " + msgerror;
-			xmlRequest.Attributes.Add("what", "snd-file");
+			xmlRequest.Attributes.Add("what", "file");
 			xmlRequest.Attributes.Add("id", Id);
 
 			// Send To Peer

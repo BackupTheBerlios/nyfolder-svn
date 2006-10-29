@@ -121,15 +121,15 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
-		/// <abort what='recv-file' id='10' />
-		/// <abort what='recv-file' id='10'>Error Message</abort>
+		/// <recv-abort what='file' id='10' />
+		/// <recv-abort what='file' id='10'>Error Message</abort>
 		private void AbortRecvFile (string msgerror) {
 			// XmlRequest
 			XmlRequest xmlRequest = new XmlRequest();
-			xmlRequest.FirstTag = "abort";
+			xmlRequest.FirstTag = "recv-abort";
 			if (msgerror != null)
 				xmlRequest.BodyText = "Sending Error: " + msgerror;
-			xmlRequest.Attributes.Add("what", "snd-file");
+			xmlRequest.Attributes.Add("what", "file");
 			xmlRequest.Attributes.Add("id", Id);
 
 			// Send To Peer

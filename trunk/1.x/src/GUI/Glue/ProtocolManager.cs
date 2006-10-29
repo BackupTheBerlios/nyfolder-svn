@@ -59,10 +59,56 @@ namespace NyFolder.GUI.Glue {
 		// PROTECTED (Methods) Event Handlers
 		// ============================================
 		private void OnAddProtocolEvent (P2PManager p2pManager) {
+			// Protocol Commands
+			CmdManager.GetEvent += new ProtocolHandler(OnGetEvent);
+			CmdManager.AskEvent += new ProtocolHandler(OnAskEvent);
+			CmdManager.AcceptEvent += new ProtocolHandler(OnAcceptEvent);
+			CmdManager.SndEvent += new ProtocolHandler(OnSndEvent);
+			CmdManager.SndStartEvent += new ProtocolHandler(OnSndStartEvent);
+			CmdManager.SndEndEvent += new ProtocolHandler(OnSndEndEvent);
+			CmdManager.SndAbortEvent += new ProtocolHandler(OnSndAbortEvent);
+			CmdManager.RecvAbortEvent += new ProtocolHandler(OnRecvAbortEvent);
 		}
 
 		private void OnDelProtocolEvent (P2PManager p2pManager) {
+			// Protocol Commands
+			CmdManager.GetEvent -= new ProtocolHandler(OnGetEvent);
+			CmdManager.AskEvent -= new ProtocolHandler(OnAskEvent);
+			CmdManager.AcceptEvent -= new ProtocolHandler(OnAcceptEvent);
+			CmdManager.SndEvent -= new ProtocolHandler(OnSndEvent);
+			CmdManager.SndStartEvent -= new ProtocolHandler(OnSndStartEvent);
+			CmdManager.SndEndEvent -= new ProtocolHandler(OnSndEndEvent);
+			CmdManager.SndAbortEvent -= new ProtocolHandler(OnSndAbortEvent);
+			CmdManager.RecvAbortEvent -= new ProtocolHandler(OnRecvAbortEvent);
 		}
+
+		// =================================================
+		// PROTECTED (Methods) Protocol Cmds Event Handlers
+		// =================================================
+		public void OnGetEvent (PeerSocket peer, XmlRequest xml) {
+		}
+
+		public void OnAskEvent (PeerSocket peer, XmlRequest xml) {
+		}
+
+		public void OnAcceptEvent (PeerSocket peer, XmlRequest xml) {
+		}
+
+		public void OnSndEvent (PeerSocket peer, XmlRequest xml) {
+		}
+
+		public void OnSndStartEvent (PeerSocket peer, XmlRequest xml) {
+		}
+
+		public void OnSndEndEvent (PeerSocket peer, XmlRequest xml) {
+		}
+
+		public void OnSndAbortEvent (PeerSocket peer, XmlRequest xml) {
+		}
+
+		public void OnRecvAbortEvent (PeerSocket peer, XmlRequest xml) {
+		}
+
 
 		// ============================================
 		// PRIVATE Methods
