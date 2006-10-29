@@ -36,16 +36,19 @@ namespace NyFolder.GUI.Glue {
 		// PRIVATE Members
 		// ============================================
 		private NotebookViewer notebookViewer;
+		private NetworkViewer networkViewer;
 
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
 		public ProtocolManager (GUI.Window window) {
 			// Initialize Components
-//			this.menuManager = window.Menu;
-//			this.userPanel = window.UserPanel;
 			this.notebookViewer = window.NotebookViewer;
-//			this.networkViewer = this.notebookViewer.NetworkViewer;
+			this.networkViewer = this.notebookViewer.NetworkViewer;
+
+			// Add Events Handler
+			CmdManager.AddProtocolEvent += new SetProtocolEventHandler(OnAddProtocolEvent);
+			CmdManager.DelProtocolEvent += new SetProtocolEventHandler(OnDelProtocolEvent);
 		}
 
 		// ============================================
@@ -55,6 +58,11 @@ namespace NyFolder.GUI.Glue {
 		// ============================================
 		// PROTECTED (Methods) Event Handlers
 		// ============================================
+		private void OnAddProtocolEvent (P2PManager p2pManager) {
+		}
+
+		private void OnDelProtocolEvent (P2PManager p2pManager) {
+		}
 
 		// ============================================
 		// PRIVATE Methods
