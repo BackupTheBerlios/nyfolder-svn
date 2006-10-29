@@ -43,7 +43,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private BinaryWriter binaryWriter;
+		private BinaryWriter binaryWriter = null;
 		private bool saveOnExit = true;
 		private long fileSaved = 0;
 
@@ -53,9 +53,7 @@ namespace NyFolder.Protocol {
 		public FileReceiver (uint id) : base(id) {
 		}
 
-		public FileReceiver (uint id, PeerSocket peer, string fileName) :
-			base(id, peer, fileName)
-		{
+		public FileReceiver (uint id, PeerSocket peer) : base(id, peer) {
 		}
 
 		~FileReceiver() {
@@ -65,6 +63,16 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Initialize File
+		public void Init (XmlRequest xml) {
+			FileSize = long.Parse((string) xml.Attributes["size"]);
+			OriginalName = (string) xml.Attributes["name"];
+
+			// Create Null File and Open Binary Stream
+			FileStream stream = FileUtils.CreateNullFile(OriginalName, FileSize);
+			binaryWriter = new BinaryWriter(stream);
+		}
+
 		/// Append Data to The File
 		public void Append (XmlRequest xml) {
 			int part = int.Parse((string) xml.Attributes["part"]);
@@ -79,6 +87,7 @@ namespace NyFolder.Protocol {
 		/// Abort The Recv Operation
 		public override void Abort() {
 			saveOnExit = false;
+			Save();
 		}
 
 		/// Save File
@@ -87,10 +96,6 @@ namespace NyFolder.Protocol {
 			binaryWriter.Close();
 			binaryWriter = null;
 		}
-
-		// ============================================
-		// PROTECTED (Methods) Event Handlers
-		// ============================================
 
 		// ============================================
 		// PRIVATE Methods

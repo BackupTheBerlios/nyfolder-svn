@@ -102,6 +102,7 @@ namespace NyFolder.Protocol {
 		// Get The Original File Name
 		public string OriginalName {
 			get { return(this.originalName); }
+			protected set { this.originalName = value; }
 		}
 	}
 }

@@ -1,0 +1,53 @@
+-------------------
+  Upload/Download
+-------------------
+ - L'utente A invia a B un messaggio di richiesta:
+     * "Vuoi Accettare il File ID + Path + Size ?"
+ - L'utente B Decide se accettare o meno il File:
+     * "Accetto il File ID"
+     * "Non Accetto il File ID"
+ 
+ ...Se L'utente B ha accettato il File...
+ - L'Utente A invia un messaggio di Start
+     * "Inizio ad inviare il file ID"
+ - L'Utente B sposta dallo stato ACCEPT a RECEIVE il File ID
+
+ [LOOP]
+ - L'utente A invia un Blocco del File ID
+    * "Invio il Blocco N del File ID"
+ - L'utente B salva il Dato
+
+ ABORT:
+  - L'Utente A interrompe l'invio
+    * "Abort Sending File ID"
+  - L'Utente B interrompe la Ricezione ed Elimina il File da RECEIVE
+    "e' possibile sapere quali blocchi non son stati inviati andato ad
+     esaminare il contenuto del file le sezioni di dimensione SND_BLOCK_SIZE
+     che contengono solo 0 sono parti mancanti"
+  ===========================================================================
+  - L'Utente B interrompe il Download
+    * "Abort Downloading File ID"
+  - L'Utente A interrompe l'invio del File e lo cancella dalla lista
+
+ FINISH:
+  - L'utente A ha finito l'invio
+    * "Finish Sending File ID"
+  - L'utente B salva il file e lo elimina dalla lista RECEIVE
+
+-----------------------
+  Upload/Download Xml
+-----------------------
+  A:  <accept what='file' id='10' path='/pippo.txt' size='1024' />
+  By: <get what='file' id='10' />
+  Bn: <abort what='recv-file' id='10' />
+
+  A:  <snd-start what='file' id='10' />
+  
+  A:  <snd what='file' id='10' part='0'>...</snd>
+  A:  ...
+  A:  <snd what='file' id='10' part='13'>...</snd>
+
+  A0: <abort what='snd-file' id='10' />
+  A1: <snd-end what='file' id='10 />
+
+  B:  <abort what='recv-file' id='10' />

@@ -46,7 +46,6 @@ namespace NyFolder.Protocol {
 		private static FileList recvList = null;
 
 		private static int numDownloads = 0;
-		private static uint fileId = 0;
 
 		// ============================================
 		// PUBLIC (Init/Clear) Methods
@@ -67,6 +66,27 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+
+		// Download Steps:
+		//  - Add To Accept List
+		//  - Move File From Accept List to Recv List and Init for Download
+		//  - [LOOP] Get File's Part
+		//  - Finish/Abort
+		//  - Remove File From Recv List
+		public static void Accept (PeerSocket peer, uint id, string path) {
+		}
+
+		public static void InitDownload (PeerSocket peer, uint id) {
+		}
+
+		public static void GetFilePart (PeerSocket peer, uint id) {
+		}
+
+		public static void AbortDownload (PeerSocket peer, uint id) {
+		}
+
+		public static void FinishedDownload (PeerSocket peer, uint id) {
+		}
 #if false
 		public static void AddToAcceptList (PeerSocket peer, 
 											string path, string savePath)

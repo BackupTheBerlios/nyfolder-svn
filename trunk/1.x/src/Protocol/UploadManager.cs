@@ -46,7 +46,7 @@ namespace NyFolder.Protocol {
 		private static uint fileId = 0;
 
 		// ============================================
-		// PUBLIC Methods
+		// PUBLIC (Init/Clear) Methods
 		// ============================================
 		/// Initialize Upload Manager
 		public static void Initialize() {
@@ -57,6 +57,17 @@ namespace NyFolder.Protocol {
 		/// Abort All The Uploads in the List
 		public static void Clear() {
 			uploadList.RemoveAll();
+		}
+
+		// ============================================
+		// PUBLIC Methods
+		// ============================================
+		public void Send (PeerSocket peer, string path, string name) {
+			// Update File ID
+			fileID++;
+		}
+
+		public void Abort (PeerSocket peer, uint id) {
 		}
 
 		// ============================================
