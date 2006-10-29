@@ -22,6 +22,7 @@ using System;
 
 using Niry;
 using Niry.Utils;
+using Niry.Network;
 
 using NyFolder;
 using NyFolder.Utils;
@@ -62,12 +63,12 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		public void Send (PeerSocket peer, string path, string name) {
+		public static void Send (PeerSocket peer, string path, string name) {
 			// Update File ID
-			fileID++;
+			fileId++;
 		}
 
-		public void Abort (PeerSocket peer, uint id) {
+		public static void Abort (PeerSocket peer, uint id) {
 		}
 
 		// ============================================
