@@ -56,7 +56,7 @@ namespace NyFolder.GUI.Dialogs {
 			OnCheckSecureAuthToggled(checkSecureAuth, null);
 
 			// Initialize Dialog Image
-			this.image.Pixbuf = StockIcons.GetPixbuf("Network", 48);
+			this.image.Pixbuf = StockIcons.GetPixbuf("Network", 96);
 		}
 
 		// ============================================
