@@ -1,4 +1,4 @@
-/* [ Protocol/FileInfo.cs ] NyFolder Protocol File Info
+/* [ Protocol/FileSender.cs ] NyFolder File Sender
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -29,7 +29,7 @@ using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.Protocol {
-	public abstract class FileInfo : IComparable {
+	public class FileSender : FileInfo {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
@@ -37,34 +37,28 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PROTECTED Members
 		// ============================================
-		private string originalName;
-		private PeerSocket peer;
 
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private uint id;
 
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
-		public FileInfo (uint id, PeerSocket peer) : this(id, peer, null) {
+		public FileSender (uint id, PeerSocket peer, string fileName) :
+			base(id, peer, fileName)
+		{
 		}
 
-		public FileInfo (uint id, PeerSocket peer, string originalName) {
-			this.id = id;
-			this.peer = peer;
-			this.originalName = originalName;
+		public FileSender (uint id, PeerSocket peer, 
+						   string fileName, string displayName) :
+			base(id, peer, fileName)
+		{
 		}
 
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		/// Compare Files Id
-		public int CompareTo (object obj) {
-			FileInfo fileInfo = (FileInfo) obj;
-			return((int) (this.id - fileInfo.Id));
-		}
 
 		// ============================================
 		// PROTECTED (Methods) Event Handlers
@@ -77,19 +71,5 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
-		/// Get The File Id
-		public uint Id {
-			get { return(this.id); }
-		}
-
-		// Get The Peer (File Owner)
-		public PeerSocket Peer {
-			get { return(this.peer); }
-		}
-
-		// Get The Original File Name
-		public string OriginalName {
-			get { return(this.originalName); }
-		}
 	}
 }

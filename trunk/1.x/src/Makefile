@@ -60,6 +60,8 @@ SRC_Protocol = 	Protocol/CmdManager.cs			\
 				Protocol/DownloadManager.cs		\
 				Protocol/FileInfo.cs			\
 				Protocol/FileList.cs			\
+				Protocol/FileReceiver.cs		\
+				Protocol/FileSender.cs			\
 				Protocol/HttpRequest.cs			\
 				Protocol/Login.cs				\
 				Protocol/MyInfo.cs				\

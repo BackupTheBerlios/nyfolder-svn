@@ -67,6 +67,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+#if false
 		public static void AddToAcceptList (PeerSocket peer, 
 											string path, string savePath)
 		{
@@ -83,7 +84,6 @@ namespace NyFolder.Protocol {
 			acceptList.Remove(peer, fileInfo);
 		}
 
-#if false
 		// TODO
 		public static void AddToReceivingList (PeerSocket peer, FileInfo fileInfo) {
 //			fileInfo.InitReception();
