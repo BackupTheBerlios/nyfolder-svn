@@ -92,11 +92,9 @@ namespace NyFolder.Protocol {
 											string path, string savePath)
 		{
 			// Initialize File Info
-			FileReceiver fileRecv = new FileReceiver(fileId, peer, path, savePath);
+			FileReceiver fileRecv = new FileReceiver(fileId++, peer, path, savePath);
 			// Add To Accept List
 			acceptList.Add(peer, fileRecv);
-			// Update File Id
-			fileId++;
 		}
 
 		public static void RemoveFromAcceptList (PeerSocket peer, uint id) {

@@ -75,6 +75,8 @@ namespace NyFolder.Protocol {
 		}
 
 		public static void Abort (PeerSocket peer, uint id) {
+			FileSender fileSender = new FileSender(id);
+			uploadList.Remove(peer, fileSender);
 		}
 
 		// ============================================
