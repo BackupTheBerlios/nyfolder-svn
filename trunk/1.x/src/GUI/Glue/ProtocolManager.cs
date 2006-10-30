@@ -109,6 +109,7 @@ namespace NyFolder.GUI.Glue {
 		// =================================================
 		private void OnSaveFile (object obj, UserInfo userInfo, string path) {
 		Gtk.Application.Invoke(delegate {
+#if false
 			PeerSocket peer = P2PManager.KnownPeers[userInfo] as PeerSocket;
 
 			// Save File Dialog
@@ -119,6 +120,9 @@ namespace NyFolder.GUI.Glue {
 			// DHO, TODO ME
 			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			Cmd.RequestFile(peer, path);
+#else
+			Debug.Log("TODO: ProtocolManager.OnSaveFile() Dho, Dho, Dho!!!");
+#endif
 		});
 		}
 
@@ -158,8 +162,12 @@ namespace NyFolder.GUI.Glue {
 					// TODO: Manage ID Not Found
 					break;
 				case "file":
-					string path = (string) xml.Attributes["path"];
-					UploadManager.Send(peer, path);
+					string filePath = (string) xml.Attributes["path"];
+					UploadManager.Send(peer, filePath);
+					break;
+				case "file-list":
+					string folderPath = (string) xml.Attributes["path"];
+					Cmd.SendFileList(peer, folderPath);
 					break;
 			}
 		});
@@ -181,9 +189,16 @@ namespace NyFolder.GUI.Glue {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
 
-			if (what == "file") {
-				uint id = uint.Parse((string) xml.Attributes["id"]);
-				DownloadManager.GetFilePart(peer, id, xml);
+			switch (what) {
+				case "file":
+					uint id = uint.Parse((string) xml.Attributes["id"]);
+					DownloadManager.GetFilePart(peer, id, xml);
+					break;
+				case "file-list":
+					UserInfo userInfo = peer.Info as UserInfo;
+					FolderViewer folderViewer = notebookViewer.LookupPage(userInfo);
+					folderViewer.Fill((string) xml.Attributes["path"], xml.BodyText);
+					break;
 			}
 		});
 		}

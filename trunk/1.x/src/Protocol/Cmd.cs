@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.IO;
 using System.Text;
 
 using Niry;
@@ -70,8 +71,8 @@ namespace NyFolder.Protocol {
 		public static void RequestFolder (PeerSocket peer, string path) {
 			XmlRequest xmlRequest = new XmlRequest();
 			xmlRequest.FirstTag = "get";
-			xmlRequest.BodyText = path;
-			xmlRequest.Attributes.Add("what", "folder");
+			xmlRequest.Attributes.Add("what", "file-list");
+			xmlRequest.Attributes.Add("path", path);
 			peer.Send(xmlRequest.GenerateXml());
 		}
 
@@ -93,8 +94,44 @@ namespace NyFolder.Protocol {
 			peer.Send(xmlRequest.GenerateXml());
 		}
 
+		/// Send Folder's File List
+		public static void SendFileList (PeerSocket peer, string path) {
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "snd";
+			xmlRequest.Attributes.Add("what", "file-list");
+			xmlRequest.Attributes.Add("path", path);
+			xmlRequest.BodyText = FolderFileList(path);
+			peer.Send(xmlRequest.GenerateXml());
+		}
+
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		private static string FolderFileList (string path) {
+			string mySharedPath = Paths.UserSharedDirectory(MyInfo.Name);
+
+			path = Path.Combine(mySharedPath, path.Substring(1));
+			// Now Go Through The Directory and Extract All The File Information
+			if (Directory.Exists(path) == false)
+				return(null);
+
+			// Get Root Directory
+			DirectoryInfo root = new DirectoryInfo(path);
+			string folder = "";		// Path|is_dir(0|1)\n
+
+			// Get SubDirectory
+			foreach (DirectoryInfo d in root.GetDirectories()) {
+				if (!d.Name.StartsWith("."))
+					folder += d.FullName.Substring(mySharedPath.Length) + "|1\n";
+			}
+
+			// Get Files
+			foreach (System.IO.FileInfo f in root.GetFiles()) {
+				if (!f.Name.StartsWith("."))
+					folder += f.FullName.Substring(mySharedPath.Length) + "|0\n";
+			}
+
+			return(folder);
+		}
 	}
 }
