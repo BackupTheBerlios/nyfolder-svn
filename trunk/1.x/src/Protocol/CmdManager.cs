@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Collections;
 
 using Niry;
 using Niry.Utils;
@@ -72,19 +73,6 @@ namespace NyFolder.Protocol {
 			P2PManager.StatusChanged += new BoolEventHandler(OnP2PStatusChanged);
 		}
 
-		/// Send Login
-		public static void Login (PeerSocket peer, UserInfo userInfo) {
-			XmlRequest xmlRequest = new XmlRequest();
-			xmlRequest.FirstTag = "login";
-			xmlRequest.Attributes.Add("name", userInfo.Name);
-			xmlRequest.Attributes.Add("secure", userInfo.SecureAuthentication.ToString());
-
-			string magic = Protocol.Login.GenerateMagic(peer);
-			xmlRequest.Attributes.Add("magic", magic);
-
-			peer.Send(xmlRequest.GenerateXml());
-		}
-
 		// ============================================
 		// PRIVATE (Methods) P2PManager Event Handlers
 		// ============================================
@@ -106,6 +94,38 @@ namespace NyFolder.Protocol {
 		}
 
 		private static void OnReceived (object sender, PeerEventArgs args) {
+			PeerSocket peer = sender as PeerSocket;
+
+			// Get Response String and Check if is Valid Xml
+			string xml = peer.GetResponseString();
+			if (xml == null) return;
+
+			// Remove Response Message
+			peer.ResetResponse();
+
+			// Get Xml Commands
+			xml = xml.Trim();
+			ArrayList xmlCmds = new ArrayList();
+			lock (peer.Response) {
+				int splitPos = 0;
+				while ((splitPos = xml.IndexOf("><")) >= 0) {
+					// Add Xml Command To Cmds
+					string cmd = xml.Substring(0, splitPos + 1);
+					xmlCmds.Add(cmd);
+
+					// Remove Splitted Part
+					xml = xml.Remove(0, splitPos + 1);
+				}
+
+				if (XmlRequest.IsEndedXml(xml) == false) {
+					peer.Response.Insert(0, xml);
+				} else {
+					xmlCmds.Add(xml);
+				}
+			}
+			
+			// Start New Command Parse Thread
+			new CmdParser(peer, xmlCmds);
 		}
 
 		// ============================================

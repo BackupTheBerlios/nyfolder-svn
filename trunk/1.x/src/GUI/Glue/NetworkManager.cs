@@ -214,7 +214,7 @@ namespace NyFolder.GUI.Glue {
 				// Connect & Send Login
 				P2PManager.AddPeer(userInfo, userInfo.Ip, userInfo.Port);
 				PeerSocket peer = (PeerSocket) P2PManager.KnownPeers[userInfo];
-				CmdManager.Login(peer, MyInfo.GetInstance());
+				Cmd.Login(peer, MyInfo.GetInstance());
 				OnPeerLogin(peer, userInfo);
 			} catch (Exception e) {
 				string title = "Connection To <b>" + userInfo.Name + "</b> Failed";

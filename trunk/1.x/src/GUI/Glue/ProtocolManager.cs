@@ -111,6 +111,9 @@ namespace NyFolder.GUI.Glue {
 		}
 
 		private void OnFolderRefresh (object obj, string path) {
+			FolderViewer folderViewer = obj as FolderViewer;
+			PeerSocket peer = P2PManager.KnownPeers[folderViewer.UserInfo] as PeerSocket;
+			Cmd.RequestFolder(peer, path);
 		}
 
 		// =================================================
