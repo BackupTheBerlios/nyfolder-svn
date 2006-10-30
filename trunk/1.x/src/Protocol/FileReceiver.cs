@@ -80,7 +80,7 @@ namespace NyFolder.Protocol {
 			OriginalName = (string) xml.Attributes["name"];
 
 			// Create Null File and Open Binary Stream
-			FileStream stream = FileUtils.CreateNullFile(OriginalName, Size);
+			FileStream stream = FileUtils.CreateNullFile(SaveName, Size);
 			binaryWriter = new BinaryWriter(stream);
 		}
 

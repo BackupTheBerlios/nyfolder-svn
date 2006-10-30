@@ -96,6 +96,7 @@ namespace NyFolder.Protocol {
 					if (index >= 0) return((FileInfo) fileList[index]);
 				}
 			}
+			Debug.Log("NULL SEARCH");
 			return(null);
 		}
 
