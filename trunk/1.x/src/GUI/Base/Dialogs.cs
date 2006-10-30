@@ -66,7 +66,9 @@ namespace NyFolder.GUI.Base {
 
 			dialog.SelectMultiple = false;
 			dialog.SetCurrentFolder(path);
-			dialog.CurrentName = fileName;
+
+			FileInfo fileInfo = new FileInfo(fileName);
+			dialog.CurrentName = fileInfo.Name;
 
 			string filePath = null;
 			do {
