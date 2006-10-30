@@ -110,21 +110,14 @@ namespace NyFolder.GUI.Glue {
 		// =================================================
 		private void OnSaveFile (object obj, UserInfo userInfo, string path) {
 		Gtk.Application.Invoke(delegate {
-#if true
 			PeerSocket peer = P2PManager.KnownPeers[userInfo] as PeerSocket;
 
 			// Save File Dialog
 			string saveAs = Base.Dialogs.SaveFile(Paths.UserSharedDirectory(MyInfo.Name), path.Substring(1));
 			if (saveAs == null) return;
 
-			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			// DHO, TODO ME
-			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			DownloadManager.Accept(peer, 0, path, saveAs);
 			Cmd.RequestFile(peer, path);
-#else
-			Debug.Log("TODO: ProtocolManager.OnSaveFile() Dho, Dho, Dho!!!");
-#endif
 		});
 		}
 

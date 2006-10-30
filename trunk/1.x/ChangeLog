@@ -5,6 +5,11 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/
 
+ * 30 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
+	All Seems Working Now (Download/Upload), Now I've to check a little bit
+	some code parts... and then i've to create Download Manager Plugin,
+	ReWrite Talk plugin... and other things... for 10 Nov the Release???
+
  * 28/29 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Starting ReWrite of Upload/Download Manager
 	Starting ReWrite of File Receiver/Sender with FileInfo as Abstract Class
