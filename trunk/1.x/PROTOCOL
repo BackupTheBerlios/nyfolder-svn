@@ -37,7 +37,7 @@
 -----------------------
   Upload/Download Xml
 -----------------------
-  A:  <ask what='file' id='10' path='/pippo.txt' size='1024' />
+  A:  <ask what='file' id='10' name='pippo' size='1024' />
   By: <get what='file' id='10' />
   Bn: <snd-abort what='file' id='10' />
 

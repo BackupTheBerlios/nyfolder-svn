@@ -61,18 +61,12 @@ namespace NyFolder.Protocol {
 		}
 
 		/// Create New File Sender
-		public FileSender (uint id, PeerSocket peer, string fileName) :
-			base(id, peer, fileName)
+		public FileSender (uint id, PeerSocket peer, string path) :
+			base(id, peer, path)
 		{
-			this.displayedName = null;
-		}
-
-		/// Create New File Sender
-		public FileSender  (uint id, PeerSocket peer, 
-							string fileName, string displayedName) :
-			base(id, peer, fileName)
-		{
-			this.displayedName = displayedName;
+			System.IO.FileInfo fileInfo = new System.IO.FileInfo(path);
+			this.displayedName = fileInfo.Name;
+			Size = fileInfo.Length;
 		}
 
 		/// File Sender Distructor
@@ -91,7 +85,7 @@ namespace NyFolder.Protocol {
 			xmlRequest.Attributes.Add("what", "file");
 			xmlRequest.Attributes.Add("id", Id);
 			xmlRequest.Attributes.Add("size", Size);
-			xmlRequest.Attributes.Add("path", DisplayedName);
+			xmlRequest.Attributes.Add("name", DisplayedName);
 
 			// Send To Peer
 			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
@@ -99,7 +93,6 @@ namespace NyFolder.Protocol {
 
 		/// Abort Sending Operation
 		public override void Abort() {
-			Debug.Log("FileSender.Abort()");
 			if (endSend == false && thread.IsAlive == true) {
 				thread.Abort();
 			}
@@ -124,6 +117,7 @@ namespace NyFolder.Protocol {
 				SendFileStart();
 				SendFileParts();
 				SendFileEnd();
+				endSend = true;
 
 				// Raise End Send Event
 				if (EndSend != null) EndSend(this, null);
@@ -131,6 +125,7 @@ namespace NyFolder.Protocol {
 				if (endSend == true) return;
 
 				// Send Abort Message
+				endSend = true;
 				AbortSendFile();
 
 				// Raise End Send Event
@@ -139,12 +134,11 @@ namespace NyFolder.Protocol {
 				if (endSend == true) return;
 
 				// Send Abort Message + Error
+				endSend = true;
 				AbortSendFile(e.Message);
 
 				// Raise End Send Event
 				if (EndSend != null) EndSend(this, e);
-			} finally {
-				endSend = true;
 			}
 		}
 

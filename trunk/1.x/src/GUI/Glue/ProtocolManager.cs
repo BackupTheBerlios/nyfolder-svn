@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Text;
 
 using Niry;
 using Niry.Utils;
@@ -98,6 +99,8 @@ namespace NyFolder.GUI.Glue {
 		// =================================================
 		private void OnSendFile (object obj, UserInfo userInfo, string path) {
 		Gtk.Application.Invoke(delegate {
+			PeerSocket peer = P2PManager.KnownPeers[userInfo] as PeerSocket;
+			UploadManager.Add(peer, path);
 		});
 		}
 
@@ -111,6 +114,14 @@ namespace NyFolder.GUI.Glue {
 
 		private void OnSendFileMenu (object obj, string path, bool isDir) {
 		Gtk.Application.Invoke(delegate {
+			if (isDir == true) {
+				Base.Dialogs.MessageError("Ask Send File Error",
+										  "Directory Send Not Supported (Now)");
+				return;
+			}
+
+			PeerSocket peer = obj as PeerSocket;
+			UploadManager.Add(peer, path);
 		});
 		}
 
@@ -131,7 +142,14 @@ namespace NyFolder.GUI.Glue {
 			string what = (string) xml.Attributes["what"];
 
 			switch (what) {
+				case "file-id":
+					uint id = uint.Parse((string) xml.Attributes["id"]);
+					UploadManager.Send(peer, id);
+					// TODO: Manage ID Not Found
+					break;
 				case "file":
+					string path = (string) xml.Attributes["path"];
+					UploadManager.Send(peer, path);
 					break;
 			}
 		});
@@ -142,9 +160,8 @@ namespace NyFolder.GUI.Glue {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
 
-			switch (what) {
-				case "file":
-					break;
+			if (what == "file") {
+				AcceptFileQuestion(peer, xml);
 			}
 		});
 		}
@@ -154,21 +171,21 @@ namespace NyFolder.GUI.Glue {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
 
-			switch (what) {
-				case "file":
-					break;
+			if (what == "file") {
+				uint id = uint.Parse((string) xml.Attributes["id"]);
+				DownloadManager.GetFilePart(peer, id, xml);
 			}
 		});
 		}
 
-		/// <snd-start what='file' id='10' />
+		/// <snd-start what='file' id='10' name='/pippo.txt' size='1024' />  
 		private void OnSndStartEvent (PeerSocket peer, XmlRequest xml) {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
 
-			switch (what) {
-				case "file":
-					break;
+			if (what == "file") {
+				uint id = uint.Parse((string) xml.Attributes["id"]);
+				DownloadManager.InitDownload(peer, id, xml);
 			}
 		});
 		}
@@ -178,9 +195,9 @@ namespace NyFolder.GUI.Glue {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
 
-			switch (what) {
-				case "file":
-					break;
+			if (what == "file") {
+				uint id = uint.Parse((string) xml.Attributes["id"]);
+				DownloadManager.FinishedDownload(peer, id);
 			}
 		});
 		}
@@ -190,9 +207,9 @@ namespace NyFolder.GUI.Glue {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
 
-			switch (what) {
-				case "file":
-					break;
+			if (what == "file") {
+				uint id = uint.Parse((string) xml.Attributes["id"]);
+				DownloadManager.AbortDownload(peer, id);
 			}
 		});
 		}
@@ -202,9 +219,9 @@ namespace NyFolder.GUI.Glue {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
 
-			switch (what) {
-				case "file":
-					break;
+			if (what == "file") {
+				uint id = uint.Parse((string) xml.Attributes["id"]);
+				UploadManager.Abort(peer, id);
 			}
 		});
 		}
@@ -212,5 +229,31 @@ namespace NyFolder.GUI.Glue {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		private void AcceptFileQuestion (PeerSocket peer, XmlRequest xml) {
+			string name = (string) xml.Attributes["name"];
+			string size = (string) xml.Attributes["size"];
+			uint id = uint.Parse((string) xml.Attributes["id"]);
+
+			UserInfo userInfo = peer.Info as UserInfo;
+
+			StringBuilder questionMsg = new StringBuilder();
+			questionMsg.AppendFormat("Accept File '<b>{0}</b>' ", name);
+			questionMsg.AppendFormat("(Size <b>{0}</b>)\n", FileUtils.GetSizeString(long.Parse(size)));
+			questionMsg.AppendFormat("From User '<b>{0}</b>' ?", userInfo.Name);
+
+			// Accept Yes/No Dialog
+			bool accept = Base.Dialogs.QuestionDialog("Accept File", questionMsg.ToString());
+			if (accept == false) return;
+
+			// Save File Dialog
+			string savePath = Base.Dialogs.SaveFile(Paths.UserSharedDirectory(MyInfo.Name), name);
+			if (savePath == null) return;
+
+			// Send Accept File Command
+			Debug.Log("Accept File '{0}' From '{1}', Save as '{2}'", userInfo.Name, name, savePath);
+
+			DownloadManager.Accept(peer, id, name, savePath);
+			Cmd.RequestFile(peer, id);
+		}
 	}
 }

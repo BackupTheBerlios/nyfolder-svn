@@ -66,9 +66,9 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		public static void Accept (PeerSocket peer, string path, string name) {
+		public static void Add (PeerSocket peer, string path) {
 			// Create New File Sender && Update File ID
-			FileSender fileSender = new FileSender(fileId++, peer, path, name);
+			FileSender fileSender = new FileSender(fileId++, peer, path);
 			fileSender.SendedPart += new BlankEventHandler(OnSendedPart);
 			fileSender.EndSend += new ExceptionEventHandler(OnEndSend);
 
@@ -82,7 +82,7 @@ namespace NyFolder.Protocol {
 			if (Added != null) Added(fileSender);
 		}
 
-		/// Start File Transfer
+		/// Start File Transfer (Accepted File)
 		public static void Send (PeerSocket peer, uint id) {
 			FileSender fileSender = new FileSender(id);
 			fileSender = (FileSender) acceptList.Search(peer, fileSender);
@@ -93,6 +93,19 @@ namespace NyFolder.Protocol {
 
 			// Start The File Sender
 			fileSender.Start();
+		}
+
+		/// Start File Transfer (Send By Name)
+		public static void Send (PeerSocket peer, string path) {
+			// Create New File Sender && Update File ID
+			FileSender fileSender = new FileSender(fileId++, peer, path);
+			fileSender.SendedPart += new BlankEventHandler(OnSendedPart);
+			fileSender.EndSend += new ExceptionEventHandler(OnEndSend);
+
+			uploadList.Add(peer, fileSender);
+
+			// Raise Upload Added Event
+			if (Added != null) Added(fileSender);
 		}
 
 		/// Abort File Upload

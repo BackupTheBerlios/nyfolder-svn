@@ -75,8 +75,22 @@ namespace NyFolder.Protocol {
 			peer.Send(xmlRequest.GenerateXml());
 		}
 
-		/// Request File
+		/// Request File By Path
 		public static void RequestFile (PeerSocket peer, string path) {
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "get";
+			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("path", path);
+			peer.Send(xmlRequest.GenerateXml());
+		}
+
+		/// Request File By ID
+		public static void RequestFile (PeerSocket peer, uint id) {
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "get";
+			xmlRequest.Attributes.Add("what", "file-id");
+			xmlRequest.Attributes.Add("id", id);
+			peer.Send(xmlRequest.GenerateXml());
 		}
 
 		// ============================================
