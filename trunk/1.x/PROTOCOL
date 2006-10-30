@@ -37,9 +37,9 @@
 -----------------------
   Upload/Download Xml
 -----------------------
-  A:  <accept what='file' id='10' path='/pippo.txt' size='1024' />
+  A:  <ask what='file' id='10' path='/pippo.txt' size='1024' />
   By: <get what='file' id='10' />
-  Bn: <abort what='recv-file' id='10' />
+  Bn: <snd-abort what='file' id='10' />
 
   A:  <snd-start what='file' id='10' />
   
@@ -47,7 +47,7 @@
   A:  ...
   A:  <snd what='file' id='10' part='13'>...</snd>
 
-  A0: <abort what='snd-file' id='10' />
+  A0: <snd-abort what='file' id='10' />
   A1: <snd-end what='file' id='10 />
 
-  B:  <abort what='recv-file' id='10' />
+  B:  <recv-abort what='file' id='10' />

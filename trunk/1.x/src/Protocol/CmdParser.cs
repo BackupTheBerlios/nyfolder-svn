@@ -113,9 +113,6 @@ namespace NyFolder.Protocol {
 					case "ask":
 						CmdManager.AskEvent(peer, xmlRequest);
 						break;
-					case "accept":
-						CmdManager.AcceptEvent(peer, xmlRequest);
-						break;
 					case "snd":
 						CmdManager.SndEvent(peer, xmlRequest);
 						break;

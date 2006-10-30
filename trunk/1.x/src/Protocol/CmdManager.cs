@@ -43,7 +43,6 @@ namespace NyFolder.Protocol {
 		public static event ProtocolHandler ErrorEvent = null;
 		public static event ProtocolHandler GetEvent = null;
 		public static event ProtocolHandler AskEvent = null;
-		public static event ProtocolHandler AcceptEvent = null;
 		public static event ProtocolHandler SndEvent = null;
 		public static event ProtocolHandler SndStartEvent = null;
 		public static event ProtocolHandler SndEndEvent = null;

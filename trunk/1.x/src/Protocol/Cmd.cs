@@ -38,10 +38,6 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-
-		// ============================================
-		// PRIVATE Methods
-		// ============================================
 		/// Send Login
 		public static void Login (PeerSocket peer, UserInfo userInfo) {
 			XmlRequest xmlRequest = new XmlRequest();
@@ -81,11 +77,10 @@ namespace NyFolder.Protocol {
 
 		/// Request File
 		public static void RequestFile (PeerSocket peer, string path) {
-			XmlRequest xmlRequest = new XmlRequest();
-			xmlRequest.FirstTag = "get";
-			xmlRequest.BodyText = path;
-			xmlRequest.Attributes.Add("what", "file");
-			peer.Send(xmlRequest.GenerateXml());
 		}
+
+		// ============================================
+		// PRIVATE Methods
+		// ============================================
 	}
 }

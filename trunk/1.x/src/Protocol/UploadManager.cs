@@ -42,6 +42,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
+		private static FileList acceptList = null;
 		private static FileList uploadList = null;
 		private static int numUploads = 0;
 		private static uint fileId = 0;
@@ -52,40 +53,53 @@ namespace NyFolder.Protocol {
 		/// Initialize Upload Manager
 		public static void Initialize() {
 			// Create Thread-Safe File Lists Instances
+			acceptList = new FileList();
 			uploadList = new FileList();
 		}
 
 		/// Abort All The Uploads in the List
 		public static void Clear() {
+			acceptList.RemoveAll();
 			uploadList.RemoveAll();
 		}
 
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		/// Start File Transfer
-		public static void Send (PeerSocket peer, string path, string name) {
+		public static void Accept (PeerSocket peer, string path, string name) {
 			// Create New File Sender && Update File ID
 			FileSender fileSender = new FileSender(fileId++, peer, path, name);
 			fileSender.SendedPart += new BlankEventHandler(OnSendedPart);
 			fileSender.EndSend += new ExceptionEventHandler(OnEndSend);
 
-			// Add File Sender To The Upload List
-			uploadList.Add(peer, fileSender);
-
-			// Start The File Sender
-			fileSender.Start();
+			// Add to Accept List
+			acceptList.Add(peer, fileSender);
 
 			// Raise Upload Added Event
 			if (Added != null) Added(fileSender);
 		}
 
+		/// Start File Transfer
+		public static void Send (PeerSocket peer, uint id) {
+			FileSender fileSender = new FileSender(id);
+			fileSender = (FileSender) acceptList.Search(peer, fileSender);
+
+			// Remove From Accept and Add To The Upload List
+			acceptList.Remove(peer, fileSender);
+			uploadList.Add(peer, fileSender);
+
+			// Start The File Sender
+			fileSender.Start();
+		}
+
 		/// Abort File Upload
 		public static void Abort (PeerSocket peer, uint id) {
-			// Remove File Sender
 			FileSender fileSender = new FileSender(id);
-			fileSender = (FileSender) uploadList.Search(peer, fileSender);
-			Remove(fileSender);
+			if ((fileSender = (FileSender) acceptList.Search(peer, fileSender)) != null) {
+				RemoveFromAcceptList(fileSender);
+			} else {
+				Remove(fileSender);
+			}
 			
 			// Raise Aborted Event
 			if (Aborted != null) Aborted(fileSender);
@@ -121,6 +135,12 @@ namespace NyFolder.Protocol {
 			fileSender.SendedPart -= new BlankEventHandler(OnSendedPart);
 			fileSender.EndSend -= new ExceptionEventHandler(OnEndSend);
 			uploadList.Remove(fileSender.Peer, fileSender);			
+		}
+
+		private static void RemoveFromAcceptList (FileSender fileSender) {
+			fileSender.SendedPart -= new BlankEventHandler(OnSendedPart);
+			fileSender.EndSend -= new ExceptionEventHandler(OnEndSend);
+			acceptList.Remove(fileSender.Peer, fileSender);
 		}
 
 		// ============================================

@@ -67,7 +67,6 @@ namespace NyFolder.GUI.Glue {
 			// Protocol Commands
 			CmdManager.GetEvent += new ProtocolHandler(OnGetEvent);
 			CmdManager.AskEvent += new ProtocolHandler(OnAskEvent);
-			CmdManager.AcceptEvent += new ProtocolHandler(OnAcceptEvent);
 			CmdManager.SndEvent += new ProtocolHandler(OnSndEvent);
 			CmdManager.SndStartEvent += new ProtocolHandler(OnSndStartEvent);
 			CmdManager.SndEndEvent += new ProtocolHandler(OnSndEndEvent);
@@ -87,7 +86,6 @@ namespace NyFolder.GUI.Glue {
 			// Protocol Commands
 			CmdManager.GetEvent -= new ProtocolHandler(OnGetEvent);
 			CmdManager.AskEvent -= new ProtocolHandler(OnAskEvent);
-			CmdManager.AcceptEvent -= new ProtocolHandler(OnAcceptEvent);
 			CmdManager.SndEvent -= new ProtocolHandler(OnSndEvent);
 			CmdManager.SndStartEvent -= new ProtocolHandler(OnSndStartEvent);
 			CmdManager.SndEndEvent -= new ProtocolHandler(OnSndEndEvent);
@@ -99,48 +97,81 @@ namespace NyFolder.GUI.Glue {
 		// PROTECTED (Methods) Network Viewer Event Handlers
 		// =================================================
 		private void OnSendFile (object obj, UserInfo userInfo, string path) {
+		Gtk.Application.Invoke(delegate {
+		});
 		}
 
 		// =================================================
 		// PROTECTED (Methods) Folder Viewers Event Handlers
 		// =================================================
 		private void OnSaveFile (object obj, UserInfo userInfo, string path) {
+		Gtk.Application.Invoke(delegate {
+		});
 		}
 
 		private void OnSendFileMenu (object obj, string path, bool isDir) {
+		Gtk.Application.Invoke(delegate {
+		});
 		}
 
 		private void OnFolderRefresh (object obj, string path) {
+		Gtk.Application.Invoke(delegate {
 			FolderViewer folderViewer = obj as FolderViewer;
 			PeerSocket peer = P2PManager.KnownPeers[folderViewer.UserInfo] as PeerSocket;
 			Cmd.RequestFolder(peer, path);
+		});
 		}
 
 		// =================================================
 		// PROTECTED (Methods) Protocol Cmds Event Handlers
 		// =================================================
+		/// <get what='file' id='10' />
 		private void OnGetEvent (PeerSocket peer, XmlRequest xml) {
+		Gtk.Application.Invoke(delegate {
+			string what = (string) xml.Attributes["what"];
+		});
 		}
 
+		/// <ask what='file' id='10' path='/pippo.txt' size='1024' />
 		private void OnAskEvent (PeerSocket peer, XmlRequest xml) {
+		Gtk.Application.Invoke(delegate {
+			string what = (string) xml.Attributes["what"];
+		});
 		}
 
-		private void OnAcceptEvent (PeerSocket peer, XmlRequest xml) {
-		}
-
+		/// <snd what='file' id='10' part='13'>...</snd>
 		private void OnSndEvent (PeerSocket peer, XmlRequest xml) {
+		Gtk.Application.Invoke(delegate {
+			string what = (string) xml.Attributes["what"];
+		});
 		}
 
+		/// <snd-start what='file' id='10' />
 		private void OnSndStartEvent (PeerSocket peer, XmlRequest xml) {
+		Gtk.Application.Invoke(delegate {
+			string what = (string) xml.Attributes["what"];
+		});
 		}
 
+		/// <snd-end what='file' id='10 />
 		private void OnSndEndEvent (PeerSocket peer, XmlRequest xml) {
+		Gtk.Application.Invoke(delegate {
+			string what = (string) xml.Attributes["what"];
+		});
 		}
 
+		/// <snd-abort what='file' id='10' />
 		private void OnSndAbortEvent (PeerSocket peer, XmlRequest xml) {
+		Gtk.Application.Invoke(delegate {
+			string what = (string) xml.Attributes["what"];
+		});
 		}
 
+		/// <recv-abort what='file' id='10' />
 		private void OnRecvAbortEvent (PeerSocket peer, XmlRequest xml) {
+		Gtk.Application.Invoke(delegate {
+			string what = (string) xml.Attributes["what"];
+		});
 		}
 
 		// ============================================

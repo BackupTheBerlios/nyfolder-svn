@@ -15,6 +15,7 @@ Note:	All Event Handler That Works with The GUI have to do this first
 
  - No Splash Screen Options
  - Pending Download Viewer (+ Remove Options)
+ - Download/Upload Manager FIX ID NOT FOUND (URGENT)
 
 Login
 	- Automatic Login (Skip Login Dialog)
