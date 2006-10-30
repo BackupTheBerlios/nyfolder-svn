@@ -75,6 +75,9 @@ namespace NyFolder.Protocol {
 			// Add to Accept List
 			acceptList.Add(peer, fileSender);
 
+			// Send Accept Message
+			fileSender.Ask();
+
 			// Raise Upload Added Event
 			if (Added != null) Added(fileSender);
 		}

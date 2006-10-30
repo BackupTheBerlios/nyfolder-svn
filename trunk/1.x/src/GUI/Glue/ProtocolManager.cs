@@ -129,6 +129,11 @@ namespace NyFolder.GUI.Glue {
 		private void OnGetEvent (PeerSocket peer, XmlRequest xml) {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
+
+			switch (what) {
+				case "file":
+					break;
+			}
 		});
 		}
 
@@ -136,6 +141,11 @@ namespace NyFolder.GUI.Glue {
 		private void OnAskEvent (PeerSocket peer, XmlRequest xml) {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
+
+			switch (what) {
+				case "file":
+					break;
+			}
 		});
 		}
 
@@ -143,6 +153,11 @@ namespace NyFolder.GUI.Glue {
 		private void OnSndEvent (PeerSocket peer, XmlRequest xml) {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
+
+			switch (what) {
+				case "file":
+					break;
+			}
 		});
 		}
 
@@ -150,6 +165,11 @@ namespace NyFolder.GUI.Glue {
 		private void OnSndStartEvent (PeerSocket peer, XmlRequest xml) {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
+
+			switch (what) {
+				case "file":
+					break;
+			}
 		});
 		}
 
@@ -157,6 +177,11 @@ namespace NyFolder.GUI.Glue {
 		private void OnSndEndEvent (PeerSocket peer, XmlRequest xml) {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
+
+			switch (what) {
+				case "file":
+					break;
+			}
 		});
 		}
 
@@ -164,6 +189,11 @@ namespace NyFolder.GUI.Glue {
 		private void OnSndAbortEvent (PeerSocket peer, XmlRequest xml) {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
+
+			switch (what) {
+				case "file":
+					break;
+			}
 		});
 		}
 
@@ -171,6 +201,11 @@ namespace NyFolder.GUI.Glue {
 		private void OnRecvAbortEvent (PeerSocket peer, XmlRequest xml) {
 		Gtk.Application.Invoke(delegate {
 			string what = (string) xml.Attributes["what"];
+
+			switch (what) {
+				case "file":
+					break;
+			}
 		});
 		}
 

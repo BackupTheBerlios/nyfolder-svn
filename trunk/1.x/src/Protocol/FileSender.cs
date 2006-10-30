@@ -83,6 +83,20 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Send Ask Message to User (Do You Want This?)
+		public void Ask() {
+			// XmlRequest
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "ask";
+			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("id", Id);
+			xmlRequest.Attributes.Add("size", Size);
+			xmlRequest.Attributes.Add("path", DisplayedName);
+
+			// Send To Peer
+			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
+		}
+
 		/// Abort Sending Operation
 		public override void Abort() {
 			Debug.Log("FileSender.Abort()");
@@ -191,7 +205,7 @@ namespace NyFolder.Protocol {
 			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
 		}
 
-		/// <snd-start what='file' id='10' />  
+		/// <snd-start what='file' id='10' name='/pippo.txt' size='1024' />  
 		private void SendFileStart() {
 			// XmlRequest
 			XmlRequest xmlRequest = new XmlRequest();

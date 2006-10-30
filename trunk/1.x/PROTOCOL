@@ -41,7 +41,7 @@
   By: <get what='file' id='10' />
   Bn: <snd-abort what='file' id='10' />
 
-  A:  <snd-start what='file' id='10' />
+  A:  <snd-start what='file' id='10' name='/pippo.txt' size='1024' />  
   
   A:  <snd what='file' id='10' part='0'>...</snd>
   A:  ...
