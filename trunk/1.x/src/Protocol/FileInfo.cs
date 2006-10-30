@@ -86,6 +86,7 @@ namespace NyFolder.Protocol {
 		/// Get The File Id
 		public uint Id {
 			get { return(this.id); }
+			set { this.id = value; }
 		}
 
 		/// Get The File Size

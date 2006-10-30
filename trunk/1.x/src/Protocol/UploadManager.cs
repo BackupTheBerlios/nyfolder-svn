@@ -45,7 +45,7 @@ namespace NyFolder.Protocol {
 		private static FileList acceptList = null;
 		private static FileList uploadList = null;
 		private static int numUploads = 0;
-		private static uint fileId = 0;
+		private static uint fileId = 1;		// ID Zero is Reserved
 
 		// ============================================
 		// PUBLIC (Init/Clear) Methods
@@ -103,6 +103,9 @@ namespace NyFolder.Protocol {
 			fileSender.EndSend += new ExceptionEventHandler(OnEndSend);
 
 			uploadList.Add(peer, fileSender);
+
+			// Start The File Sender
+			fileSender.Start();
 
 			// Raise Upload Added Event
 			if (Added != null) Added(fileSender);

@@ -65,7 +65,13 @@ namespace NyFolder.Protocol {
 			base(id, peer, path)
 		{
 			System.IO.FileInfo fileInfo = new System.IO.FileInfo(path);
-			this.displayedName = fileInfo.Name;
+
+			string sharedFolder = Paths.UserSharedDirectory(MyInfo.Name);
+			if (OriginalName.StartsWith(sharedFolder) == true) {				
+				this.displayedName = OriginalName.Substring(sharedFolder.Length);
+			} else {
+				this.displayedName = fileInfo.Name;
+			}
 			Size = fileInfo.Length;
 		}
 

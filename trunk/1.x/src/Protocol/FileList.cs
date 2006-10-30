@@ -96,8 +96,11 @@ namespace NyFolder.Protocol {
 					if (index >= 0) return((FileInfo) fileList[index]);
 				}
 			}
-			Debug.Log("NULL SEARCH");
 			return(null);
+		}
+
+		public ArrayList GetFiles (PeerSocket peer) {
+			return((ArrayList) this.data[peer]);
 		}
 
 		// ============================================

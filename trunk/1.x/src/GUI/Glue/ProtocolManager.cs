@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.IO;
 using System.Text;
 
 using Niry;
@@ -109,16 +110,17 @@ namespace NyFolder.GUI.Glue {
 		// =================================================
 		private void OnSaveFile (object obj, UserInfo userInfo, string path) {
 		Gtk.Application.Invoke(delegate {
-#if false
+#if true
 			PeerSocket peer = P2PManager.KnownPeers[userInfo] as PeerSocket;
 
 			// Save File Dialog
-			string savePath = Base.Dialogs.SaveFile(Paths.UserSharedDirectory(MyInfo.Name), path.Substring(1));
-			if (savePath == null) return;
+			string saveAs = Base.Dialogs.SaveFile(Paths.UserSharedDirectory(MyInfo.Name), path.Substring(1));
+			if (saveAs == null) return;
 
 			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			// DHO, TODO ME
 			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			DownloadManager.Accept(peer, 0, path, saveAs);
 			Cmd.RequestFile(peer, path);
 #else
 			Debug.Log("TODO: ProtocolManager.OnSaveFile() Dho, Dho, Dho!!!");
@@ -163,6 +165,7 @@ namespace NyFolder.GUI.Glue {
 					break;
 				case "file":
 					string filePath = (string) xml.Attributes["path"];
+					filePath = Path.Combine(Paths.UserSharedDirectory(MyInfo.Name), filePath.Substring(1));
 					UploadManager.Send(peer, filePath);
 					break;
 				case "file-list":

@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Collections;
 
 using Niry;
 using Niry.Utils;
@@ -83,8 +84,19 @@ namespace NyFolder.Protocol {
 		/// Move Download From Accept To Receiving List and Initialize it
 		public static void InitDownload (PeerSocket peer, uint id, XmlRequest xml) {
 			FileReceiver fileRecv = new FileReceiver(id);
-			fileRecv = (FileReceiver) acceptList.Search(peer, fileRecv);
+			if ((fileRecv = (FileReceiver) acceptList.Search(peer, fileRecv)) == null) {
+				ArrayList files = acceptList.GetFiles(peer);
+
+				string name = (string) xml.Attributes["name"];
+				foreach (FileReceiver fRecv in files) {
+					if (fRecv.OriginalName == name) {
+						fileRecv = fRecv;
+						break;
+					}
+				}
+			}
 			acceptList.Remove(peer, fileRecv);
+			fileRecv.Id = id;
 			recvList.Add(peer, fileRecv);
 			fileRecv.Init(xml);
 		}
