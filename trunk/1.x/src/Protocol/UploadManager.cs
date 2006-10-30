@@ -63,29 +63,65 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Start File Transfer
 		public static void Send (PeerSocket peer, string path, string name) {
 			// Create New File Sender && Update File ID
 			FileSender fileSender = new FileSender(fileId++, peer, path, name);
+			fileSender.SendedPart += new BlankEventHandler(OnSendedPart);
+			fileSender.EndSend += new ExceptionEventHandler(OnEndSend);
 
 			// Add File Sender To The Upload List
 			uploadList.Add(peer, fileSender);
 
 			// Start The File Sender
 			fileSender.Start();
+
+			// Raise Upload Added Event
+			if (Added != null) Added(fileSender);
 		}
 
+		/// Abort File Upload
 		public static void Abort (PeerSocket peer, uint id) {
+			// Remove File Sender
 			FileSender fileSender = new FileSender(id);
-			uploadList.Remove(peer, fileSender);
+			fileSender = (FileSender) uploadList.Search(peer, fileSender);
+			Remove(fileSender);
+			
+			// Raise Aborted Event
+			if (Aborted != null) Aborted(fileSender);
 		}
 
 		// ============================================
 		// PRIVATE (Methods) Event Handlers
 		// ============================================
+		private static void OnSendedPart (object sender) {
+			// Raise Sended Part Event
+			if (SendedPart != null) SendedPart(sender);
+		}
+
+		private static void OnEndSend (object sender, Exception e) {
+			FileSender fileSender = sender as FileSender;
+			
+			// Upload Finished/Aborted, Remove it
+			Remove(fileSender);
+
+			if (e == null) {
+				// Raise Finished Event
+				if (Finished != null) Finished(fileSender);
+			} else {
+				// Raise Aborted Event
+				if (Aborted != null) Aborted(fileSender);
+			}
+		}
 
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		private static void Remove (FileSender fileSender) {
+			fileSender.SendedPart -= new BlankEventHandler(OnSendedPart);
+			fileSender.EndSend -= new ExceptionEventHandler(OnEndSend);
+			uploadList.Remove(fileSender.Peer, fileSender);			
+		}
 
 		// ============================================
 		// PUBLIC Properties

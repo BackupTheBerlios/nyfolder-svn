@@ -34,9 +34,13 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
+		/// Raised When Download has Received Part
 		public static event BlankEventHandler ReceivedPart = null;
+		/// Raised When Download is Finished
 		public static event BlankEventHandler Finished = null;
+		/// Raised When Download is Aborted
 		public static event BlankEventHandler Aborted = null;
+		/// Raised When New Download is Added to Accept List
 		public static event BlankEventHandler Added = null;
 
 		// ============================================
@@ -44,7 +48,6 @@ namespace NyFolder.Protocol {
 		// ============================================
 		private static FileList acceptList = null;
 		private static FileList recvList = null;
-
 		private static int numDownloads = 0;
 
 		// ============================================
@@ -66,20 +69,18 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-
-		// Download Steps:
-		//  - Add To Accept List
-		//  - Move File From Accept List to Recv List and Init for Download
-		//  - [LOOP] Get File's Part
-		//  - Finish/Abort
-		//  - Remove File From Recv List
+		/// Add New Download To The Accept List
 		public static void Accept  (PeerSocket peer, uint id, 
 									string path, string saveAs) 
 		{
 			FileReceiver fileRecv = new FileReceiver(id, peer, path, saveAs);
 			acceptList.Add(peer, fileRecv);
+
+			// Raise Added Event
+			if (Added != null) Added(fileRecv);
 		}
 
+		/// Move Download From Accept To Receiving List and Initialize it
 		public static void InitDownload (PeerSocket peer, uint id, XmlRequest xml) {
 			FileReceiver fileRecv = new FileReceiver(id);
 			fileRecv = (FileReceiver) acceptList.Search(peer, fileRecv);
@@ -88,12 +89,17 @@ namespace NyFolder.Protocol {
 			fileRecv.Init(xml);
 		}
 
+		/// Append New Data To Download
 		public static void GetFilePart (PeerSocket peer, uint id, XmlRequest xml) {
 			FileReceiver fileRecv = new FileReceiver(id);
 			fileRecv = (FileReceiver) recvList.Search(peer, fileRecv);
 			fileRecv.AddPart(xml);
+
+			// Raise Received Event
+			if (ReceivedPart != null) ReceivedPart(fileRecv);
 		}
 
+		/// Abort Download and Remove it From Receiving or Accepted List
 		public static void AbortDownload (PeerSocket peer, uint id) {
 			FileReceiver fileRecv = new FileReceiver(id);
 			if ((fileRecv = (FileReceiver) acceptList.Search(peer, fileRecv)) != null) {
@@ -101,14 +107,21 @@ namespace NyFolder.Protocol {
 			} else {
 				recvList.Remove(peer, fileRecv);
 			}
-			fileRecv.Abort();			
+			fileRecv.Abort();
+
+			// Raise Aborted Event
+			if (Aborted != null) Aborted(fileRecv);
 		}
 
+		/// Save and Remove Download From Receiving List
 		public static void FinishedDownload (PeerSocket peer, uint id) {
 			FileReceiver fileRecv = new FileReceiver(id);
 			fileRecv = (FileReceiver) recvList.Search(peer, fileRecv);
 			fileRecv.Save();
 			recvList.Remove(peer, fileRecv);
+
+			// Raise Finished Event
+			if (Finished != null) Finished(fileRecv);
 		}
 
 		// ============================================
