@@ -73,50 +73,43 @@ namespace NyFolder.Protocol {
 		//  - [LOOP] Get File's Part
 		//  - Finish/Abort
 		//  - Remove File From Recv List
-		public static void Accept (PeerSocket peer, uint id, string path) {
-		}
-
-		public static void InitDownload (PeerSocket peer, uint id) {
-		}
-
-		public static void GetFilePart (PeerSocket peer, uint id) {
-		}
-
-		public static void AbortDownload (PeerSocket peer, uint id) {
-		}
-
-		public static void FinishedDownload (PeerSocket peer, uint id) {
-		}
-#if false
-		public static void AddToAcceptList (PeerSocket peer, 
-											string path, string savePath)
+		public static void Accept  (PeerSocket peer, uint id, 
+									string path, string saveAs) 
 		{
-			// Initialize File Info
-			FileReceiver fileRecv = new FileReceiver(fileId++, peer, path, savePath);
-			// Add To Accept List
+			FileReceiver fileRecv = new FileReceiver(id, peer, path, saveAs);
 			acceptList.Add(peer, fileRecv);
 		}
 
-		public static void RemoveFromAcceptList (PeerSocket peer, uint id) {
+		public static void InitDownload (PeerSocket peer, uint id, XmlRequest xml) {
 			FileReceiver fileRecv = new FileReceiver(id);
+			fileRecv = (FileReceiver) acceptList.Search(peer, fileRecv);
 			acceptList.Remove(peer, fileRecv);
+			recvList.Add(peer, fileRecv);
+			fileRecv.Init(xml);
 		}
 
-		// TODO
-		public static void AddDownload (PeerSocket peer,
-										FileReceiver fileRecv)
-		{
-//			fileInfo.InitReception();
-			recvList.Add(peer, fileInfo);
+		public static void GetFilePart (PeerSocket peer, uint id, XmlRequest xml) {
+			FileReceiver fileRecv = new FileReceiver(id);
+			fileRecv = (FileReceiver) recvList.Search(peer, fileRecv);
+			fileRecv.AddPart(xml);
 		}
 
-		public static void RemoveDownload  (PeerSocket peer,
-											FileReceiver fileRecv)
-		{
-//			fileInfo.InitReception();
-			recvList.Add(peer, fileInfo);
+		public static void AbortDownload (PeerSocket peer, uint id) {
+			FileReceiver fileRecv = new FileReceiver(id);
+			if ((fileRecv = (FileReceiver) acceptList.Search(peer, fileRecv)) != null) {
+				acceptList.Remove(peer, fileRecv);
+			} else {
+				recvList.Remove(peer, fileRecv);
+			}
+			fileRecv.Abort();			
 		}
-#endif
+
+		public static void FinishedDownload (PeerSocket peer, uint id) {
+			FileReceiver fileRecv = new FileReceiver(id);
+			fileRecv = (FileReceiver) recvList.Search(peer, fileRecv);
+			fileRecv.Save();
+			recvList.Remove(peer, fileRecv);
+		}
 
 		// ============================================
 		// PRIVATE (Methods) Event Handlers

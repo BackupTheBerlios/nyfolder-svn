@@ -89,7 +89,7 @@ namespace NyFolder.Protocol {
 		}
 
 		/// Append Data to The File
-		public void Append (XmlRequest xml) {
+		public void AddPart (XmlRequest xml) {
 			int part = int.Parse((string) xml.Attributes["part"]);
 			byte[] data = Convert.FromBase64String(xml.BodyText);
 			fileSaved += data.Length;

@@ -88,6 +88,17 @@ namespace NyFolder.Protocol {
 			}
 		}
 
+		public FileInfo Search (PeerSocket peer, FileInfo fileInfo) {
+			lock (this.data) {
+				if (this.data.ContainsKey(peer) == true) {
+					ArrayList fileList = (ArrayList) this.data[peer];
+					int index = fileList.BinarySearch(fileInfo);
+					if (index >= 0) return((FileInfo) fileList[index]);
+				}
+			}
+			return(null);
+		}
+
 		// ============================================
 		// PROTECTED (Methods) Event Handlers
 		// ============================================

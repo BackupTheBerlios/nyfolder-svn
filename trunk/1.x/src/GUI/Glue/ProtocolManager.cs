@@ -31,6 +31,7 @@ using NyFolder.Protocol;
 using NyFolder.GUI.Base;
 
 namespace NyFolder.GUI.Glue {
+	/// Protocol Manager
 	public sealed class ProtocolManager {
 		// ============================================
 		// PRIVATE Members
@@ -50,10 +51,6 @@ namespace NyFolder.GUI.Glue {
 			CmdManager.AddProtocolEvent += new SetProtocolEventHandler(OnAddProtocolEvent);
 			CmdManager.DelProtocolEvent += new SetProtocolEventHandler(OnDelProtocolEvent);
 		}
-
-		// ============================================
-		// PUBLIC Methods
-		// ============================================
 
 		// ============================================
 		// PROTECTED (Methods) Event Handlers
@@ -143,13 +140,8 @@ namespace NyFolder.GUI.Glue {
 		private void OnRecvAbortEvent (PeerSocket peer, XmlRequest xml) {
 		}
 
-
 		// ============================================
 		// PRIVATE Methods
-		// ============================================
-
-		// ============================================
-		// PUBLIC Properties
 		// ============================================
 	}
 }
