@@ -59,6 +59,14 @@ namespace NyFolder.GUI.Glue {
 		// PROTECTED (Methods) Event Handlers
 		// ============================================
 		private void OnAddProtocolEvent (P2PManager p2pManager) {
+			// Network Viewer
+			networkViewer.SendFile += new SendFileHandler(OnSendFile);
+
+			// Folder Viewers
+			notebookViewer.SaveFile += new SendFileHandler(OnSaveFile);
+			notebookViewer.FileSend += new FileSendEventHandler(OnSendFileMenu);
+			notebookViewer.FolderRefresh += new StringEventHandler(OnFolderRefresh); 
+
 			// Protocol Commands
 			CmdManager.GetEvent += new ProtocolHandler(OnGetEvent);
 			CmdManager.AskEvent += new ProtocolHandler(OnAskEvent);
@@ -71,6 +79,14 @@ namespace NyFolder.GUI.Glue {
 		}
 
 		private void OnDelProtocolEvent (P2PManager p2pManager) {
+			// Network Viewer
+			networkViewer.SendFile -= new SendFileHandler(OnSendFile);
+
+			// Folder Viewers
+			notebookViewer.SaveFile -= new SendFileHandler(OnSaveFile);
+			notebookViewer.FileSend -= new FileSendEventHandler(OnSendFileMenu);
+			notebookViewer.FolderRefresh -= new StringEventHandler(OnFolderRefresh); 
+
 			// Protocol Commands
 			CmdManager.GetEvent -= new ProtocolHandler(OnGetEvent);
 			CmdManager.AskEvent -= new ProtocolHandler(OnAskEvent);
@@ -83,30 +99,48 @@ namespace NyFolder.GUI.Glue {
 		}
 
 		// =================================================
+		// PROTECTED (Methods) Network Viewer Event Handlers
+		// =================================================
+		private void OnSendFile (object obj, UserInfo userInfo, string path) {
+		}
+
+		// =================================================
+		// PROTECTED (Methods) Folder Viewers Event Handlers
+		// =================================================
+		private void OnSaveFile (object obj, UserInfo userInfo, string path) {
+		}
+
+		private void OnSendFileMenu (object obj, string path, bool isDir) {
+		}
+
+		private void OnFolderRefresh (object obj, string path) {
+		}
+
+		// =================================================
 		// PROTECTED (Methods) Protocol Cmds Event Handlers
 		// =================================================
-		public void OnGetEvent (PeerSocket peer, XmlRequest xml) {
+		private void OnGetEvent (PeerSocket peer, XmlRequest xml) {
 		}
 
-		public void OnAskEvent (PeerSocket peer, XmlRequest xml) {
+		private void OnAskEvent (PeerSocket peer, XmlRequest xml) {
 		}
 
-		public void OnAcceptEvent (PeerSocket peer, XmlRequest xml) {
+		private void OnAcceptEvent (PeerSocket peer, XmlRequest xml) {
 		}
 
-		public void OnSndEvent (PeerSocket peer, XmlRequest xml) {
+		private void OnSndEvent (PeerSocket peer, XmlRequest xml) {
 		}
 
-		public void OnSndStartEvent (PeerSocket peer, XmlRequest xml) {
+		private void OnSndStartEvent (PeerSocket peer, XmlRequest xml) {
 		}
 
-		public void OnSndEndEvent (PeerSocket peer, XmlRequest xml) {
+		private void OnSndEndEvent (PeerSocket peer, XmlRequest xml) {
 		}
 
-		public void OnSndAbortEvent (PeerSocket peer, XmlRequest xml) {
+		private void OnSndAbortEvent (PeerSocket peer, XmlRequest xml) {
 		}
 
-		public void OnRecvAbortEvent (PeerSocket peer, XmlRequest xml) {
+		private void OnRecvAbortEvent (PeerSocket peer, XmlRequest xml) {
 		}
 
 
