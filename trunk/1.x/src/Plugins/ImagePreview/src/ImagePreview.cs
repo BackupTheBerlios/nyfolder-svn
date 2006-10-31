@@ -177,7 +177,7 @@ namespace NyFolder.Plugins.ImagePreview {
 		}
 
 		// ============================================
-		// PRIVATE (Methods) Menu Event Handlers 
+		// PRIVATE Methods
 		// ============================================
 		private void InitializeMenu() {
 			ToggleActionEntry[] entries = new ToggleActionEntry[] {

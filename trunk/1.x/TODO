@@ -21,7 +21,6 @@ Note:	All Event Handler That Works with The GUI have to do this first
 -------------
    Plugins
 -------------
- - Talk
  - Update Notifier
  - Download Viewer (+ Remove Options)
  - Database (Remember Password, Accepted User, Saved User) 
