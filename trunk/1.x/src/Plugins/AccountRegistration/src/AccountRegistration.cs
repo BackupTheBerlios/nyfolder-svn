@@ -27,6 +27,7 @@ using Niry.Utils;
 using Niry.GUI.Gtk2;
 
 using NyFolder;
+using NyFolder.GUI;
 using NyFolder.Utils;
 using NyFolder.GUI.Base;
 using NyFolder.PluginLib;
@@ -50,6 +51,12 @@ namespace NyFolder.Plugins.AccountRegistration {
 		public AccountRegistration() {
 			// Initialize Plugin Info
 			this.pluginInfo = new Info();
+
+			// Initialize Stock
+			Gdk.Pixbuf pixbuf;
+			pixbuf = new Gdk.Pixbuf(null, "Registration.png");
+			StockIcons.AddToStock("Registration", pixbuf);
+			StockIcons.AddToStockImages("Registration", pixbuf);
 		}
 
 		// ============================================
@@ -58,18 +65,46 @@ namespace NyFolder.Plugins.AccountRegistration {
 		/// Initialize Tray Icon Plugin
 		public override void Initialize (INyFolder iNyFolder) {
 			this.nyFolder = iNyFolder;
-			Console.WriteLine("Init Reg");
-			RegistrationDialog dialog = new RegistrationDialog();
-			dialog.Run();
+
+			this.nyFolder.LoginDialogStarted += new BlankEventHandler(OnLoginDialogStarted);
 		}
 
 		// ============================================
 		// PRIVATE (Methods) Event Handlers
 		// ============================================
+		private void OnLoginDialogStarted (object sender) {
+			GUI.Dialogs.Login loginDialog = sender as GUI.Dialogs.Login;
+
+			AddMenu(loginDialog.Menu);
+		}
+
+		private void OnRegisterAccount (object sender, EventArgs args) {
+			RegistrationDialog dialog = new RegistrationDialog();
+			if (dialog.Run() == ResponseType.Ok) {
+				Console.WriteLine("TODO: Do Registration");
+			}
+			dialog.Destroy();
+		}
 
 		// ============================================
 		// PRIVATE (Methods) Menu Event Handlers 
 		// ============================================
+		private void AddMenu (GUI.Base.UIManager menuManager) {
+			string ui = "<ui>" +
+						"  <menubar name='MenuBar'>" +
+						"    <menu action='FileMenu'>" +
+						"      <menuitem action='RegisterAccount' position='top' />" +
+						"    </menu>" +
+						"  </menubar>" +
+						"</ui>";
+
+			ActionEntry[] entries = new ActionEntry[] {
+				new ActionEntry("RegisterAccount", "Registration", "Register Account", null, 
+								"Register New Account...", new EventHandler(OnRegisterAccount)),
+			};
+
+			menuManager.AddMenus(ui, entries);
+		}
 
 		// ============================================
 		// PUBLIC Properties

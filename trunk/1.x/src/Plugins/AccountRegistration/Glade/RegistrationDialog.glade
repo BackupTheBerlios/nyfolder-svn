@@ -295,6 +295,7 @@ Password:&lt;/b&gt;</property>
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">gtk-ok</property>
                 <property name="use_stock">True</property>
+                <property name="response_id">-5</property>
               </widget>
             </child>
             <child>
@@ -302,6 +303,7 @@ Password:&lt;/b&gt;</property>
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">gtk-cancel</property>
                 <property name="use_stock">True</property>
+                <property name="response_id">-6</property>
               </widget>
               <packing>
                 <property name="position">1</property>

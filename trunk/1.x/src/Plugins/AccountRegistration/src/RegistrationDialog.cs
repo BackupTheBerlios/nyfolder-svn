@@ -29,6 +29,7 @@ using Niry.Utils;
 using Niry.Network;
 
 using NyFolder;
+using NyFolder.GUI;
 using NyFolder.Protocol;
 using NyFolder.GUI.Base;
 
@@ -55,7 +56,7 @@ namespace NyFolder.Plugins.AccountRegistration {
 			base("dialog", new Glade.XML(null, "RegistrationDialog.glade", "dialog", null))
 		{
 			// Initialize Dialog Image
-			this.image.Pixbuf = new Gdk.Pixbuf(null, "Registration.png");
+			this.image.Pixbuf = StockIcons.GetPixbuf("Registration");
 
 			// Initialize Events
 			entryPassword.Changed += new EventHandler(OnPasswordChanged);
