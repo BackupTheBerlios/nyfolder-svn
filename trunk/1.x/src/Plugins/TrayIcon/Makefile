@@ -21,7 +21,7 @@ DESCRIPTION = NyFolder Tray Icon
 COPYRIGHT = (C) Copyright Matteo Bertozzi 2006
 COMPANY = Matteo Bertozzi
 # ==================================================
-PLUGIN_DLL = nf-trayicon.dll
+PLUGIN_DLL = nfTrayIcon.dll
 
 SRC_Base = 		AssemblyInfo.cs	\
 				Info.cs
@@ -49,7 +49,7 @@ PluginInfo: Info.cs.in AssemblyInfo.cs.in
 	sed -e "s|\@name\@|${NAME}|" 				\
 		-e "s|\@version\@|${VERSION}|" 			\
 	    -e "s|\@authors\@|${AUTHORS}|" 			\
-		-e "s|\@version\@|${WEB}|" 				\
+		-e "s|\@web\@|${WEB}|" 				\
 	    -e "s|\@priority\@|${PRIORITY}|" 		\
 		 Info.cs.in > Info.cs
 	@echo "======================================================="
@@ -63,7 +63,7 @@ PluginInfo: Info.cs.in AssemblyInfo.cs.in
 	@echo
 
 install: $(PLUGIN_DLL)
-	cp $(PLUGIN_DLL) ~/.nyFolder/Plugins/$(PLUGIN_DLL)
+	cp $(PLUGIN_DLL) ~/.nyFolder-1.x/Plugins/$(PLUGIN_DLL)
 
 clean:
 	rm -f $(PLUGIN_DLL) Info.cs AssemblyInfo.cs

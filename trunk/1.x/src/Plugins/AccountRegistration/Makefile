@@ -1,4 +1,4 @@
-# Makefile for NyFolder Plugin
+# Makefile for NyFolder
 # Author: Matteo Bertozzi <theo.bertozzi@gmail.com>
 # ===================================================
 
@@ -7,29 +7,31 @@ CFLAGS =
 
 PKG_GTK = -pkg:gtk-sharp-2.0
 PKG_CAIRO = -r:Mono.Cairo.dll
+PKG_GLADE = -pkg:glade-sharp-2.0
+PKG_SQLITE = -r:System.Data.dll -r:Mono.Data.SqliteClient.dll
 PKG_NIRY = -r:../../niry-sharp.dll
 PKG_NF_PLUGIN = -r:../../nyfolder-plugin.dll
-PKGS = $(PKG_GTK) $(PKG_CAIRO) $(PKG_NIRY) $(PKG_NF_PLUGIN)
+PKGS = $(PKG_GTK) $(PKG_CAIRO) $(PKG_GLADE) $(PKG_SQLITE) $(PKG_NIRY) $(PKG_NF_PLUGIN)
 
 # ============================== Plugin Infos ====
-NAME = Update Notifier
+NAME = AccountRegistration
 VERSION = 0.1
 AUTHORS = \"Matteo Bertozzi\"
 WEB = http://nyfolder.berlios.de
-PRIORITY = -20
-DESCRIPTION = NyFolder Update Notifier
+PRIORITY = 0
+DESCRIPTION = NyFolder Account Registration
 COPYRIGHT = (C) Copyright Matteo Bertozzi 2006
 COMPANY = Matteo Bertozzi
 # ==================================================
-PLUGIN_DLL = nfUpdateNotifier.dll
+PLUGIN_DLL = nfAccountRegistration.dll
 
 SRC_Base = 		AssemblyInfo.cs	\
 				Info.cs
-SRC_Plugin =	src/UpdateNotifier.cs	\
-				src/UpdateInfo.cs
+SRC_Plugin =	src/AccountRegistration.cs		\
+				src/RegistrationDialog.cs
 
-RES_Glade =	
-RES_Images = 	Pixmaps/UpdateNotifier.png
+RES_Glade =		Glade/RegistrationDialog.glade
+RES_Images = 	Pixmaps/Registration.png
 
 SRC = $(SRC_Base) $(SRC_Plugin)
 RESOURCES = $(RES_Glade) $(RES_Images)
@@ -39,6 +41,9 @@ Plugin: PluginInfo $(SRC) $(RESOURCES)
 	@echo "$(NAME) Plugin (DLL)"
 	@echo "======================================================="
 	$(CC) $(CFLAGS) -target:library $(PKGS) $(SRC) $(RESOURCES:%=-resource:%) -out:$(PLUGIN_DLL)
+	@echo "======================================================="
+	@echo "$(CC) -target:library MyPlugin.cs -r:$(PLUGIN_DLL)"
+	@echo "======================================================="
 	@echo
 
 PluginInfo: Info.cs.in AssemblyInfo.cs.in 
@@ -50,7 +55,7 @@ PluginInfo: Info.cs.in AssemblyInfo.cs.in
 	sed -e "s|\@name\@|${NAME}|" 				\
 		-e "s|\@version\@|${VERSION}|" 			\
 	    -e "s|\@authors\@|${AUTHORS}|" 			\
-		-e "s|\@version\@|${WEB}|" 				\
+		-e "s|\@web\@|${WEB}|" 				\
 	    -e "s|\@priority\@|${PRIORITY}|" 		\
 		 Info.cs.in > Info.cs
 	@echo "======================================================="
@@ -62,6 +67,7 @@ PluginInfo: Info.cs.in AssemblyInfo.cs.in
 	    -e "s|\@company\@|${COMPANY}|" 		\
 		AssemblyInfo.cs.in > AssemblyInfo.cs
 	@echo
+
 
 install: $(PLUGIN_DLL)
 	cp $(PLUGIN_DLL) ~/.nyFolder-1.x/Plugins/$(PLUGIN_DLL)

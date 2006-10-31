@@ -67,5 +67,9 @@ PluginInfo: Info.cs.in AssemblyInfo.cs.in
 		AssemblyInfo.cs.in > AssemblyInfo.cs
 	@echo
 
+
+install: $(PLUGIN_DLL)
+	cp $(PLUGIN_DLL) ~/.nyFolder-1.x/Plugins/$(PLUGIN_DLL)
+
 clean:
 	rm -f $(PLUGIN_DLL) Info.cs AssemblyInfo.cs

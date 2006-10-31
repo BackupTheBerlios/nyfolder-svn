@@ -1,4 +1,4 @@
-/* [ Plugins/TrayIcon/Info.cs ] NyFolder Tray Icon Info
+/* [ Plugins/AccountRegistration/Info.cs ] NyFolder Account Registration Info
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -23,7 +23,7 @@ using System;
 using NyFolder;
 using NyFolder.PluginLib;
 
-namespace NyFolder.Plugins.TrayIcon {
+namespace NyFolder.Plugins.AccountRegistration {
 	/// Plugin Informations Class
 	public class Info : PluginInfo {
 		public Info() {

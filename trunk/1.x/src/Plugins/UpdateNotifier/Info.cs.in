@@ -23,8 +23,8 @@ using System;
 using NyFolder;
 using NyFolder.PluginLib;
 
-namespace NyFolder.Plugins.TrayIcon {
-	/// Interface for the Plugin Informations Class
+namespace NyFolder.Plugins.UpdateNotifier {
+	/// Plugin Informations Class
 	public class Info : PluginInfo {
 		public Info() {
 			this.authors = new string[] {

@@ -31,7 +31,7 @@ using NyFolder.Protocol;
 using NyFolder.GUI.Base;
 
 namespace NyFolder.GUI.Dialogs {
-	/// Remove Add Dialog
+	/// Add Peer Dialog
 	public class AddPeer : GladeDialog {
 		// ============================================
 		// PRIVATE Members

@@ -1,0 +1,9 @@
+using System.Reflection;
+using System.Runtime.CompilerServices;
+
+[assembly: AssemblyVersion("@version@")]
+[assembly: AssemblyTitle ("@name@")]
+[assembly: AssemblyProduct ("@name@")]
+[assembly: AssemblyDescription ("@description@")]
+[assembly: AssemblyCopyright ("@copyright@")]
+[assembly: AssemblyCompany ("@company@")]
