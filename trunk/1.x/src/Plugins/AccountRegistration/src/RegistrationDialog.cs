@@ -51,7 +51,7 @@ namespace NyFolder.Plugins.AccountRegistration {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
-		/// Create New "Add Peer" Dialog
+		/// Create New Registration Dialog
 		public RegistrationDialog() : 
 			base("dialog", new Glade.XML(null, "RegistrationDialog.glade", "dialog", null))
 		{
@@ -125,10 +125,12 @@ namespace NyFolder.Plugins.AccountRegistration {
 			get { return(TextUtils.IsEmpty(entryUserName.Text) ? null : entryUserName.Text); }
 		}
 
+		/// Get User Password
 		public string Password {
 			get { return(TextUtils.IsEmpty(entryPassword.Text) ? null : entryPassword.Text); }
 		}
 
+		/// Get User EMail
 		public string EMail {
 			get { return(TextUtils.IsEmpty(entryMail.Text) ? null : entryMail.Text); }
 		}
