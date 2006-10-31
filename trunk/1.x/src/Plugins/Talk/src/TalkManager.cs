@@ -58,6 +58,8 @@ namespace NyFolder.Plugins.Talk {
 		}
 
 		public static void Uninitialize() {
+			if (talkFrames == null) return;
+
 			foreach (UserInfo userInfo in talkFrames.Keys) {
 				TalkFrame talkFrame = talkFrames[userInfo] as TalkFrame;
 

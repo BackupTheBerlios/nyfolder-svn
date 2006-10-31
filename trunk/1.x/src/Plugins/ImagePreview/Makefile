@@ -12,11 +12,11 @@ PKG_NF_PLUGIN = -r:../../nyfolder-plugin.dll
 PKGS = $(PKG_GTK) $(PKG_CAIRO) $(PKG_NIRY) $(PKG_NF_PLUGIN)
 
 # ============================== Plugin Infos ====
-NAME = ImagePreview
+NAME = Image Preview
 VERSION = 0.1
 AUTHORS = \"Matteo Bertozzi\"
 WEB = http://nyfolder.berlios.de
-PRIORITY = -20
+PRIORITY = 0
 DESCRIPTION = NyFolder Image Preview
 COPYRIGHT = (C) Copyright Matteo Bertozzi 2006
 COMPANY = Matteo Bertozzi

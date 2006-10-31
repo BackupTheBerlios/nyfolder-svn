@@ -175,6 +175,9 @@ NyFolder: Main.cs NyFolderApp.cs NyFolderPlugin
 	@echo "======================================================="
 	$(CC) $(CFLAGS) -target:winexe $(PKGS) Main.cs NyFolderApp.cs -out:NyFolder.exe -r:$(NYFOLDER_DLL) -resource:Pixmaps/NFSplash.png 
 
+NyFolderStartup: Startup.cs
+	$(CC) -target:winexe Startup.cs /r:System.Windows.Forms -out:Startup.exe
+
 NyFolderPlugin: NyFolderInfo $(SRC) $(RESOURCES)
 	@echo
 	@echo "$(NAME) Plugin (DLL)"
