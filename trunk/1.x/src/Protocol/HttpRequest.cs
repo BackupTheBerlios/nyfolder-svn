@@ -186,6 +186,43 @@ namespace NyFolder.Protocol {
 			}
 		}
 
+		/// Check if Username is Available
+		public static string UserNameIsAvailable (string username) {
+			// Set Options
+			Hashtable options = new Hashtable();
+			options.Add("user", username);
+			options.Add("checkAvail", "username");
+
+			// Make Url & Request
+			string url = MakeUrl("Registration.php", options);
+			XmlRequest xml = MakeRequest(url);
+
+			// Parse Xml Response
+			if (xml.FirstTag == "error") {
+				// Request Error
+				throw(new Exception(xml.FirstTag + ": " + xml.BodyText));
+			}
+
+			return(xml.BodyText);
+		}
+
+		public static void RegisterAccount (string user, string pass, string mail) {
+			// Set Options
+			Hashtable options = new Hashtable();
+			options.Add("user", user);
+			options.Add("pass", CryptoUtils.MD5String(pass));
+			options.Add("mail", mail);
+
+			// Make Url & Request
+			string url = MakeUrl("Registration.php", options);
+			XmlRequest xml = MakeRequest(url);
+
+			// Parse Xml Response
+			if (xml.FirstTag == "error") {
+				// Request Error
+				throw(new Exception(xml.FirstTag + ": " + xml.BodyText));
+			}
+		}
 
 		// ============================================
 		// PUBLIC STATIC Proxy Methods
@@ -224,6 +261,23 @@ namespace NyFolder.Protocol {
 			url.Append("user=");
 			url.Append(userInfo.GetName());
 
+			AddUrlOpts(ref url, opts);
+
+			return(url.ToString());
+		}
+
+		public static string MakeUrl (string pg, Hashtable opts) {
+			StringBuilder url = new StringBuilder();
+			url.Append("http://nyfolder.berlios.de/NyFolder/");
+			url.Append(pg);
+			url.Append("?");
+
+			AddUrlOpts(ref url, opts);
+
+			return(url.ToString());
+		}
+
+		private static void AddUrlOpts (ref StringBuilder url, Hashtable opts) {
 			if (opts != null) {
 				foreach (string name in opts.Keys) {
 					url.Append('&');
@@ -232,8 +286,6 @@ namespace NyFolder.Protocol {
 					url.Append((string) opts[name]);
 				}
 			}
-
-			return(url.ToString());
 		}
 
 		private static XmlRequest MakeRequest (string url) {

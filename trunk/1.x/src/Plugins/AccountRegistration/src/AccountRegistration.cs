@@ -29,6 +29,7 @@ using Niry.GUI.Gtk2;
 using NyFolder;
 using NyFolder.GUI;
 using NyFolder.Utils;
+using NyFolder.Protocol;
 using NyFolder.GUI.Base;
 using NyFolder.PluginLib;
 
@@ -81,7 +82,11 @@ namespace NyFolder.Plugins.AccountRegistration {
 		private void OnRegisterAccount (object sender, EventArgs args) {
 			RegistrationDialog dialog = new RegistrationDialog();
 			if (dialog.Run() == ResponseType.Ok) {
-				Console.WriteLine("TODO: Do Registration");
+				try {
+					HttpRequest.RegisterAccount(dialog.Username, dialog.Password, dialog.EMail);
+				} catch (Exception e) {
+					GUI.Base.Dialogs.MessageError("Account Registration", e.Message);
+				}
 			}
 			dialog.Destroy();
 		}

@@ -88,7 +88,13 @@ namespace NyFolder.Plugins.AccountRegistration {
 				return;
 
 			Gtk.Application.Invoke(delegate {
-				//entryUserName.Text
+				try {
+					string resp = HttpRequest.UserNameIsAvailable(entryUserName.Text);
+					GUI.Base.Dialogs.MessageError("UserName Availability", resp);
+				} catch (Exception e) {
+					GUI.Base.Dialogs.MessageError("UserName Availability", e.Message);
+					Console.WriteLine(e.StackTrace);
+				}
 			});
 		}
 
