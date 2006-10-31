@@ -102,8 +102,10 @@ namespace NyFolder.Plugins.Talk {
 		}
 
 		private void OnDelProtocolCmds (P2PManager p2pManager) {
-			// Sensitivize Talk Menu
-			SetSensitiveTalkMenu(false);
+			if (nyFolder.MainWindow != null) {
+				// Sensitivize Talk Menu
+				SetSensitiveTalkMenu(false);
+			}
 
 			// Del Protocol Event Handler
 			CmdManager.UnknownEvent -= new ProtocolHandler(OnUnknownEvent);
