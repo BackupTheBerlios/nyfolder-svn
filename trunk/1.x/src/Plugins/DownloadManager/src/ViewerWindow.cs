@@ -1,4 +1,4 @@
-/* [ Protocol/FileInfo.cs ] NyFolder Protocol File Info
+/* [ Plugins/DownloadManager/ViewerWindow.cs ] NyFolder Viewer Window
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -22,14 +22,15 @@ using System;
 
 using Niry;
 using Niry.Utils;
-using Niry.Network;
 
 using NyFolder;
+using NyFolder.GUI;
 using NyFolder.Utils;
 using NyFolder.Protocol;
+using NyFolder.GUI.Base;
 
-namespace NyFolder.Protocol {
-	public abstract class FileInfo : IComparable {
+namespace NyFolder.Plugins.DownloadManager {
+	public class ViewerWindow : Gtk.Window {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
@@ -41,36 +42,38 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private string originalName = null;
-		private PeerSocket peer = null;
-		private long fileSize = 0;
-		private uint id;
+		private DownloadViewer downloadViewer;
+		private UploadViewer uploadViewer;
+		private Gtk.Notebook notebook;
+		private TabLabel tabDownloads;
+		private TabLabel tabUploads;
 
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
-		public FileInfo (uint id) : this(id, null, null) {
-		}
+		public ViewerWindow() : base("Download/Upload Viewer") {
+			// Initialize Notebook
+			this.notebook = new Gtk.Notebook();
+			this.notebook.ShowTabs = true;
+			this.notebook.Scrollable = true;
+			Add(this.notebook);
 
-		public FileInfo (uint id, PeerSocket peer) : this(id, peer, null) {
-		}
+			// Add Download Viewer
+			this.tabDownloads = new TabLabel("<b>Downloads</b>", StockIcons.GetImage("Download", 22));
+			this.tabDownloads.Button.Sensitive = false;
+			this.downloadViewer = new DownloadViewer();
+			this.notebook.AppendPage(this.downloadViewer, this.tabDownloads);
 
-		public FileInfo (uint id, PeerSocket peer, string originalName) {
-			this.id = id;
-			this.peer = peer;
-			this.originalName = originalName;
+			// Add Uploads Viewer
+			this.tabUploads = new TabLabel("<b>Uploads</b>", StockIcons.GetImage("Upload", 22));
+			this.tabUploads.Button.Sensitive = false;
+			this.uploadViewer = new UploadViewer();
+			this.notebook.AppendPage(this.uploadViewer, this.tabUploads);			
 		}
 
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		public abstract void Abort();
-
-		/// Compare Files Id
-		public int CompareTo (object obj) {
-			FileInfo fileInfo = (FileInfo) obj;
-			return((int) (this.id - fileInfo.Id));
-		}
 
 		// ============================================
 		// PROTECTED (Methods) Event Handlers
@@ -83,27 +86,5 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
-		/// Get The File Id
-		public uint Id {
-			get { return(this.id); }
-			set { this.id = value; }
-		}
-
-		/// Get The File Size
-		public long Size {
-			get { return(this.fileSize); }
-			protected set { this.fileSize = value; }
-		}
-
-		/// Get The Peer (File Owner)
-		public PeerSocket Peer {
-			get { return(this.peer); }
-		}
-
-		// Get The Original File Name
-		public string OriginalName {
-			get { return(this.originalName); }
-			protected set { this.originalName = value; }
-		}
 	}
 }

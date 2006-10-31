@@ -75,6 +75,9 @@ namespace NyFolder.Plugins.DownloadManager {
 		public override void Initialize (INyFolder iNyFolder) {
 			this.nyFolder = iNyFolder;
 
+			ViewerWindow vw = new ViewerWindow();
+			vw.ShowAll();
+
 			// Initialize GUI Events
 			this.nyFolder.MainWindowStarted += new BlankEventHandler(OnMainWindowStarted);
 		}
@@ -115,11 +118,11 @@ namespace NyFolder.Plugins.DownloadManager {
 						"  </menubar>" +
 						"</ui>";
 
-			nyFolder.Window.Menu.AddMenus(ui, entries);
+			nyFolder.MainWindow.Menu.AddMenus(ui, entries);
 		}
 
 		private void SetSensitiveMenu (bool sensitive) {
-			nyFolder.Window.Menu.SetSensitive("/MenuBar/ToolMenu/DownloadManager", sensitive);
+			nyFolder.MainWindow.Menu.SetSensitive("/MenuBar/ToolMenu/DownloadManager", sensitive);
 		}
 
 		// ============================================

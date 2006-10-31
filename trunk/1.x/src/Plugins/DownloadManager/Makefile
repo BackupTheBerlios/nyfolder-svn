@@ -26,10 +26,18 @@ PLUGIN_DLL = nfDownloadManager.dll
 
 SRC_Base = 		AssemblyInfo.cs	\
 				Info.cs
-SRC_Plugin =	src/DownloadManager.cs
+SRC_Plugin =	src/DownloadManager.cs		\
+				src/DownloadViewer.cs		\
+				src/FileProgressObject.cs	\
+				src/FrameViewer.cs			\
+				src/UploadViewer.cs			\
+				src/ViewerWindow.cs
 
 RES_Glade =	
-RES_Images = 	
+RES_Images = 	Pixmaps/DlTrash.png	\
+				Pixmaps/Download.png	\
+				Pixmaps/Upload.png
+
 
 SRC = $(SRC_Base) $(SRC_Plugin)
 RESOURCES = $(RES_Glade) $(RES_Images)

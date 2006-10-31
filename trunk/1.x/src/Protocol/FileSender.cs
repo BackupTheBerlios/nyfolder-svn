@@ -121,7 +121,9 @@ namespace NyFolder.Protocol {
 				Size = fileContent.Length;
 
 				SendFileStart();
+				Thread.Sleep(1500);
 				SendFileParts();
+				Thread.Sleep(1500);
 				SendFileEnd();
 				endSend = true;
 

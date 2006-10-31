@@ -203,9 +203,7 @@ namespace NyFolder.GUI {
 			string ext = fileInfo.Extension;
 			if (ext != null && ext != "") {
 				ext = ext.Remove(0, 1);
-				char[] extchr = ext.ToCharArray();
-				extchr[0] = Char.ToUpper(extchr[0]);
-				ext = new String(extchr);
+				ext = TextUtils.UpFirstChar(ext);
 			} else {
 				ext = null;
 			}

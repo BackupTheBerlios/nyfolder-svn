@@ -147,7 +147,7 @@ namespace NyFolder.Protocol {
 
 		/// Get Received Percentage
 		public int ReceivedPercent {
-			get { return((int) ((fileSaved / (double) Size) * 100)); }
+			get { return((int) ((SavedSize / (double) Size) * 100)); }
 		}
 	}
 }

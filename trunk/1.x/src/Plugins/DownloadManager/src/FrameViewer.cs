@@ -1,4 +1,4 @@
-/* [ Protocol/FileInfo.cs ] NyFolder Protocol File Info
+/* [ Plugins/DownloadManager/FrameViewer.cs ] NyFolder Frame Viewer
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -19,17 +19,19 @@
  */
 
 using System;
+using System.Collections;
 
 using Niry;
 using Niry.Utils;
-using Niry.Network;
 
 using NyFolder;
+using NyFolder.GUI;
 using NyFolder.Utils;
 using NyFolder.Protocol;
+using NyFolder.GUI.Base;
 
-namespace NyFolder.Protocol {
-	public abstract class FileInfo : IComparable {
+namespace NyFolder.Plugins.DownloadManager {
+	public abstract class FrameViewer : Gtk.Frame {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
@@ -37,40 +39,42 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PROTECTED Members
 		// ============================================
+		protected Hashtable progressObjects = null;
+		protected Gtk.VBox vbox;
 
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private string originalName = null;
-		private PeerSocket peer = null;
-		private long fileSize = 0;
-		private uint id;
+		private Gtk.ScrolledWindow scrolledWindow;
 
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
-		public FileInfo (uint id) : this(id, null, null) {
-		}
+		public FrameViewer() {
+			// Initialize Progress Objects Hashtable
+			this.progressObjects = Hashtable.Synchronized(new Hashtable());
 
-		public FileInfo (uint id, PeerSocket peer) : this(id, peer, null) {
-		}
+			// Initialize Frame
+			this.Shadow = Gtk.ShadowType.None;
+			this.ShadowType = Gtk.ShadowType.None;
 
-		public FileInfo (uint id, PeerSocket peer, string originalName) {
-			this.id = id;
-			this.peer = peer;
-			this.originalName = originalName;
+			// Initialize Scrolled Window
+			this.scrolledWindow = new Gtk.ScrolledWindow(null, null);
+			this.Add(this.scrolledWindow);
+			this.scrolledWindow.ShadowType = Gtk.ShadowType.None;
+			this.scrolledWindow.HscrollbarPolicy = Gtk.PolicyType.Automatic;
+			this.scrolledWindow.VscrollbarPolicy = Gtk.PolicyType.Always;
+
+			// Initialize VBox
+			this.vbox = new Gtk.VBox(false, 2);
+			this.scrolledWindow.AddWithViewport(this.vbox);
+
+			this.ShowAll();
 		}
 
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		public abstract void Abort();
-
-		/// Compare Files Id
-		public int CompareTo (object obj) {
-			FileInfo fileInfo = (FileInfo) obj;
-			return((int) (this.id - fileInfo.Id));
-		}
 
 		// ============================================
 		// PROTECTED (Methods) Event Handlers
@@ -83,27 +87,5 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
-		/// Get The File Id
-		public uint Id {
-			get { return(this.id); }
-			set { this.id = value; }
-		}
-
-		/// Get The File Size
-		public long Size {
-			get { return(this.fileSize); }
-			protected set { this.fileSize = value; }
-		}
-
-		/// Get The Peer (File Owner)
-		public PeerSocket Peer {
-			get { return(this.peer); }
-		}
-
-		// Get The Original File Name
-		public string OriginalName {
-			get { return(this.originalName); }
-			protected set { this.originalName = value; }
-		}
 	}
 }
