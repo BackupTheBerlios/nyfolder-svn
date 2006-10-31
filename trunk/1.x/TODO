@@ -12,10 +12,20 @@ Note:	All Event Handler That Works with The GUI have to do this first
 			});
 		-------------------------------------------
 
-
+-------------
+   Main
+-------------
  - No Splash Screen Options
- - Pending Download Viewer (+ Remove Options)
  - Download/Upload Manager FIX ID NOT FOUND (URGENT)
+
+-------------
+   Plugins
+-------------
+ - Download Viewer (+ Remove Options)
+ - Account Registration (Web Reg)
+ - Talk
+ - Database (Remember Password, Accepted User, Saved User) 
+   - Auto Login & Auto Add Buddy
 
 Login
 	- Automatic Login (Skip Login Dialog)
