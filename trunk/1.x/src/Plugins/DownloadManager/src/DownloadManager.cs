@@ -45,6 +45,7 @@ namespace NyFolder.Plugins.DownloadManager {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
+		private ViewerWindow viewerWindow = null;
 		private INyFolder nyFolder = null;
 
 		// ============================================
@@ -75,11 +76,9 @@ namespace NyFolder.Plugins.DownloadManager {
 		public override void Initialize (INyFolder iNyFolder) {
 			this.nyFolder = iNyFolder;
 
-			ViewerWindow vw = new ViewerWindow();
-			vw.ShowAll();
-
 			// Initialize GUI Events
 			this.nyFolder.MainWindowStarted += new BlankEventHandler(OnMainWindowStarted);
+			this.nyFolder.MainWindowClosed += new BlankEventHandler(OnMainWindowClosed);
 		}
 
 		// ============================================
@@ -94,11 +93,30 @@ namespace NyFolder.Plugins.DownloadManager {
 			SetSensitiveMenu(P2PManager.IsListening());
 		}
 
-		protected void OnP2PStatusChanged (object sender, bool isOnline) {
-			SetSensitiveMenu(isOnline);
+		private void OnMainWindowClosed (object sender) {
+			OnDlWinClose(null, null);
 		}
 
-		protected void OnDlManager (object sender, EventArgs args) {
+		private void OnP2PStatusChanged (object sender, bool isOnline) {
+			if (nyFolder.MainWindow != null)
+				SetSensitiveMenu(isOnline);
+		}
+
+		private void OnDlManager (object sender, EventArgs args) {
+			if (viewerWindow == null) {
+				viewerWindow = new ViewerWindow();
+				viewerWindow.DeleteEvent += new DeleteEventHandler(OnDlWinClose);
+				viewerWindow.ShowAll();
+			}
+			viewerWindow.GrabFocus();
+		}
+
+		private void OnDlWinClose (object sender, DeleteEventArgs args) {
+			if (viewerWindow != null) {
+				viewerWindow.DeleteEvent += new DeleteEventHandler(OnDlWinClose);
+				viewerWindow.Destroy();
+			}
+			viewerWindow = null;
 		}
 
 		// ============================================

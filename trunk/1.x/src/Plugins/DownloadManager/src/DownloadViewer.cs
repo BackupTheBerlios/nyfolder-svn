@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Collections;
 
 using Niry;
 using Niry.Utils;
@@ -63,6 +64,23 @@ namespace NyFolder.Plugins.DownloadManager {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Remove Finished or Aborted
+		public void Clear() {
+			lock (progressObjects) {
+				Hashtable rm = new Hashtable();				
+				foreach (FileReceiver fileRecv in progressObjects.Keys) {
+					FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
+					if (obj.Finished == true) rm.Add(fileRecv, obj);
+				}
+
+				foreach (FileReceiver fileRecv in rm.Keys) {
+					progressObjects.Remove(fileRecv);
+					vbox.Remove((FileProgressObject) rm[fileRecv]);
+				}
+				rm.Clear();
+				rm = null;
+			}
+		}
 
 		// ============================================
 		// PRIVATE (Methods) Event Handlers
@@ -87,7 +105,7 @@ namespace NyFolder.Plugins.DownloadManager {
 			// Add Update
 			progressObjects.Add(fileRecv, obj);
 			vbox.PackStart(obj, false, false, 2);
-			ShowAll();
+			obj.ShowAll();
 		});
 		}
 
@@ -97,6 +115,7 @@ namespace NyFolder.Plugins.DownloadManager {
 			FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
 			SetTransferInfo(obj, fileRecv);
 			obj.Info += " <b>ABORTED</b>";
+			obj.Finished = true;
 		});
 		}
 
@@ -106,6 +125,7 @@ namespace NyFolder.Plugins.DownloadManager {
 			FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
 			obj.ProgressBar.Visible = false;
 			obj.Info = "<b>(Finished)</b>";
+			obj.Finished = true;
 		});
 		}
 

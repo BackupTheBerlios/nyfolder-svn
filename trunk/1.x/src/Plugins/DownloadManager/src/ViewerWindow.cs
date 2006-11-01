@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+using Gtk;
+
 using System;
 
 using Niry;
@@ -44,19 +46,28 @@ namespace NyFolder.Plugins.DownloadManager {
 		// ============================================
 		private DownloadViewer downloadViewer;
 		private UploadViewer uploadViewer;
+		private Gtk.HButtonBox hButtonBox;
 		private Gtk.Notebook notebook;
 		private TabLabel tabDownloads;
 		private TabLabel tabUploads;
+		private Gtk.VBox vbox;
 
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
 		public ViewerWindow() : base("Download/Upload Viewer") {
+			// Initialize Window
+			SetDefaultSize(400, 300);
+
+			// Initialize VBox
+			this.vbox = new Gtk.VBox(false, 2);
+			this.Add(this.vbox);
+
 			// Initialize Notebook
 			this.notebook = new Gtk.Notebook();
 			this.notebook.ShowTabs = true;
 			this.notebook.Scrollable = true;
-			Add(this.notebook);
+			this.vbox.PackStart(this.notebook, true, true, 2);
 
 			// Add Download Viewer
 			this.tabDownloads = new TabLabel("<b>Downloads</b>", StockIcons.GetImage("Download", 22));
@@ -68,7 +79,23 @@ namespace NyFolder.Plugins.DownloadManager {
 			this.tabUploads = new TabLabel("<b>Uploads</b>", StockIcons.GetImage("Upload", 22));
 			this.tabUploads.Button.Sensitive = false;
 			this.uploadViewer = new UploadViewer();
-			this.notebook.AppendPage(this.uploadViewer, this.tabUploads);			
+			this.notebook.AppendPage(this.uploadViewer, this.tabUploads);
+
+			// HButton Box
+			this.hButtonBox = new Gtk.HButtonBox();
+			this.hButtonBox.Spacing = 4;
+			this.hButtonBox.Layout = ButtonBoxStyle.End;
+			this.hButtonBox.LayoutStyle = ButtonBoxStyle.End;
+			this.vbox.PackStart(this.hButtonBox, false, false, 2);
+
+			Gtk.Button button;
+
+			button = new Gtk.Button(Gtk.Stock.Clear);
+			button.Clicked += new EventHandler(OnButtonClear);
+			this.hButtonBox.PackStart(button, false, false, 2);
+
+			// Show All
+			this.ShowAll();			
 		}
 
 		// ============================================
@@ -78,6 +105,15 @@ namespace NyFolder.Plugins.DownloadManager {
 		// ============================================
 		// PROTECTED (Methods) Event Handlers
 		// ============================================
+		private void OnButtonClear (object sender, EventArgs args) {
+		Gtk.Application.Invoke(delegate {
+			if (notebook.CurrentPageWidget == downloadViewer) {
+				downloadViewer.Clear();
+			} else if (notebook.CurrentPageWidget == uploadViewer) {
+				uploadViewer.Clear();
+			}
+		});
+		}
 
 		// ============================================
 		// PRIVATE Methods
