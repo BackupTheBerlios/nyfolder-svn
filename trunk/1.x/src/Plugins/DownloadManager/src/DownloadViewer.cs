@@ -31,6 +31,7 @@ using NyFolder.Protocol;
 using NyFolder.GUI.Base;
 
 namespace NyFolder.Plugins.DownloadManager {
+	/// Download Viewer
 	public class DownloadViewer : FrameViewer {
 		// ============================================
 		// PUBLIC Events
@@ -112,47 +113,47 @@ namespace NyFolder.Plugins.DownloadManager {
 
 		private void OnAborted (object sender) {
 		Gtk.Application.Invoke(delegate {
-try {
-			FileReceiver fileRecv = sender as FileReceiver;
-			FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
-			SetTransferInfo(obj, fileRecv);
-			obj.Info += " <b>ABORTED</b>";
-			obj.Finished = true;
-} catch (Exception e) {
-	Debug.Log("Download Viewer Abort: {0}", e.Message);
-}
+			try {
+				FileReceiver fileRecv = sender as FileReceiver;
+				FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
+				SetTransferInfo(obj, fileRecv);
+				obj.Info += " <b>ABORTED</b>";
+				obj.Finished = true;
+			} catch (Exception e) {
+				Debug.Log("Download Viewer Abort: {0}", e.Message);
+			}
 		});
 		}
 
 		private void OnFinished (object sender) {
 		Gtk.Application.Invoke(delegate {
-try {
-			FileReceiver fileRecv = sender as FileReceiver;
-			FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
-			obj.ProgressBar.Visible = false;
-			obj.Info = "<b>(Finished)</b>";
-			obj.Finished = true;
-} catch (Exception e) {
-	Debug.Log("Download Viewer Finished: {0}", e.Message);
-}
+			try {
+				FileReceiver fileRecv = sender as FileReceiver;
+				FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
+				obj.ProgressBar.Visible = false;
+				obj.Info = "<b>(Finished)</b>";
+				obj.Finished = true;
+			} catch (Exception e) {
+				Debug.Log("Download Viewer Finished: {0}", e.Message);
+			}
 		});
 		}
 
 		private void OnReceivedPart (object sender) {
 		Gtk.Application.Invoke(delegate {
-try {
-			FileReceiver fileRecv = sender as FileReceiver;
-			FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
-			if (obj == null) {
-				OnAdded(sender);
-				obj = (FileProgressObject) progressObjects[fileRecv];
-			} else if (obj.Finished == true) {
-				return;
+			try {
+				FileReceiver fileRecv = sender as FileReceiver;
+				FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
+				if (obj == null) {
+					OnAdded(sender);
+					obj = (FileProgressObject) progressObjects[fileRecv];
+				} else if (obj.Finished == true) {
+					return;
+				}
+				SetTransferInfo(obj, fileRecv);
+			} catch (Exception e) {
+				Debug.Log("Download Viewer Received Part: {0}", e.Message);
 			}
-			SetTransferInfo(obj, fileRecv);
-} catch (Exception e) {
-	Debug.Log("Download Viewer Received Part: {0}", e.Message);
-}
 		});
 		}
 
@@ -179,15 +180,15 @@ try {
 		});
 		}
 
-
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
 		private void SetTransferInfo (FileProgressObject obj, FileReceiver fr) {
-			if (obj == null) return;
-			int percent = fr.ReceivedPercent;
-			if (percent < 0) percent = 0;
-			obj.SetTransferInfo(fr.SavedSize, fr.Size, percent);
+			if (obj != null) {
+				int percent = fr.ReceivedPercent;
+				if (percent < 0) percent = 0;
+				obj.SetTransferInfo(fr.SavedSize, fr.Size, percent);
+			}
 		}
 
 		// ============================================

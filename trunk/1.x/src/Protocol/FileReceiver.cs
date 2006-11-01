@@ -112,12 +112,10 @@ namespace NyFolder.Protocol {
 
 		/// Save File
 		public void Save() {
-			try {
+			if (binaryWriter != null) {
 				binaryWriter.Flush();
 				binaryWriter.Close();
 				binaryWriter = null;
-			} catch (Exception e) {
-				Debug.Log("FileReceiver.Send(): {0}", e.Message);
 			}
 		}
 

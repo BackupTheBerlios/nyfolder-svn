@@ -34,9 +34,13 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
+		/// Raised When Upload has Sended Part
 		public static event BlankEventHandler SendedPart = null;
+		/// Raised When Upload is Finished
 		public static event BlankEventHandler Finished = null;
+		/// Raised When Upload is Aborted
 		public static event BlankEventHandler Aborted = null;
+		/// Raised When New Upload is Added to Accept List
 		public static event BlankEventHandler Added = null;
 
 		// ============================================
@@ -119,26 +123,23 @@ namespace NyFolder.Protocol {
 
 		/// Abort File Upload
 		public static void Abort (PeerSocket peer, uint id) {
-			Debug.Log("[ST] Upload Abort");
 			FileSender fileSender = new FileSender(id);
 			if ((fileSender = (FileSender) acceptList.Search(peer, fileSender)) != null) {
-				Debug.Log(" - Remove From Accept List");
 				RemoveFromAcceptList(fileSender);
 			} else {
-				Debug.Log(" - Remove From Recv List");
 				fileSender = (FileSender) uploadList.Search(peer, new FileSender(id));
+				if (fileSender == null) return;
 				Remove(fileSender);
 			}
-			if (fileSender == null) return;
+
+			// Abort Upload
 			fileSender.Abort();
 
 			// Update Num Uploads
 			numUploads--;
 
 			// Raise Aborted Event
-			Debug.Log(" - Start Event");
 			if (Aborted != null) Aborted(fileSender);
-			Debug.Log("[ED] Upload Abort");
 		}
 
 		// ============================================

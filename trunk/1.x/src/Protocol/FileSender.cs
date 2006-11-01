@@ -35,12 +35,15 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
+		/// Event Raised When Send is Ended
 		public ExceptionEventHandler EndSend = null;
+		/// Event Raised When Part is Sended
 		public BlankEventHandler SendedPart = null;
 
 		// ============================================
 		// PUBLIC Consts
 		// ============================================
+		/// Sended Block Size
 		public const uint ChunkSize = 1024;	// 1024 it's ok
 
 		// ============================================
@@ -171,7 +174,7 @@ namespace NyFolder.Protocol {
 
 				// Raise Sended Part Event
 				if (SendedPart != null) SendedPart(this);
-				Thread.Sleep(50);
+				Thread.Sleep(40);
 
 				// Remove Sended Part From File
 				if (fileContent.Length > ChunkSize) {

@@ -90,7 +90,6 @@ namespace NyFolder.Protocol {
 
 		/// Move Download From Accept To Receiving List and Initialize it
 		public static void InitDownload (PeerSocket peer, uint id, XmlRequest xml) {
-			Debug.Log("[ST] Init Download");
 			FileReceiver fileRecv = new FileReceiver(id);
 			if ((fileRecv = (FileReceiver) acceptList.Search(peer, fileRecv)) == null) {
 				ArrayList files = acceptList.GetFiles(peer);
@@ -107,7 +106,6 @@ namespace NyFolder.Protocol {
 			fileRecv.Id = id;
 			recvList.Add(peer, fileRecv);
 			fileRecv.Init(xml);
-			Debug.Log("[ED] Init Download");
 		}
 
 		/// Append New Data To Download
@@ -116,6 +114,7 @@ namespace NyFolder.Protocol {
 			fileRecv = (FileReceiver) recvList.Search(peer, fileRecv);
 			if (fileRecv == null) return;
 
+			// Add Part
 			fileRecv.AddPart(xml);
 
 			// Raise Received Event
@@ -124,29 +123,23 @@ namespace NyFolder.Protocol {
 
 		/// Abort Download and Remove it From Receiving or Accepted List
 		public static void AbortDownload (PeerSocket peer, uint id) {
-			Debug.Log("[ST] Abort Download");
 			FileReceiver fileRecv = new FileReceiver(id);
 			if ((fileRecv = (FileReceiver) acceptList.Search(peer, fileRecv)) != null) {
-				Debug.Log(" - Remove Accept");
 				acceptList.Remove(peer, fileRecv);
 			} else {
 				fileRecv = (FileReceiver) recvList.Search(peer, new FileReceiver(id));
+				if (fileRecv == null) return;
 				recvList.Remove(peer, fileRecv);
-				Debug.Log(" - Remove Recv");
 			}
-			if (fileRecv == null) return;
 
-			Debug.Log(" - Do Abort");
+			// Abort Download
 			fileRecv.Abort();
-			Debug.Log(" - End Abort");
 
 			// Update Num Downloads
 			numDownloads--;
 
 			// Raise Aborted Event
-				Debug.Log(" - Start Event");
 			if (Aborted != null) Aborted(fileRecv);
-			Debug.Log("[ED] Abort Download");
 		}
 
 		/// Save and Remove Download From Receiving List
@@ -155,7 +148,6 @@ namespace NyFolder.Protocol {
 			fileRecv = (FileReceiver) recvList.Search(peer, fileRecv);
 			fileRecv.Save();
 			recvList.Remove(peer, fileRecv);
-
 
 			// Update Num Downloads
 			numDownloads--;
