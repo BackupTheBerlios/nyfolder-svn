@@ -90,6 +90,7 @@ namespace NyFolder.Plugins.DownloadManager {
 			FileReceiver fileRecv = sender as FileReceiver;
 
 			FileProgressObject obj = new FileProgressObject();
+			obj.Delete += new BlankEventHandler(OnButtonDelete);
 
 			// Setup Image
 			string ext = FileUtils.GetExtension(fileRecv.SaveName);
@@ -136,6 +137,30 @@ namespace NyFolder.Plugins.DownloadManager {
 			SetTransferInfo(obj, fileRecv);
 		});
 		}
+
+		private void OnButtonDelete (object sender) {
+		Gtk.Application.Invoke(delegate {
+			FileProgressObject obj = sender as FileProgressObject;
+			obj.Delete -= new BlankEventHandler(OnButtonDelete);
+
+			FileReceiver fileReceiver = null;
+			lock (progressObjects) {
+				foreach (FileReceiver fileRecv in progressObjects.Keys) {
+					if (progressObjects[fileRecv] == obj) {
+						fileReceiver = fileRecv;
+						break;
+					}
+				}
+
+				if (obj.Finished != true)
+					fileReceiver.Abort();
+
+				progressObjects.Remove(fileReceiver);
+				vbox.Remove(obj);
+			}
+		});
+		}
+
 
 		// ============================================
 		// PRIVATE Methods

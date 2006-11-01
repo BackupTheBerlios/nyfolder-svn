@@ -49,8 +49,8 @@ namespace NyFolder.Plugins.DownloadManager {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private long time;
-		private long lastSize;
+//		private long time;
+//		private long lastSize;
 		private Gtk.VBox vbox;
 		private bool finished;
 
@@ -58,7 +58,7 @@ namespace NyFolder.Plugins.DownloadManager {
 		// PUBLIC Constructors
 		// ============================================	
 		public FileProgressObject() : base(false, 2) {
-			time = DateTime.Now.Ticks;
+//			time = DateTime.Now.Ticks;
 			InitializeObject();
 			finished = false;
 		}
@@ -74,10 +74,9 @@ namespace NyFolder.Plugins.DownloadManager {
 			string currentStr = FileUtils.GetSizeString(current);
 			string totalStr = FileUtils.GetSizeString(total);
 			string percentStr = percent.ToString() + "%";
-			Info = currentStr + " of " + totalStr + " (" +  percentStr + ")" +
-					((lastSize - current)/(DateTime.Now.Ticks - time)).ToString();
-			time = DateTime.Now.Ticks;
-			lastSize = current;
+			Info = currentStr + " of " + totalStr + " (" +  percentStr + ")";
+//			time = DateTime.Now.Ticks;
+//			lastSize = current;
 
 			this.progressBar.Fraction = (double) percent / (double) 100.0f;
 		}

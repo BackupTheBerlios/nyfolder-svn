@@ -70,7 +70,10 @@ namespace NyFolder.Plugins.DownloadManager {
 				Hashtable rm = new Hashtable();				
 				foreach (FileSender fileSender in progressObjects.Keys) {
 					FileProgressObject obj = (FileProgressObject) progressObjects[fileSender];
-					if (obj.Finished == true) rm.Add(fileSender, obj);
+					if (obj.Finished == true) {
+						obj.Delete -= new BlankEventHandler(OnButtonDelete);
+						rm.Add(fileSender, obj);
+					}
 				}
 
 				foreach (FileSender fileSender in rm.Keys) {
@@ -83,13 +86,14 @@ namespace NyFolder.Plugins.DownloadManager {
 		}
 
 		// ============================================
-		// PROTECTED (Methods) Event Handlers
+		// PRIVATE (Methods) Event Handlers
 		// ============================================
 		private void OnAdded (object sender) {
 		Gtk.Application.Invoke(delegate {
 			FileSender fileSender = sender as FileSender;
 
 			FileProgressObject obj = new FileProgressObject();
+			obj.Delete += new BlankEventHandler(OnButtonDelete);
 
 			// Setup Image
 			string ext = FileUtils.GetExtension(fileSender.DisplayedName);
@@ -135,6 +139,29 @@ namespace NyFolder.Plugins.DownloadManager {
 			FileProgressObject obj = (FileProgressObject) progressObjects[fileSender];
 			if (obj == null) Console.WriteLine("Sended Part NULL");
 			SetTransferInfo(obj, fileSender);
+		});
+		}
+
+		private void OnButtonDelete (object sender) {
+		Gtk.Application.Invoke(delegate {
+			FileProgressObject obj = sender as FileProgressObject;
+			obj.Delete -= new BlankEventHandler(OnButtonDelete);
+
+			FileSender fileSender = null;
+			lock (progressObjects) {
+				foreach (FileSender fileSnd in progressObjects.Keys) {
+					if (progressObjects[fileSnd] == obj) {
+						fileSender = fileSnd;
+						break;
+					}
+				}
+
+				if (obj.Finished != true)
+					fileSender.Abort();
+
+				progressObjects.Remove(fileSender);
+				vbox.Remove(obj);
+			}
 		});
 		}
 

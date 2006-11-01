@@ -105,6 +105,8 @@ namespace NyFolder.Protocol {
 		public static void GetFilePart (PeerSocket peer, uint id, XmlRequest xml) {
 			FileReceiver fileRecv = new FileReceiver(id);
 			fileRecv = (FileReceiver) recvList.Search(peer, fileRecv);
+			if (fileRecv == null) return;
+
 			fileRecv.AddPart(xml);
 
 			// Raise Received Event
