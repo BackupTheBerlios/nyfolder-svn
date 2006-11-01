@@ -171,6 +171,7 @@ namespace NyFolder.Protocol {
 
 				// Raise Sended Part Event
 				if (SendedPart != null) SendedPart(this);
+				Thread.Sleep(100);
 
 				// Remove Sended Part From File
 				if (fileContent.Length > ChunkSize) {

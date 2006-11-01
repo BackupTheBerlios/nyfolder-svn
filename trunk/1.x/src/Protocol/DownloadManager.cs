@@ -59,12 +59,16 @@ namespace NyFolder.Protocol {
 			// Create Thread-Safe File Lists Instances
 			acceptList = new FileList();
 			recvList = new FileList();
+
+			numDownloads = 0;
 		}
 
 		/// Abort All The Download in the List
 		public static void Clear() {
 			acceptList.RemoveAll();
 			recvList.RemoveAll();
+
+			numDownloads = 0;
 		}
 
 		// ============================================
@@ -76,6 +80,9 @@ namespace NyFolder.Protocol {
 		{
 			FileReceiver fileRecv = new FileReceiver(id, peer, path, saveAs);
 			acceptList.Add(peer, fileRecv);
+
+			// Update Num Downloads
+			numDownloads++;
 
 			// Raise Added Event
 			if (Added != null) Added(fileRecv);
@@ -123,6 +130,9 @@ namespace NyFolder.Protocol {
 			}
 			fileRecv.Abort();
 
+			// Update Num Downloads
+			numDownloads--;
+
 			// Raise Aborted Event
 			if (Aborted != null) Aborted(fileRecv);
 		}
@@ -133,6 +143,10 @@ namespace NyFolder.Protocol {
 			fileRecv = (FileReceiver) recvList.Search(peer, fileRecv);
 			fileRecv.Save();
 			recvList.Remove(peer, fileRecv);
+
+
+			// Update Num Downloads
+			numDownloads--;
 
 			// Raise Finished Event
 			if (Finished != null) Finished(fileRecv);

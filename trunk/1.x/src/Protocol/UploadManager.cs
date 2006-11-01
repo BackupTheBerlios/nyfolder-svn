@@ -93,6 +93,9 @@ namespace NyFolder.Protocol {
 
 			// Start The File Sender
 			fileSender.Start();
+
+			// Update Num Uploads
+			numUploads++;
 		}
 
 		/// Start File Transfer (Send By Name)
@@ -107,6 +110,9 @@ namespace NyFolder.Protocol {
 			// Start The File Sender
 			fileSender.Start();
 
+			// Update Num Uploads
+			numUploads++;
+
 			// Raise Upload Added Event
 			if (Added != null) Added(fileSender);
 		}
@@ -120,6 +126,9 @@ namespace NyFolder.Protocol {
 				Remove(fileSender);
 			}
 			
+			// Update Num Uploads
+			numUploads--;
+
 			// Raise Aborted Event
 			if (Aborted != null) Aborted(fileSender);
 		}
@@ -134,6 +143,9 @@ namespace NyFolder.Protocol {
 
 		private static void OnEndSend (object sender, Exception e) {
 			FileSender fileSender = sender as FileSender;
+
+			// Update Num Uploads
+			numUploads--;
 			
 			// Upload Finished/Aborted, Remove it
 			Remove(fileSender);
