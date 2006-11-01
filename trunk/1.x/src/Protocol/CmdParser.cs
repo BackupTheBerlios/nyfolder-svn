@@ -75,6 +75,7 @@ namespace NyFolder.Protocol {
 			private void ParseCommand (string xml) {
 				XmlRequest xmlRequest = null;
 				try {
+					Debug.Log(xml);
 					xmlRequest = new XmlRequest(xml);
 					xmlRequest.Parse();
 				} catch (Exception e) {

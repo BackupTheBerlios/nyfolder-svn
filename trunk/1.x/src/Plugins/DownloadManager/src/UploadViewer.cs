@@ -115,46 +115,55 @@ namespace NyFolder.Plugins.DownloadManager {
 
 		private void OnAborted (object sender) {
 		Gtk.Application.Invoke(delegate {
+try {
+			Debug.Log("[ST] Upload Viewer Abort");
 			FileSender fileSender = sender as FileSender;
 			FileProgressObject obj = (FileProgressObject) progressObjects[fileSender];
-			if (obj == null) {
-				OnAdded(sender);
-				obj = (FileProgressObject) progressObjects[fileSender];
-			}
 			SetTransferInfo(obj, fileSender);
 			obj.Info += " <b>ABORTED</b>";
 			obj.Finished = true;
+			Debug.Log("[ED] Upload Viewer Abort");
+} catch (Exception e) {
+	Debug.Log("Upload Viewer Abort: {0}", e.Message);
+}
 		});
 		}
 
 		private void OnFinished (object sender) {
 		Gtk.Application.Invoke(delegate {
+try {
 			FileSender fileSender = sender as FileSender;
 			FileProgressObject obj = (FileProgressObject) progressObjects[fileSender];
-			if (obj == null) {
-				OnAdded(sender);
-				obj = (FileProgressObject) progressObjects[fileSender];
-			}
 			obj.ProgressBar.Visible = false;
 			obj.Info = "<b>(Finished)</b>";
 			obj.Finished = true;
+} catch (Exception e) {
+	Debug.Log("Upload Viewer Finish: {0}", e.Message);
+}
 		});
 		}
 
 		private void OnSendedPart (object sender) {
 		Gtk.Application.Invoke(delegate {
+try {
 			FileSender fileSender = sender as FileSender;
 			FileProgressObject obj = (FileProgressObject) progressObjects[fileSender];
 			if (obj == null) {
 				OnAdded(sender);
 				obj = (FileProgressObject) progressObjects[fileSender];
+			} else if (obj.Finished == true) {
+				return;
 			}
 			SetTransferInfo(obj, fileSender);
+} catch (Exception e) {
+	Debug.Log("Upload Viewer Sended Part: {0}", e.Message);
+}
 		});
 		}
 
 		private void OnButtonDelete (object sender) {
 		Gtk.Application.Invoke(delegate {
+			Debug.Log("[ST] On Button Delete");
 			FileProgressObject obj = sender as FileProgressObject;
 			obj.Delete -= new BlankEventHandler(OnButtonDelete);
 
@@ -173,6 +182,7 @@ namespace NyFolder.Plugins.DownloadManager {
 				progressObjects.Remove(fileSender);
 				vbox.Remove(obj);
 			}
+			Debug.Log("[ED] On Button Delete");
 		});
 		}
 

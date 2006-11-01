@@ -86,13 +86,17 @@ namespace NyFolder.Protocol {
 
 		/// Append Data to The File
 		public void AddPart (XmlRequest xml) {
-			int part = int.Parse((string) xml.Attributes["part"]);
-			byte[] data = Convert.FromBase64String(xml.BodyText);
-			fileSaved += data.Length;
+			try {
+				int part = int.Parse((string) xml.Attributes["part"]);
+				byte[] data = Convert.FromBase64String(xml.BodyText);
+				fileSaved += data.Length;
 
-			// Seek to Offset & Write Data
-			binaryWriter.Seek((int)(part * FileSender.ChunkSize), SeekOrigin.Begin);
-			binaryWriter.Write(data, 0, data.Length);
+				// Seek to Offset & Write Data
+				binaryWriter.Seek((int)(part * FileSender.ChunkSize), SeekOrigin.Begin);
+				binaryWriter.Write(data, 0, data.Length);
+			} catch (Exception e) {
+				Debug.Log("FileReceiver.AddPart(): {0}", e.Message);
+			}
 		}
 
 		/// Abort The Recv Operation
@@ -108,9 +112,13 @@ namespace NyFolder.Protocol {
 
 		/// Save File
 		public void Save() {
-			binaryWriter.Flush();
-			binaryWriter.Close();
-			binaryWriter = null;
+			try {
+				binaryWriter.Flush();
+				binaryWriter.Close();
+				binaryWriter = null;
+			} catch (Exception e) {
+				Debug.Log("FileReceiver.Send(): {0}", e.Message);
+			}
 		}
 
 		// ============================================

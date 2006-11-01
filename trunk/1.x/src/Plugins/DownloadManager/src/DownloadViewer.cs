@@ -112,41 +112,47 @@ namespace NyFolder.Plugins.DownloadManager {
 
 		private void OnAborted (object sender) {
 		Gtk.Application.Invoke(delegate {
+try {
 			FileReceiver fileRecv = sender as FileReceiver;
 			FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
-			if (obj == null) {
-				OnAdded(sender);
-				obj = (FileProgressObject) progressObjects[fileRecv];
-			}
 			SetTransferInfo(obj, fileRecv);
 			obj.Info += " <b>ABORTED</b>";
 			obj.Finished = true;
+} catch (Exception e) {
+	Debug.Log("Download Viewer Abort: {0}", e.Message);
+}
 		});
 		}
 
 		private void OnFinished (object sender) {
 		Gtk.Application.Invoke(delegate {
+try {
 			FileReceiver fileRecv = sender as FileReceiver;
 			FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
-			if (obj == null) {
-				OnAdded(sender);
-				obj = (FileProgressObject) progressObjects[fileRecv];
-			}
 			obj.ProgressBar.Visible = false;
 			obj.Info = "<b>(Finished)</b>";
 			obj.Finished = true;
+} catch (Exception e) {
+	Debug.Log("Download Viewer Finished: {0}", e.Message);
+}
 		});
 		}
 
 		private void OnReceivedPart (object sender) {
 		Gtk.Application.Invoke(delegate {
+try {
 			FileReceiver fileRecv = sender as FileReceiver;
 			FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
 			if (obj == null) {
 				OnAdded(sender);
 				obj = (FileProgressObject) progressObjects[fileRecv];
+			} else if (obj.Finished == true) {
+				return;
 			}
 			SetTransferInfo(obj, fileRecv);
+} catch (Exception e) {
+	Debug.Log("Download Viewer Received Part: {0}", e.Message);
+}
 		});
 		}
 

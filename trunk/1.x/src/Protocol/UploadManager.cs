@@ -119,18 +119,26 @@ namespace NyFolder.Protocol {
 
 		/// Abort File Upload
 		public static void Abort (PeerSocket peer, uint id) {
+			Debug.Log("[ST] Upload Abort");
 			FileSender fileSender = new FileSender(id);
 			if ((fileSender = (FileSender) acceptList.Search(peer, fileSender)) != null) {
+				Debug.Log(" - Remove From Accept List");
 				RemoveFromAcceptList(fileSender);
 			} else {
+				Debug.Log(" - Remove From Recv List");
+				fileSender = (FileSender) uploadList.Search(peer, new FileSender(id));
 				Remove(fileSender);
 			}
-			
+			if (fileSender == null) return;
+			fileSender.Abort();
+
 			// Update Num Uploads
 			numUploads--;
 
 			// Raise Aborted Event
+			Debug.Log(" - Start Event");
 			if (Aborted != null) Aborted(fileSender);
+			Debug.Log("[ED] Upload Abort");
 		}
 
 		// ============================================
@@ -163,15 +171,19 @@ namespace NyFolder.Protocol {
 		// PRIVATE Methods
 		// ============================================
 		private static void Remove (FileSender fileSender) {
-			fileSender.SendedPart -= new BlankEventHandler(OnSendedPart);
-			fileSender.EndSend -= new ExceptionEventHandler(OnEndSend);
-			uploadList.Remove(fileSender.Peer, fileSender);			
+			if (fileSender != null) {
+				fileSender.SendedPart -= new BlankEventHandler(OnSendedPart);
+				fileSender.EndSend -= new ExceptionEventHandler(OnEndSend);
+				uploadList.Remove(fileSender.Peer, fileSender);			
+			}
 		}
 
 		private static void RemoveFromAcceptList (FileSender fileSender) {
-			fileSender.SendedPart -= new BlankEventHandler(OnSendedPart);
-			fileSender.EndSend -= new ExceptionEventHandler(OnEndSend);
-			acceptList.Remove(fileSender.Peer, fileSender);
+			if (fileSender != null) {
+				fileSender.SendedPart -= new BlankEventHandler(OnSendedPart);
+				fileSender.EndSend -= new ExceptionEventHandler(OnEndSend);
+				acceptList.Remove(fileSender.Peer, fileSender);
+			}
 		}
 
 		// ============================================

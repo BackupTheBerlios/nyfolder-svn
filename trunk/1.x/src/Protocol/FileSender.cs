@@ -41,7 +41,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Consts
 		// ============================================
-		public const uint ChunkSize = 5120;	// 1024 it's ok
+		public const uint ChunkSize = 1024;	// 1024 it's ok
 
 		// ============================================
 		// PRIVATE Members
