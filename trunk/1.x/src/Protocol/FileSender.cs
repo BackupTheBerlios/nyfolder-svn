@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.IO;
 using System.Threading;
 
 using Niry;
@@ -43,14 +44,13 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Consts
 		// ============================================
-		/// Sended Block Size
-		public const uint ChunkSize = 1024;	// 1024 it's ok
+		/// Sended Block Size (Less Then 8K Please)
+		public const uint ChunkSize = 5120;	// 5120 it's ok
 
 		// ============================================
 		// PRIVATE Members
 		// ============================================
 		private string displayedName = null;
-		private byte[] fileContent = null;
 		private int sendedPercent = 0;
 		private Thread thread = null;
 		private bool endSend = false;
@@ -107,6 +107,19 @@ namespace NyFolder.Protocol {
 			}
 		}
 
+		/// Abort Sending Operation
+		public void Abort (Exception e) {
+			// Send Abort Message + Error
+			endSend = true;
+			AbortSendFile(e.Message);
+
+			// Raise End Send Event
+			if (EndSend != null) EndSend(this, e);
+
+			// Abort Thread
+			if (thread.IsAlive == true) thread.Abort();
+		}
+
 		/// Start Sending File
 		public void Start() {
 			thread = new Thread(new ThreadStart(StartSendingFile));
@@ -119,13 +132,14 @@ namespace NyFolder.Protocol {
 		// ============================================
 		private void StartSendingFile() {
 			try {
-				// Initialize & Read Entire File
-				fileContent = FileUtils.ReadEntireFile(OriginalName);
-				Size = fileContent.Length;
-
 				SendFileStart();
 				Thread.Sleep(1500);
-				SendFileParts();
+				if (Size < 1048576) {
+					// Less Then 1M
+					SendSmallFileParts();
+				} else {
+					SendBigFileParts();
+				}
 				Thread.Sleep(1500);
 				SendFileEnd();
 				endSend = true;
@@ -153,8 +167,12 @@ namespace NyFolder.Protocol {
 			}
 		}
 
-		/// Split and Send File In Parts of ChunkSize
-		private void SendFileParts() {
+		/// Split and Send "Small File" In Parts of ChunkSize
+		private void SendSmallFileParts() {
+			// Initialize & Read Entire File
+			byte[] fileContent = FileUtils.ReadEntireFile(OriginalName);
+			Size = fileContent.Length;
+
 			uint part = 0;
 			while (fileContent != null) {
 				long length = ChunkSize;
@@ -184,6 +202,60 @@ namespace NyFolder.Protocol {
 					Array.Copy(buffer, ChunkSize, fileContent, 0, length);
 				} else {
 					fileContent = null;
+				}
+			}
+		}
+
+		/// Split and Send "Big File" In Parts of ChunkSize
+		private void SendBigFileParts() {
+			BufferedStream stream = null;
+
+			try {
+				uint totalParts = (uint) Size / FileSender.ChunkSize;
+
+				stream = new BufferedStream(File.OpenRead(OriginalName));
+				byte[] buffer = new byte[FileSender.ChunkSize];
+
+				for (uint part=0; part < totalParts; part++) {
+					stream.Seek((int)(part * FileSender.ChunkSize), SeekOrigin.Begin);
+					stream.Read(buffer, 0, (int) FileSender.ChunkSize);
+
+					// Send File Part
+					SendFilePart(buffer, part);
+
+					// Sended File Part
+					sendedSize = part * FileSender.ChunkSize;
+					sendedPercent = (int) ((sendedSize / (double) Size) * 100);
+
+					// Raise Sended Part Event
+					if (SendedPart != null) SendedPart(this);
+					Thread.Sleep(40);
+				}
+
+				// Send Last Block
+				if ((Size % FileSender.ChunkSize) != 0) {
+					int startPos = (int) (totalParts * FileSender.ChunkSize);
+					stream.Seek(startPos, SeekOrigin.Begin);
+
+					byte[] lastBuffer = new byte[(int) Size - startPos];
+					stream.Read(lastBuffer, 0, lastBuffer.Length);
+
+					// Send File Part
+					SendFilePart(lastBuffer, totalParts);
+
+					// Sended File Part
+					sendedSize = Size;
+					sendedPercent = 100;
+
+					// Raise Sended Part Event
+					if (SendedPart != null) SendedPart(this);
+				}
+			} catch (Exception e) {
+				Abort(e);
+			} finally {
+				if (stream != null) {
+					stream.Close();
+					stream = null;
 				}
 			}
 		}

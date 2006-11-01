@@ -217,9 +217,13 @@ namespace NyFolder.Plugins.ImagePreview {
 		}
 
 		private void ReceiveImageThumb (UserInfo userInfo, string path, string b64image) {
-			byte[] imgData = Convert.FromBase64String(b64image);
-			Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(imgData);
-			LoadImage(userInfo, path, pixbuf);
+			try {
+				byte[] imgData = Convert.FromBase64String(b64image);
+				Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(imgData);
+				LoadImage(userInfo, path, pixbuf);
+			} catch (Exception e) {
+				Debug.Log("Load {0} Image {1}: {2}", userInfo.Name, path, e.Message);
+			}
 		}
 
 		private void LoadImage (UserInfo userInfo, string path) {
