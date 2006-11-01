@@ -58,7 +58,16 @@ namespace NyFolder.Protocol {
 		public FileInfo (uint id, PeerSocket peer, string originalName) {
 			this.id = id;
 			this.peer = peer;
+			if (this.peer != null) {
+				this.peer.Disconnecting += new PeerEventHandler(OnPeerDisconnect);
+			}
 			this.originalName = originalName;
+		}
+
+		~FileInfo() {
+			if (this.peer != null) {
+				this.peer.Disconnecting -= new PeerEventHandler(OnPeerDisconnect);
+			}
 		}
 
 		// ============================================
@@ -73,8 +82,11 @@ namespace NyFolder.Protocol {
 		}
 
 		// ============================================
-		// PROTECTED (Methods) Event Handlers
+		// PRIVATE (Methods) Event Handlers
 		// ============================================
+		private void OnPeerDisconnect (object sender, PeerEventArgs args) {
+			Abort();
+		}
 
 		// ============================================
 		// PRIVATE Methods

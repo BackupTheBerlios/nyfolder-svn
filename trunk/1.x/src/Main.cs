@@ -154,6 +154,8 @@ namespace NyFolder {
 					PrintErrorMessage(e);
 					return(1);
 				} finally {
+					UploadManager.Clear();
+					DownloadManager.Clear();
 					if (NyFolderApp.Restart != true) {
 						if (nyFolder != null) nyFolder.Quit();
 						if (p2pManager != null) p2pManager.Kill();

@@ -114,6 +114,10 @@ namespace NyFolder.Plugins.DownloadManager {
 		Gtk.Application.Invoke(delegate {
 			FileReceiver fileRecv = sender as FileReceiver;
 			FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
+			if (obj == null) {
+				OnAdded(sender);
+				obj = (FileProgressObject) progressObjects[fileRecv];
+			}
 			SetTransferInfo(obj, fileRecv);
 			obj.Info += " <b>ABORTED</b>";
 			obj.Finished = true;
@@ -124,6 +128,10 @@ namespace NyFolder.Plugins.DownloadManager {
 		Gtk.Application.Invoke(delegate {
 			FileReceiver fileRecv = sender as FileReceiver;
 			FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
+			if (obj == null) {
+				OnAdded(sender);
+				obj = (FileProgressObject) progressObjects[fileRecv];
+			}
 			obj.ProgressBar.Visible = false;
 			obj.Info = "<b>(Finished)</b>";
 			obj.Finished = true;
@@ -134,6 +142,10 @@ namespace NyFolder.Plugins.DownloadManager {
 		Gtk.Application.Invoke(delegate {
 			FileReceiver fileRecv = sender as FileReceiver;
 			FileProgressObject obj = (FileProgressObject) progressObjects[fileRecv];
+			if (obj == null) {
+				OnAdded(sender);
+				obj = (FileProgressObject) progressObjects[fileRecv];
+			}
 			SetTransferInfo(obj, fileRecv);
 		});
 		}
@@ -166,6 +178,7 @@ namespace NyFolder.Plugins.DownloadManager {
 		// PRIVATE Methods
 		// ============================================
 		private void SetTransferInfo (FileProgressObject obj, FileReceiver fr) {
+			if (obj == null) return;
 			int percent = fr.ReceivedPercent;
 			if (percent < 0) percent = 0;
 			obj.SetTransferInfo(fr.SavedSize, fr.Size, percent);
