@@ -7,6 +7,7 @@
 
  * 01 Nov 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	ReWrited File Sender, Now File Bigger Than 1M are sended with Reader Seek
+	Drastic Reduce memory usage on Send File...
 
  * 30 Oct 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	All Seems Working Now (Download/Upload), Now I've to check a little bit

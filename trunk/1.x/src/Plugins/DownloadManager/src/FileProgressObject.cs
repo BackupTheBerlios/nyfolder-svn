@@ -49,18 +49,28 @@ namespace NyFolder.Plugins.DownloadManager {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-//		private long time;
-//		private long lastSize;
+		private DateTime startTime;
 		private Gtk.VBox vbox;
 		private bool finished;
+
+		internal bool timeoutRet = true;
+		internal uint timeout;
 
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================	
 		public FileProgressObject() : base(false, 2) {
-//			time = DateTime.Now.Ticks;
+			startTime = DateTime.Now;
 			InitializeObject();
 			finished = false;
+	
+			timeoutRet = true;
+			timeout = GLib.Timeout.Add(1000, UpdateDownloadTime);
+			UpdateDownloadTime();
+		}
+
+		~FileProgressObject() {
+			timeoutRet = false;
 		}
 
 		// ============================================
@@ -74,9 +84,12 @@ namespace NyFolder.Plugins.DownloadManager {
 			string currentStr = FileUtils.GetSizeString(current);
 			string totalStr = FileUtils.GetSizeString(total);
 			string percentStr = percent.ToString() + "%";
-			Info = currentStr + " of " + totalStr + " (" +  percentStr + ")";
-//			time = DateTime.Now.Ticks;
-//			lastSize = current;
+			Info = currentStr + " of " + totalStr + " (" +  percentStr + ") ";
+
+			int sec = (DateTime.Now - startTime).Seconds;
+			if (sec > 0) {
+				Info += " - " + FileUtils.GetSizeString(current / sec) + "/s";
+			}
 
 			this.progressBar.Fraction = (double) percent / (double) 100.0f;
 		}
@@ -86,6 +99,13 @@ namespace NyFolder.Plugins.DownloadManager {
 		// ============================================
 		private void OnDeleteClicked (object sender, EventArgs args) {
 			if (Delete != null) Delete(this);
+		}
+
+		private bool UpdateDownloadTime() {
+			Gtk.Application.Invoke(delegate {
+				progressBar.Text = "Elapsed Time: " + (DateTime.Now - startTime).ToString();
+			});
+			return(this.timeoutRet);
 		}
 
 		// ============================================
@@ -115,9 +135,9 @@ namespace NyFolder.Plugins.DownloadManager {
 			this.labelName = new Gtk.Label();
 			this.labelName.UseMarkup = true;
 			this.labelName.Xalign = 0.0f;
-			this.vbox.PackStart(this.labelName, false, false, 2);
+			this.vbox.PackStart(this.labelName, false, false, 2);		
 
-			// Initialize Status "5.8Mb of 8.1Mb (at 316.1Kb/s)"
+			// Initialize Status "6.1Mb of 10.1Mb (60%)"
 			this.labelStatus = new Gtk.Label();
 			this.labelStatus.UseMarkup = true;
 			this.labelStatus.Xalign = 0.0f;
@@ -156,7 +176,11 @@ namespace NyFolder.Plugins.DownloadManager {
 
 		public bool Finished {
 			get { return(this.finished); }
-			set { this.finished = value; }
+			set { 
+				this.finished = value; 
+				if (this.finished == true) 
+					timeoutRet = false;
+			}
 		}
 	}
 }
