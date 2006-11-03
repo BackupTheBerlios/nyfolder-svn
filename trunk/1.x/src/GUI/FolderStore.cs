@@ -53,6 +53,7 @@ namespace NyFolder.GUI {
 		// ============================================
 		private Gtk.TreeIter fIter;
 		private string fPath;
+		private bool isEmpty;
 
 		// ============================================
 		// PUBLIC Constructors
@@ -71,6 +72,12 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		public new void Clear() {
+			isEmpty = true;
+			base.Clear();
+			Append();
+		}
+
 		/// Add an Existing File or Directory
 		public void Add (string path) {
 			if (Directory.Exists(path) == true) {
@@ -87,7 +94,7 @@ namespace NyFolder.GUI {
 			Gdk.Pixbuf pixbuf = StockIcons.GetFileIconPixbuf(ext);
 			
 			Gtk.TreeIter iter;
-			iter = this.AppendValues(path, fileInfo.Name, pixbuf, false);
+			iter = InsertData(path, fileInfo.Name, pixbuf, false);
 
 			// File Added Event
 			if (FileAdded != null) FileAdded(this, iter);
@@ -99,7 +106,7 @@ namespace NyFolder.GUI {
 			Gdk.Pixbuf pixbuf = StockIcons.GetPixbuf("Directory");
 
 			Gtk.TreeIter iter;
-			iter = this.AppendValues(path, dirInfo.Name, pixbuf, true);
+			iter = InsertData(path, dirInfo.Name, pixbuf, true);
 
 			// Directory Added Event
 			if (DirectoryAdded != null) DirectoryAdded(this, iter);
@@ -237,6 +244,16 @@ namespace NyFolder.GUI {
 				}
 				return(false);
 			}
+		}
+
+		private TreeIter InsertData (string path, string name, 
+									 Gdk.Pixbuf pixbuf, bool isDir)
+		{
+			if (isEmpty == true) {
+				base.Clear();
+				isEmpty = !isEmpty;
+			}
+			return(AppendValues(path, name, pixbuf, isDir));
 		}
 
 		// ============================================

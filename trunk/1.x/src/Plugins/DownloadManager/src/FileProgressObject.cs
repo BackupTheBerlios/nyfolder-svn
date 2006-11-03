@@ -84,11 +84,11 @@ namespace NyFolder.Plugins.DownloadManager {
 			string currentStr = FileUtils.GetSizeString(current);
 			string totalStr = FileUtils.GetSizeString(total);
 			string percentStr = percent.ToString() + "%";
-			Info = currentStr + " of " + totalStr + " (" +  percentStr + ") ";
+			Info = currentStr + " of " + totalStr + " (" +  percentStr + ")  ";
 
 			int sec = (DateTime.Now - startTime).Seconds;
 			if (sec > 0) {
-				Info += " - " + FileUtils.GetSizeString(current / sec) + "/s";
+				Info += FileUtils.GetSizeString(current / sec) + "/s";
 			}
 
 			this.progressBar.Fraction = (double) percent / (double) 100.0f;

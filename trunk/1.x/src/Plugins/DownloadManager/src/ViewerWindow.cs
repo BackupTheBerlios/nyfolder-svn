@@ -57,7 +57,7 @@ namespace NyFolder.Plugins.DownloadManager {
 		// ============================================
 		public ViewerWindow() : base("Download/Upload Viewer") {
 			// Initialize Window
-			SetDefaultSize(400, 300);
+			SetDefaultSize(440, 300);
 
 			// Initialize VBox
 			this.vbox = new Gtk.VBox(false, 2);

@@ -215,6 +215,9 @@ namespace NyFolder.GUI {
 				foreach (string filePath in filesPath) {
 					FileUtils.CopyAll(filePath, currentDirectory.FullName);
 				}
+
+				// Refresh Icon View
+				Refresh();
 			} else {
 				// Send Files
 				foreach (string filePath in filesPath) {

@@ -5,6 +5,9 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/
 
+ * 03 Nov 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
+	Solved DND Problem With Empty Folder (FolderViewer/FolderStore)
+
  * 01 Nov 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	ReWrited File Sender, Now File Bigger Than 1M are sended with Reader Seek
 	Drastic Reduce memory usage on Send File...
