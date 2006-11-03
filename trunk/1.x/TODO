@@ -15,7 +15,10 @@ Note:	All Event Handler That Works with The GUI have to do this first
 -------------
    Main
 -------------
- - URGENT FIX: Logout, Disconnect & Re Init Essential
+ - URGENT FIX: 
+	- ReInit Plugins Errors
+	- Manage Download When User Disconnect (File Recv)
+
  - No Splash Screen Options
  - Download/Upload Save on The same file
  - Download/Upload Manager FIX ID NOT FOUND (URGENT)

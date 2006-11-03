@@ -66,6 +66,11 @@ namespace NyFolder.GUI.Glue {
 			CmdManager.DelProtocolEvent += new SetProtocolEventHandler(OnDelProtocolEvent);
 		}
 
+		~NetworkManager() {
+			CmdManager.AddProtocolEvent -= new SetProtocolEventHandler(OnAddProtocolEvent);
+			CmdManager.DelProtocolEvent -= new SetProtocolEventHandler(OnDelProtocolEvent);
+		}
+
 		// ============================================
 		// PUBLIC Methods
 		// ============================================

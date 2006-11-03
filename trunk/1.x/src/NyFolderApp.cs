@@ -108,7 +108,8 @@ namespace NyFolder {
 			mainWindow = null;
 
 			// Do User Logout
-			Protocol.MyInfo.Logout();			
+			Protocol.MyInfo.Logout();
+			this.myInfo = null;
 		}
 
 		/// Logout From the Current Account (Go To Login Dialog)

@@ -60,6 +60,13 @@ namespace NyFolder.GUI.Glue {
 			this.userPanel.FolderButton.Clicked += new EventHandler(OnMyFolderCliecked);
 		}
 
+		~FolderManager() {
+			this.menuManager.Activated -= new EventHandler(OnMenuActivated);
+			this.notebookViewer.SwitchPage -= new SwitchPageHandler(OnSwitchPage); 
+			this.notebookViewer.DirChanged -= new BoolEventHandler(OnDirChanged);
+			this.userPanel.FolderButton.Clicked -= new EventHandler(OnMyFolderCliecked);
+		}
+
 		// ============================================
 		// PRIVATE (Methods) Event Handlers
 		// ============================================

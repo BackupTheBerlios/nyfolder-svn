@@ -142,6 +142,7 @@ namespace NyFolder.GUI {
 						break;
 					case "Quit":
 						if (Quit != null) Quit(this);
+						Gtk.Application.Quit();	
 						break;
 					// View Menu
 					case "ViewToolBar":

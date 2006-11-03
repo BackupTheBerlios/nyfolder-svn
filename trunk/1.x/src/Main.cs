@@ -153,14 +153,21 @@ namespace NyFolder {
 					Gtk.Application.Run();
 				} catch (NyFolderExit) {
 					// This is Logout Event :D
+					NyFolderApp.Restart = true;
 				} catch (Exception e) {
 					PrintErrorMessage(e);
 					return(1);
 				} finally {
+					// Clear Download/Upload Manager
 					UploadManager.Clear();
 					DownloadManager.Clear();
-					if (nyFolder != null) nyFolder.Quit();
+
+					// Destroy All P2P Connections
 					if (p2pManager != null) p2pManager.Kill();
+
+					// NyFolder Quit Application
+					if (NyFolderApp.Restart == false && nyFolder != null)
+						nyFolder.Quit();
 				}
 			} while (NyFolderApp.Restart == true);
 			return(0);
