@@ -143,6 +143,9 @@ namespace NyFolder {
 					// Set 'No Restart' Application
 					NyFolderApp.Restart = false;
 
+					// Get P2P Manager Instance
+					p2pManager = P2PManager.GetInstance();
+
 					// Run NyFolder Application
 					nyFolder.Run();
 
@@ -156,10 +159,8 @@ namespace NyFolder {
 				} finally {
 					UploadManager.Clear();
 					DownloadManager.Clear();
-					if (NyFolderApp.Restart != true) {
-						if (nyFolder != null) nyFolder.Quit();
-						if (p2pManager != null) p2pManager.Kill();
-					}
+					if (nyFolder != null) nyFolder.Quit();
+					if (p2pManager != null) p2pManager.Kill();
 				}
 			} while (NyFolderApp.Restart == true);
 			return(0);
