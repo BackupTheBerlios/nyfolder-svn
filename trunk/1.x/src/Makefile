@@ -8,9 +8,8 @@ CFLAGS =
 PKG_GTK = -pkg:gtk-sharp-2.0
 PKG_CAIRO = -r:Mono.Cairo.dll
 PKG_GLADE = -pkg:glade-sharp-2.0
-PKG_SQLITE = -r:System.Data.dll -r:Mono.Data.SqliteClient.dll
 PKG_NIRY = -r:niry-sharp.dll
-PKGS = $(PKG_GTK) $(PKG_CAIRO) $(PKG_GLADE) $(PKG_SQLITE) $(PKG_NIRY)
+PKGS = $(PKG_GTK) $(PKG_CAIRO) $(PKG_GLADE) $(PKG_NIRY)
 
 # ============================== NyFolder Infos ====
 NAME = NyFolder

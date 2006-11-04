@@ -77,13 +77,7 @@ namespace NyFolder.Plugins.TrayIcon {
 		// PRIVATE (Methods) Event Handlers
 		// ============================================
 		private void OnStatusIconActivated (object sender, EventArgs args) {
-			// Show/Hide Main Window
-			if (nyFolder.MainWindow != null)
-				nyFolder.MainWindow.Visible = !nyFolder.MainWindow.Visible;
-
-			// Show/Hide Login Dialog
-			if (nyFolder.LoginDialog != null)
-				nyFolder.LoginDialog.Visible = !nyFolder.LoginDialog.Visible;
+			OnMenuShowHideWin(sender, args);
 		}
 
 		private void OnStatusIconPopupMenu (object sender, PopupMenuArgs args) {
@@ -96,6 +90,21 @@ namespace NyFolder.Plugins.TrayIcon {
 				menu.AddImageItem("Logout", new EventHandler(OnMenuLogout));
 
 			menu.AddSeparator();
+
+			// Show/Hide Login Dialog Check Box
+			if (nyFolder.MainWindow != null) {
+				menu.AddCheckItem("Show/Hide Window",
+								  nyFolder.MainWindow.Visible,
+								  new EventHandler(OnMenuShowHideWin));
+			}
+
+			// Show/Hide Login Dialog Check Box
+			if (nyFolder.LoginDialog != null) {
+				menu.AddCheckItem("Show/Hide Dialog",
+								  nyFolder.LoginDialog.Visible, 
+								  new EventHandler(OnMenuShowHideWin));
+			}
+
 			menu.AddImageItem(Gtk.Stock.Quit, new EventHandler(OnMenuQuit));
 
 			menu.ShowAll();
@@ -112,6 +121,16 @@ namespace NyFolder.Plugins.TrayIcon {
 		private void OnMenuQuit (object sender, EventArgs args) {
 			this.nyFolder.Quit();
 			Gtk.Application.Quit();
+		}
+
+		private void OnMenuShowHideWin (object sender, EventArgs args) {
+			// Show/Hide Main Window
+			if (nyFolder.MainWindow != null)
+				nyFolder.MainWindow.Visible = !nyFolder.MainWindow.Visible;
+
+			// Show/Hide Login Dialog
+			if (nyFolder.LoginDialog != null)
+				nyFolder.LoginDialog.Visible = !nyFolder.LoginDialog.Visible;
 		}
 
 		// ============================================

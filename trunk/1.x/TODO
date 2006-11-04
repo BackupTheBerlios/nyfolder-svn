@@ -16,7 +16,7 @@ Note:	All Event Handler That Works with The GUI have to do this first
    Main
 -------------
  - URGENT FIX: 
-	- ReInit Plugins Errors
+	- ReInit Plugins Errors (Duplicate User Add)
 	- Manage Download When User Disconnect (File Recv)
 
  - No Splash Screen Options
