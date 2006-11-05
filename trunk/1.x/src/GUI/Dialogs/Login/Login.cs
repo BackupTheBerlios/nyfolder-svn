@@ -53,6 +53,7 @@ namespace NyFolder.GUI.Dialogs {
 		// ============================================
 		/// Create New Login Dialog
 		public Login() {
+			Resizable = false;
 			SetDefaultSize(240, 355);
 			DefaultIcon = StockIcons.GetPixbuf("NyFolderIcon");
 

@@ -55,18 +55,76 @@ namespace NyFolder.Plugins.UsersManager {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		/// Initialize Tray Icon Plugin
+		/// Initialize Users Manager Plugin
 		public override void Initialize (INyFolder iNyFolder) {
 			this.nyFolder = iNyFolder;
+
+			// Initialize GUI Events
+			this.nyFolder.UserLogin += new BlankEventHandler(OnUserLogin);
+			this.nyFolder.LoginDialogStarted += new BlankEventHandler(OnLoginDialogStart);
+			this.nyFolder.LoginDialogClosed += new BlankEventHandler(OnLoginDialogClose);
 		}
 
 		// ============================================
 		// PRIVATE (Methods) Event Handlers
 		// ============================================
+		private void OnUserLogin (object sender) {
+			GUI.Dialogs.Login login = this.nyFolder.LoginDialog;
+			if (login.RememberPassword && login.SecureAuthentication) {
+				SaveAccount(login);
+			}
+		}
+
+		private void OnLoginDialogStart (object sender) {
+			GUI.Dialogs.Login login = sender as GUI.Dialogs.Login;
+
+			// Fill User Entry Completion
+			login.UserNameCompletion.Model = CreateUserNameCompletion();
+			login.UserNameCompletion.TextColumn = 0;
+
+			// Add Event Handler When User Entry Lost Focus
+			login.UserFocusOut += new FocusOutEventHandler(OnUserEntryLostFocus);
+		}
+
+		private void OnLoginDialogClose (object sender) {
+			GUI.Dialogs.Login login = sender as GUI.Dialogs.Login;
+			login.UserFocusOut -= new FocusOutEventHandler(OnUserEntryLostFocus);
+		}
 
 		// ============================================
-		// PRIVATE (Methods) Menu Event Handlers 
+		// PRIVATE (Methods) Event Handlers 
 		// ============================================
+		private void OnUserEntryLostFocus (object o, FocusOutEventArgs args) {
+			GUI.Dialogs.Login login = this.nyFolder.LoginDialog;
+
+			Accounts accounts = new Accounts();
+			login.Password = accounts.GetUserPassword(login.Username);
+			accounts.Dispose();
+		}
+
+		// ============================================
+		// PRIVATE Methods
+		// ============================================
+		private void SaveAccount (GUI.Dialogs.Login login) {
+			Accounts accounts = new Accounts();
+			accounts.Insert(login.Username, login.Password);
+			accounts.Dispose();
+		}
+
+		private TreeModel CreateUserNameCompletion() {
+			Accounts accounts = new Accounts();
+			string[] accNames = accounts.GetAllAccounts();
+			accounts.Dispose();
+
+			// No Account Saved
+			if (accNames == null) return(null);
+
+			// Add Account
+			ListStore store = new ListStore(typeof(string));
+			foreach (string name in accNames)
+				store.AppendValues(name);
+			return(store);
+		}
 
 		// ============================================
 		// PUBLIC Properties

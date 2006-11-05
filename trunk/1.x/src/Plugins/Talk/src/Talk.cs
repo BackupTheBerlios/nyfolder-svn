@@ -70,7 +70,7 @@ namespace NyFolder.Plugins.Talk {
 			this.nyFolder = iNyFolder;
 
 			// Initialize GUI Events
-			this.nyFolder.MainWindowStarted += new BlankEventHandler(OnMainWindowStarted);
+			this.nyFolder.LoginDialogStarted += new BlankEventHandler(OnMainWindowStarted);
 
 			// Initialize Protocol Events
 			CmdManager.AddProtocolEvent += new SetProtocolEventHandler(OnAddProtocolCmds);

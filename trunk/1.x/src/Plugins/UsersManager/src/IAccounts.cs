@@ -1,4 +1,4 @@
-/* [ PluginLib/INyFolder.cs ] NyFolder Plugin Interface
+/* [ UsersManager/IAccounts.cs ] NyFolder Accounts DB Interface
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -21,47 +21,27 @@
 using System;
 
 using Niry;
+using Niry.Utils;
 
 using NyFolder;
 using NyFolder.Utils;
 using NyFolder.Protocol;
 
-namespace NyFolder.PluginLib {
-	/// Interface to allow Plugin Access into Application
-	public interface INyFolder {
-		// ============================================
-		// PUBLIC Events
-		// ============================================
-		/// Event Raised When Main Window is Started
-		event BlankEventHandler MainWindowStarted;
-		/// Event Raised When Main Window is Closed
-		event BlankEventHandler MainWindowClosed;
-		/// Event Raised When Login Dialog is Started
-		event BlankEventHandler LoginDialogStarted;
-		/// Event Raised When Login Dialog is Closed
-		event BlankEventHandler LoginDialogClosed;
-		/// Event Raised When User Do Logout
-		event BlankEventHandler UserLogout;
-		/// Event Raised When User Logged In
-		event BlankEventHandler UserLogin;
-
+namespace NyFolder.Plugins.UsersManager {
+	public interface IAccounts {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		/// Quit The Application, Call Gtk.Application.Quit() after This
-		void Quit();
-
-		/// Logout From the Current Account (Go To Login Dialog)
-		void Logout();
+		string[] GetAllAccounts();
+		string GetUserPassword (string username);
+		string GetUserName (int id);
+		int GetUserId (string username);
+		int Insert (string username, string password);
+//		int Remove (string username);
+//		void Remove (int id);
 
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
-		/// Get NyFolder Main Window or null
-		GUI.Window MainWindow { get; }
-		/// Get NyFolder Login Dialog or null
-		GUI.Dialogs.Login LoginDialog { get; }
-		/// Get My UserInfo if I've done Login
-		UserInfo MyInfo { get; }
 	}
 }

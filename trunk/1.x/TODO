@@ -18,6 +18,7 @@ Note:	All Event Handler That Works with The GUI have to do this first
  - URGENT FIX: 
 	- ReInit Plugins Errors (Duplicate User Add)
 	- Manage Download When User Disconnect (File Recv)
+	- Add User Login/Logout Event into NyFolderApp
 
  - No Splash Screen Options
  - Download/Upload Save on The same file

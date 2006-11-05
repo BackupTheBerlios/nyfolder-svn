@@ -246,9 +246,7 @@ namespace NyFolder.Plugins.Talk {
 					Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(null, iconName + ".png");
 					
 					Buffer.InsertPixbuf(ref endIter, pixbuf);
-				}
-				else
-				{
+				} else {
 					Buffer.Insert(ref endIter, emoticon);
 				}
 				

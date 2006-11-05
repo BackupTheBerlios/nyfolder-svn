@@ -53,6 +53,10 @@ namespace NyFolder {
 		public event BlankEventHandler MainWindowStarted = null;
 		/// Event Raised When Main Window is Closed
 		public event BlankEventHandler MainWindowClosed = null;
+		/// Event Raised When User Do Logout
+		public event BlankEventHandler UserLogout = null;
+		/// Event Raised When User Logged In
+		public event BlankEventHandler UserLogin = null;
 
 		// ============================================
 		// PRIVATE STATIC Members
@@ -108,6 +112,7 @@ namespace NyFolder {
 			mainWindow = null;
 
 			// Do User Logout
+			if (UserLogout != null) UserLogout(myInfo);
 			Protocol.MyInfo.Logout();
 			this.myInfo = null;
 		}
@@ -171,6 +176,7 @@ namespace NyFolder {
 				return;
 
 			if ((myInfo = dialog.CheckLogin()) != null) {
+				if (UserLogin != null) UserLogin(myInfo);
 				if (LoginDialogClosed != null) LoginDialogClosed(loginDialog);
 				dialog.Destroy();
 				loginDialog = null;

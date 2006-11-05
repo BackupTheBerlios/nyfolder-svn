@@ -26,7 +26,10 @@ PLUGIN_DLL = nfUsersManager.dll
 
 SRC_Base = 		AssemblyInfo.cs	\
 				Info.cs
-SRC_Plugin =	src/UsersManager.cs
+
+SRC_Plugin =	src/Accounts.cs		\
+				src/IAccounts.cs	\
+				src/UsersManager.cs
 
 RES_Glade =	
 RES_Images =
