@@ -13,7 +13,7 @@ PKGS = $(PKG_GTK) $(PKG_CAIRO) $(PKG_GLADE) $(PKG_NIRY)
 
 # ============================== NyFolder Infos ====
 NAME = NyFolder
-VERSION = 1.0.0
+VERSION = 0.90
 COMPILER = `$(CC) --version`
 # ==================================================
 NYFOLDER_DLL = nyfolder-plugin.dll

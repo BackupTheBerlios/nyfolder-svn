@@ -34,10 +34,10 @@ namespace NyFolder.GUI.Dialogs {
 	public class RemovePeer : GladeDialog {
 		// ============================================
 		// PRIVATE Members
-		// ============================================
-		[Glade.WidgetAttribute] private Gtk.ComboBox comboPeers;
+		// ============================================		
 		[Glade.WidgetAttribute] private Gtk.VBox vboxMain;
 		[Glade.WidgetAttribute] private Gtk.Image image;
+		private Gtk.ComboBox comboPeers;
 
 		// ============================================
 		// PUBLIC Constructors
@@ -52,9 +52,10 @@ namespace NyFolder.GUI.Dialogs {
 				foreach (UserInfo userInfo in P2PManager.KnownPeers.Keys)
 					this.comboPeers.AppendText(userInfo.Name);
 			}
+			this.comboPeers.ShowAll();
 
 			// Initialize Dialog Image
-			this.image.Pixbuf = StockIcons.GetPixbuf("Network", 48);
+			this.image.Pixbuf = StockIcons.GetPixbuf("Network", 96);
 		}
 
 		// ============================================

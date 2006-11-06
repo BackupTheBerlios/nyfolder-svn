@@ -5,6 +5,10 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/
 
+ * 06 Nov 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
+	Fixed Remove Peer Dialog, talk, ecc...
+	Released as 0.9 (1.0 RC1)
+
  * 03 Nov 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Solved DND Problem With Empty Folder (FolderViewer/FolderStore)
 

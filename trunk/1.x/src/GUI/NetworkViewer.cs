@@ -42,6 +42,8 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
+		public event PeerSelectedHandler UserLoggedOut = null;
+		public event PeerSelectedHandler UserLoggedIn = null;
 		public event PeerSelectedHandler ItemActivated = null;
 		public event PeerSelectedHandler ItemRemoved = null;
 		public event RightMenuHandler RightMenu = null;
@@ -104,10 +106,16 @@ namespace NyFolder.GUI {
 		/// Add New Peer
 		public void Add (UserInfo userInfo) {
 			store.Add(userInfo);
+
+			// Raise User Logged In Event
+			if (UserLoggedIn != null) UserLoggedIn(this, userInfo);
 		}
 
 		/// Remove Peer
 		public void Remove (UserInfo userInfo) {
+			// Raise User Logged Out Event
+			if (UserLoggedOut != null) UserLoggedOut(this, userInfo);
+
 			store.Remove(userInfo);
 		}
 
