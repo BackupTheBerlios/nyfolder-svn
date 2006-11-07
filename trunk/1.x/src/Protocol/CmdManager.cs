@@ -30,6 +30,7 @@ using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.Protocol {
+	public delegate void PeerSelectedHandler (object sender, UserInfo userInfo);
 	public delegate void ProtocolLoginHandler (PeerSocket peer, UserInfo info);
 	public delegate void ProtocolHandler (PeerSocket peer, XmlRequest xml);
 	public delegate void SetProtocolEventHandler (P2PManager p2pManager);

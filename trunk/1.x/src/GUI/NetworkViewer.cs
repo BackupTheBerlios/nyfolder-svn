@@ -34,7 +34,6 @@ using NyFolder.Protocol;
 using NyFolder.GUI.Base;
 
 namespace NyFolder.GUI {
-	public delegate void PeerSelectedHandler (object sender, UserInfo userInfo);
 	public delegate void SendFileHandler (object sender, UserInfo userInfo, string path);
 
 	/// Network Viewer

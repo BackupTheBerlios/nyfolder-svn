@@ -29,6 +29,8 @@ SRC_Base = 		AssemblyInfo.cs	\
 
 SRC_Plugin =	src/Accounts.cs		\
 				src/IAccounts.cs	\
+				src/IUsers.cs		\
+				src/Users.cs		\
 				src/UsersManager.cs
 
 RES_Glade =	

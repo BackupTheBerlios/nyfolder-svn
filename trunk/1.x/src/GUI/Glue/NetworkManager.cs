@@ -32,7 +32,15 @@ using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.GUI.Glue {
+	public enum AcceptUserType {Yes, No, Ask};
+	public delegate AcceptUserType AcceptUserHandler (PeerSocket peer, UserInfo info);
+
 	public sealed class NetworkManager {
+		// ============================================
+		// PUBLIC STATIC Events
+		// ============================================
+		public static event AcceptUserHandler UserAccept = null;
+
 		// ============================================
 		// PRIVATE Members
 		// ============================================
@@ -129,8 +137,18 @@ namespace NyFolder.GUI.Glue {
 
 		private void OnPeerLogin (PeerSocket peer, UserInfo userInfo) {
 			Gtk.Application.Invoke(delegate {
+				AcceptUserType acceptUser = AcceptUserType.Ask;
+
+				// Raise Accept User Event
+				if (UserAccept != null)
+					acceptUser = UserAccept(peer, userInfo);
+
+				// Ask if Accept User
+				if (acceptUser == AcceptUserType.Ask)
+					acceptUser = AcceptUser(peer) ? AcceptUserType.Yes : AcceptUserType.No;
+
 				// Accept Peer (Add to NetworkViewer) or Remove Peer (P2PManager)
-				if (AcceptUser(peer) == true) {
+				if (acceptUser == AcceptUserType.Yes) {
 					AddUser(userInfo);
 				} else {
 					P2PManager.RemovePeer(peer);

@@ -1,4 +1,4 @@
-/* [ UsersManager/Accounts.cs ] NyFolder Accounts DB
+/* [ UsersManager/Users.cs ] NyFolder Users DB
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -32,7 +32,7 @@ using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.Plugins.UsersManager {
-	public class Accounts : IAccounts, IDisposable {
+	public class Users : IUsers, IDisposable {
 		// ============================================
 		// PUBLIC Const
 		// ============================================
@@ -47,7 +47,7 @@ namespace NyFolder.Plugins.UsersManager {
 		// PUBLIC Constructors
 		// ============================================
 		/// Open Db Connection With Accounts (Users) Database
-		public Accounts() {
+		public Users() {
 			// SQLite File Path
 			string dbPath = Path.Combine(Utils.Paths.ConfigDirectory, dbName);
 
@@ -55,7 +55,7 @@ namespace NyFolder.Plugins.UsersManager {
 			this.sqlite = new SQLite(dbPath);
 			this.sqlite.Open();
 
-			if (this.sqlite.TableExists("accounts") == false) {
+			if (this.sqlite.TableExists("users") == false) {
 				CreateAccountsTable();
 			}
 		}
@@ -69,43 +69,27 @@ namespace NyFolder.Plugins.UsersManager {
 			this.sqlite = null;
 		}
 
-		/// Return a String Array That Contains all The Accounts UserName
-		public string[] GetAllAccounts() {
-			string sql = "SELECT username FROM `accounts`;";
-			return(sqlite.ExecuteReadStrings(sql));
+		public int Remove (string username) {
+			return(-1);
 		}
 
-		/// Return The User's Password
-		public string GetUserPassword (string username) {
-			string sql = "SELECT password FROM `accounts` WHERE username=@Name;";
+		/// Return The Id Of The Inserted User
+		public int Insert (string username, bool accept) {
+			string sql = "INSERT INTO `users` (username, accept) VALUES (@Name, @Accept);";
 			Hashtable sqlParams = new Hashtable();
 			sqlParams.Add("@Name", username);
-			return(sqlite.ExecuteReadString(sql, sqlParams));
-		}
-
-		/// Return The Username associate at The Specified ID
-		public string GetUserName (int id) {
-			string sql = "SELECT username FROM `accounts` WHERE id=@Id;";
-			Hashtable sqlParams = new Hashtable();
-			sqlParams.Add("@Id", id);
-			return(sqlite.ExecuteReadString(sql, sqlParams));
-		}
-
-		/// Return The Id of The Specified User
-		public int GetUserId (string username) {
-			string sql = "SELECT id FROM `accounts` WHERE username=@Name;";
-			Hashtable sqlParams = new Hashtable();
-			sqlParams.Add("@Name", username);
-			return(sqlite.ExecuteReadInt(sql, sqlParams));
-		}
-
-		/// Return The Id Of The Inserted Account
-		public int Insert (string username, string password) {
-			string sql = "INSERT INTO `accounts` (username, password) VALUES (@Name, @Password);";
-			Hashtable sqlParams = new Hashtable();
-			sqlParams.Add("@Name", username);
-			sqlParams.Add("@Password", password);
+			sqlParams.Add("@Accept", (accept == true) ? 1 : 0);
 			return(sqlite.ExecuteNonQueryGetID(sql, sqlParams));
+		}
+
+		public void SetAccept (string username, bool accept) {
+		}
+
+		public bool GetAccept (string username) {
+			string sql = "SELECT accept FROM users WHERE username=@Name;";
+			Hashtable sqlParams = new Hashtable();
+			sqlParams.Add("@Name", username);
+			return(sqlite.ExecuteReadInt(sql, sqlParams) == 1 ? true : false);
 		}
 
 		// ============================================
@@ -116,13 +100,13 @@ namespace NyFolder.Plugins.UsersManager {
 		// +----------+------------------+
 		// | username | VARCHAR(32 + 24) |
 		// +----------+------------------+
-		// | password | VARCHAR(32)      |
+		// | accept   | INTEGER          |
 		// +----------+------------------+
 		private void CreateAccountsTable() {
-			string sql = "CREATE TABLE accounts (" +
+			string sql = "CREATE TABLE users (" +
 							"id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
 							"username VARCHAR(56) NOT NULL UNIQUE," +
-							"password VARCHAR(32) NOT NULL" +
+							"accept INTEGER NOT NULL" +
 						 ");";
 			sqlite.ExecuteNonQuery(sql);
 		}

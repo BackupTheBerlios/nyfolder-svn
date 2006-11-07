@@ -52,3 +52,7 @@ Database for Accepted User (Plugin)
 				} else {
 					acceptUser = AcceptUser(peer);
 				}
+
+Do a bool LoginHandler ()
+if (LoginHandler == false)
+	P2P.Remove(peer)

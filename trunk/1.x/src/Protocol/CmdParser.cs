@@ -95,7 +95,7 @@ namespace NyFolder.Protocol {
 						if (login.Authentication() == true && login.User != null) {
 							// Add to Known User
 							P2PManager.AddPeer(login.User, peer);
-	
+
 							// Start Login Event
 							CmdManager.LoginEvent(peer, login.User);
 						} else {

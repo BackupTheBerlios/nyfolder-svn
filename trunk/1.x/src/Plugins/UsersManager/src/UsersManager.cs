@@ -24,11 +24,15 @@ using System;
 
 using Niry;
 using Niry.Utils;
+using Niry.Network;
 using Niry.GUI.Gtk2;
 
 using NyFolder;
+using NyFolder.GUI;
 using NyFolder.Utils;
+using NyFolder.Protocol;
 using NyFolder.GUI.Base;
+using NyFolder.GUI.Glue;
 using NyFolder.PluginLib;
 
 namespace NyFolder.Plugins.UsersManager {
@@ -63,6 +67,8 @@ namespace NyFolder.Plugins.UsersManager {
 			this.nyFolder.UserLogin += new BlankEventHandler(OnUserLogin);
 			this.nyFolder.LoginDialogStarted += new BlankEventHandler(OnLoginDialogStart);
 			this.nyFolder.LoginDialogClosed += new BlankEventHandler(OnLoginDialogClose);
+			this.nyFolder.MainWindowStarted += new BlankEventHandler(OnMainWindowStart);
+			this.nyFolder.MainWindowClosed += new BlankEventHandler(OnMainWindowClose);
 		}
 
 		// ============================================
@@ -91,15 +97,50 @@ namespace NyFolder.Plugins.UsersManager {
 			login.UserFocusOut -= new FocusOutEventHandler(OnUserEntryLostFocus);
 		}
 
+		private void OnMainWindowStart (object sender) {
+			GUI.Window window = sender as GUI.Window;
+			NetworkViewer networkViewer = window.NotebookViewer.NetworkViewer;
+
+			NetworkManager.UserAccept += new AcceptUserHandler(OnAcceptUser);
+			networkViewer.UserLoggedIn += new PeerSelectedHandler(OnUserLoggedIn);
+		}
+
+		private void OnMainWindowClose (object sender) {
+			GUI.Window window = sender as GUI.Window;
+			NetworkViewer networkViewer = window.NotebookViewer.NetworkViewer;
+
+			NetworkManager.UserAccept -= new AcceptUserHandler(OnAcceptUser);
+			networkViewer.UserLoggedIn -= new PeerSelectedHandler(OnUserLoggedIn);
+		}
+
 		// ============================================
 		// PRIVATE (Methods) Event Handlers 
 		// ============================================
-		private void OnUserEntryLostFocus (object o, FocusOutEventArgs args) {
+		private void OnUserEntryLostFocus (object obj, FocusOutEventArgs args) {
 			GUI.Dialogs.Login login = this.nyFolder.LoginDialog;
 
 			Accounts accounts = new Accounts();
 			login.Password = accounts.GetUserPassword(login.Username);
 			accounts.Dispose();
+		}
+
+		private void OnUserLoggedIn (object sender, UserInfo userInfo) {
+			Console.WriteLine("Added: {0} (ADD TO DB)", userInfo.Name);
+		}
+
+		private AcceptUserType OnAcceptUser (PeerSocket peer, UserInfo userInfo) {
+			if (userInfo.SecureAuthentication == false)
+				return(AcceptUserType.Ask);
+
+			Console.WriteLine("Accept Secure User: {0} (Check DB)", userInfo.Name);
+
+			// If User isn't into DB
+			//return(AcceptUserType.Ask);
+
+			// If User is Banned
+			//return(AcceptUserType.No);
+
+			return(AcceptUserType.Yes);
 		}
 
 		// ============================================
