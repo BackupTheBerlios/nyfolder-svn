@@ -37,7 +37,7 @@ namespace NyFolder.Plugins.UsersManager {
 		string GetUserName (int id);
 		int GetUserId (string username);
 		int Insert (string username, string password);
-//		int Remove (string username);
+		void Remove (string username);
 //		void Remove (int id);
 
 		// ============================================

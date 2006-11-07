@@ -125,22 +125,30 @@ namespace NyFolder.Plugins.UsersManager {
 		}
 
 		private void OnUserLoggedIn (object sender, UserInfo userInfo) {
-			Console.WriteLine("Added: {0} (ADD TO DB)", userInfo.Name);
+			Users usersDb = new Users();
+			if (usersDb.GetUserId(userInfo.Name) < 0) {
+				usersDb.Insert(userInfo.Name, true);
+			}
+			usersDb.Dispose();
 		}
 
 		private AcceptUserType OnAcceptUser (PeerSocket peer, UserInfo userInfo) {
 			if (userInfo.SecureAuthentication == false)
 				return(AcceptUserType.Ask);
 
-			Console.WriteLine("Accept Secure User: {0} (Check DB)", userInfo.Name);
+			Users usersDb = new Users();
 
 			// If User isn't into DB
-			//return(AcceptUserType.Ask);
+			if (usersDb.GetUserId(userInfo.Name) < 0) {
+				usersDb.Dispose();
+				return(AcceptUserType.Ask);
+			}
 
-			// If User is Banned
-			//return(AcceptUserType.No);
+			// Get User Accept Status
+			bool acceptUser = usersDb.GetAccept(userInfo.Name);
 
-			return(AcceptUserType.Yes);
+			usersDb.Dispose();
+			return(acceptUser ? AcceptUserType.Yes : AcceptUserType.No);
 		}
 
 		// ============================================

@@ -35,7 +35,7 @@ namespace NyFolder.Plugins.UsersManager {
 		bool GetAccept (string username);
 		void SetAccept (string username, bool accept);
 		int Insert (string username, bool accept);
-		int Remove (string username);
+		void Remove (string username);
 
 		// ============================================
 		// PUBLIC Properties

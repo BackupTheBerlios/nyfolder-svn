@@ -108,6 +108,14 @@ namespace NyFolder.Plugins.UsersManager {
 			return(sqlite.ExecuteNonQueryGetID(sql, sqlParams));
 		}
 
+		public void Remove (string username) {
+			string sql = "DELETE `accounts` WHERE username=@Name;";
+			Hashtable sqlParams = new Hashtable();
+			sqlParams.Add("@Name", username);
+			sqlite.ExecuteNonQuery(sql, sqlParams);
+		}
+
+
 		// ============================================
 		// PRIVATE Methods
 		// ============================================

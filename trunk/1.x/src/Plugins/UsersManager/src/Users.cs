@@ -69,8 +69,11 @@ namespace NyFolder.Plugins.UsersManager {
 			this.sqlite = null;
 		}
 
-		public int Remove (string username) {
-			return(-1);
+		public void Remove (string username) {
+			string sql = "DELETE `users` WHERE username=@Name;";
+			Hashtable sqlParams = new Hashtable();
+			sqlParams.Add("@Name", username);
+			sqlite.ExecuteNonQuery(sql, sqlParams);
 		}
 
 		/// Return The Id Of The Inserted User
@@ -83,6 +86,11 @@ namespace NyFolder.Plugins.UsersManager {
 		}
 
 		public void SetAccept (string username, bool accept) {
+			string sql = "UPDATE `users` SET accept=@Accept WHERE username=@Name;";
+			Hashtable sqlParams = new Hashtable();
+			sqlParams.Add("@Name", username);
+			sqlParams.Add("@Accept", (accept == true) ? 1 : 0);
+			sqlite.ExecuteNonQuery(sql, sqlParams);
 		}
 
 		public bool GetAccept (string username) {
@@ -90,6 +98,14 @@ namespace NyFolder.Plugins.UsersManager {
 			Hashtable sqlParams = new Hashtable();
 			sqlParams.Add("@Name", username);
 			return(sqlite.ExecuteReadInt(sql, sqlParams) == 1 ? true : false);
+		}
+
+		/// Return The Id of The Specified User
+		public int GetUserId (string username) {
+			string sql = "SELECT id FROM users WHERE username=@Name;";
+			Hashtable sqlParams = new Hashtable();
+			sqlParams.Add("@Name", username);
+			return(sqlite.ExecuteReadInt(sql, sqlParams));
 		}
 
 		// ============================================
