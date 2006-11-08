@@ -19,7 +19,12 @@
  */
 
 using Gtk;
+
 using System;
+using System.Collections;
+
+using Niry;
+using Niry.Utils;
 
 using NyFolder;
 using NyFolder.Protocol;
@@ -48,8 +53,11 @@ namespace NyFolder.GUI {
 									 typeof(string),
 									 typeof(Gdk.Pixbuf))
 		{
+#if false
+			// Removed because Generate a Thread error, that throw Exception
 			SetSortColumnId(COL_NAME, SortType.Ascending);
 			DefaultSortFunc = new TreeIterCompareFunc(StoreSortFunc);
+#endif
 		}
 
 		// ============================================
@@ -69,7 +77,17 @@ namespace NyFolder.GUI {
 				pixbuf = StockIcons.GetPixbuf("NetworkInsecure", 74);
 			}
 
-			this.AppendValues(userInfo, userInfo.GetName(), pixbuf);
+			lock (this) {
+				AppendValues(userInfo, userInfo.GetName(), pixbuf);
+			}
+		}
+
+		/// Add a List of Users
+		public void Add (UserInfo[] users) {
+			lock (this) {
+				foreach (UserInfo userInfo in users)
+					Add(userInfo);
+			}
 		}
 
 		/// Remove Peer
@@ -77,6 +95,35 @@ namespace NyFolder.GUI {
 			this.rmUser = userInfo;
 			this.Foreach(RemoveForeach);
 			this.rmUser = null;
+		}
+
+		/// Remove a List of Users
+		public void Remove (UserInfo[] users) {
+			lock (this) {
+				foreach (UserInfo userInfo in users)
+					Remove(userInfo);
+			}
+		}
+
+		/// Remove All The Offline User In The Store
+		public void RemoveAllOffline() {
+			UserInfo[] users = GetOfflineUsers();
+			if (users != null) Remove(users);
+		}
+
+		/// Return User Info Array Contains all The Stored Offline Users
+		public UserInfo[] GetOfflineUsers() {
+			ArrayList offlineUsers = new ArrayList();
+
+			lock (this) {
+				foreach (object[] row in this) {
+					UserInfo userInfo = row[COL_USER_INFO] as UserInfo;
+					if (userInfo.IsOnline == false)
+						offlineUsers.Add(userInfo);
+				}
+			}
+
+			return((UserInfo[]) offlineUsers.ToArray(typeof(UserInfo)));
 		}
 
 		/// Return Peer UserInfo at TreePath position.
@@ -122,11 +169,15 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+#if false
+		// Removed because Generate a Thread error, that throw Exception
 		private int StoreSortFunc (TreeModel model, TreeIter a, TreeIter b) {
 			string a_name = (string) model.GetValue(a, COL_NAME);
 			string b_name = (string) model.GetValue(b, COL_NAME);
+			Debug.Log("[ED] Store Sort Function");
 			return(String.Compare(a_name, b_name));
 		}
+#endif
 
 		private bool RemoveForeach (TreeModel model, TreePath path, TreeIter iter) {
 			lock (this.rmUser) {

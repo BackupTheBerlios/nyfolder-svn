@@ -8,7 +8,7 @@
  * 08 Nov 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Changed Network & MyFolder Icon and Removed unused ones.
 	Fixed StockIcons.cs for the new icons.
-	
+	Added Multiple Remove() Methods into NetworkStore.
 
  * 06 Nov 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Fixed Remove Peer Dialog, talk, ecc...

@@ -1,4 +1,4 @@
-/* [ UsersManager/IUsers.cs ] NyFolder Users DB Interface
+/* [ Plugins/BuddyList/Info.cs ] NyFolder Buddy List Info
  * Author: Matteo Bertozzi
  * ============================================================================
  * This file is part of NyFolder.
@@ -20,25 +20,21 @@
 
 using System;
 
-using Niry;
-using Niry.Utils;
-
 using NyFolder;
-using NyFolder.Utils;
-using NyFolder.Protocol;
+using NyFolder.PluginLib;
 
-namespace NyFolder.Plugins.UsersManager {
-	public interface IUsers {
-		// ============================================
-		// PUBLIC Methods
-		// ============================================
-		bool GetAccept (string username);
-		void SetAccept (string username, bool accept);
-		int Insert (string username, bool accept);
-		void Remove (string username);
+namespace NyFolder.Plugins.BuddyList {
+	/// Plugin Informations Class
+	public class Info : PluginInfo {
+		public Info() {
+			this.authors = new string[] {
+				@authors@
+			};
 
-		// ============================================
-		// PUBLIC Properties
-		// ============================================
+			this.version = "@version@";
+			this.name = "@name@";
+			this.web = "@web@";
+			this.priority = @priority@;
+		}
 	}
 }

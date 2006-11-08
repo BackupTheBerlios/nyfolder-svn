@@ -141,7 +141,10 @@ namespace NyFolder.Protocol {
 		}
 
 		public bool IsOnline {
-			get { return(P2PManager.KnownPeers.ContainsKey(this)); }
+			get {
+				if (P2PManager.KnownPeers == null) return(false);
+				return(P2PManager.KnownPeers.ContainsKey(this));
+			}
 		}
 	}
 }

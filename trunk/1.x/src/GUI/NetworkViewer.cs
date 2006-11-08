@@ -107,13 +107,15 @@ namespace NyFolder.GUI {
 			store.Add(userInfo);
 
 			// Raise User Logged In Event
-			if (UserLoggedIn != null) UserLoggedIn(this, userInfo);
+			if (userInfo.IsOnline == true && UserLoggedIn != null)
+				UserLoggedIn(this, userInfo);
 		}
 
 		/// Remove Peer
 		public void Remove (UserInfo userInfo) {
 			// Raise User Logged Out Event
-			if (UserLoggedOut != null) UserLoggedOut(this, userInfo);
+			if (userInfo.IsOnline == true && UserLoggedOut != null)
+				UserLoggedOut(this, userInfo);
 
 			store.Remove(userInfo);
 		}

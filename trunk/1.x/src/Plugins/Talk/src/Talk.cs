@@ -50,7 +50,7 @@ namespace NyFolder.Plugins.Talk {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
-		/// Create Image Preview
+		/// Create Talk
 		public Talk() {
 			// Initialize Plugin Info
 			this.pluginInfo = new Info();

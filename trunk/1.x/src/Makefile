@@ -148,7 +148,6 @@ RES_Images = 	Pixmaps/FileTypes/FileTypeAc3.png			\
 				Pixmaps/Icons/InsecureAuth.png				\
 				Pixmaps/Icons/Lock.png						\
 				Pixmaps/Icons/Logout.png					\
-				Pixmaps/Icons/MyFolder.png					\
 				Pixmaps/Icons/MyFolderOffline.png			\
 				Pixmaps/Icons/MyFolderOnline.png			\
 				Pixmaps/Icons/Network.png					\

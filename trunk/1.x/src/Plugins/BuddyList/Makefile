@@ -13,16 +13,16 @@ PKG_SQLITE = -r:System.Data.dll -r:Mono.Data.SqliteClient.dll
 PKGS = $(PKG_GTK) $(PKG_CAIRO) $(PKG_NIRY) $(PKG_NF_PLUGIN) $(PKG_SQLITE)
 
 # ============================== Plugin Infos ====
-NAME = Users Manager
+NAME = Buddy List
 VERSION = 0.1
 AUTHORS = \"Matteo Bertozzi\"
 WEB = http://nyfolder.berlios.de
 PRIORITY = -20
-DESCRIPTION = NyFolder Users Manager
+DESCRIPTION = NyFolder Buddy List
 COPYRIGHT = (C) Copyright Matteo Bertozzi 2006
 COMPANY = Matteo Bertozzi
 # ==================================================
-PLUGIN_DLL = nfUsersManager.dll
+PLUGIN_DLL = nfBuddyList.dll
 
 SRC_Base = 		AssemblyInfo.cs	\
 				Info.cs
@@ -31,7 +31,7 @@ SRC_Plugin =	src/Accounts.cs		\
 				src/IAccounts.cs	\
 				src/IUsers.cs		\
 				src/Users.cs		\
-				src/UsersManager.cs
+				src/BuddyList.cs
 
 RES_Glade =	
 RES_Images =
