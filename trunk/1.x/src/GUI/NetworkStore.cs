@@ -60,12 +60,16 @@ namespace NyFolder.GUI {
 			// Setup Pixbuf
 			Gdk.Pixbuf pixbuf;
 			if (userInfo.SecureAuthentication == true) {
-				pixbuf = StockIcons.GetPixbuf("Network", 74);
+				if (userInfo.IsOnline == true) {
+					pixbuf = StockIcons.GetPixbuf("Network", 74);
+				} else {
+					pixbuf = StockIcons.GetPixbuf("NetworkOffline", 74);
+				}
 			} else {
 				pixbuf = StockIcons.GetPixbuf("NetworkInsecure", 74);
 			}
 
-			this.AppendValues(userInfo, userInfo.Name, pixbuf);
+			this.AppendValues(userInfo, userInfo.GetName(), pixbuf);
 		}
 
 		/// Remove Peer

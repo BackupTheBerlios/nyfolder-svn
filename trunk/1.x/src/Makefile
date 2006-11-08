@@ -145,7 +145,6 @@ RES_Images = 	Pixmaps/FileTypes/FileTypeAc3.png			\
 				Pixmaps/Icons/Channel.png					\
 				Pixmaps/Icons/Close.png					\
 				Pixmaps/Icons/Directory.png				\
-				Pixmaps/Icons/Download.png					\
 				Pixmaps/Icons/InsecureAuth.png				\
 				Pixmaps/Icons/Lock.png						\
 				Pixmaps/Icons/Logout.png					\
@@ -154,6 +153,7 @@ RES_Images = 	Pixmaps/FileTypes/FileTypeAc3.png			\
 				Pixmaps/Icons/MyFolderOnline.png			\
 				Pixmaps/Icons/Network.png					\
 				Pixmaps/Icons/NetworkInsecure.png			\
+				Pixmaps/Icons/NetworkOffline.png			\
 				Pixmaps/Icons/NyFolderIcon.png				\
 				Pixmaps/Icons/NyFolderLogo.png				\
 				Pixmaps/Icons/NyFolderSmall.png			\

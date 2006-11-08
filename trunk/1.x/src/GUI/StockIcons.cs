@@ -48,13 +48,14 @@ namespace NyFolder.GUI {
 			"Lock",
 			"Logout",
 			"Network",
+			"NetworkOffline",
 			"NetworkInsecure",
 			"Proxy",
 			"InsecureAuth",
 			"SecureAuth",
 			"Send",
 
-			"MyFolder",
+			// MyFolder (UserPanel Icon)
 			"MyFolderOffline",
 			"MyFolderOfflineInsecure",
 			"MyFolderOnline",

@@ -22,6 +22,10 @@ using System;
 using System.Threading;
 using System.Collections;
 
+using Niry;
+using Niry.Utils;
+using Niry.Network;
+
 namespace NyFolder.Protocol {
 	public class UserInfoException : Exception {
 		public UserInfoException (string msg) : base(msg) {}
@@ -134,6 +138,10 @@ namespace NyFolder.Protocol {
 		public bool SecureAuthentication {
 			get { return(this.secureAuth); }
 			set { this.secureAuth = value; }
+		}
+
+		public bool IsOnline {
+			get { return(P2PManager.KnownPeers.ContainsKey(this)); }
 		}
 	}
 }
