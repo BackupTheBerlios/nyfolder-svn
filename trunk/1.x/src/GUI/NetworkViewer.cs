@@ -45,6 +45,7 @@ namespace NyFolder.GUI {
 		public event PeerSelectedHandler UserLoggedIn = null;
 		public event PeerSelectedHandler ItemActivated = null;
 		public event PeerSelectedHandler ItemRemoved = null;
+		public event BlankEventHandler RefreshPeers = null;
 		public event RightMenuHandler RightMenu = null;
 		public event SendFileHandler SendFile = null;
 		
@@ -95,11 +96,14 @@ namespace NyFolder.GUI {
 		public void Refresh() {
 			store.Clear();
 
-			if (P2PManager.KnownPeers == null) return;
-			if (P2PManager.KnownPeers.Count <= 0) return;
+			if (P2PManager.KnownPeers != null &&
+				P2PManager.KnownPeers.Count > 0)
+			{
+				foreach (UserInfo userInfo in P2PManager.KnownPeers.Keys)
+					store.Add(userInfo);
+			}
 
-			foreach (UserInfo userInfo in P2PManager.KnownPeers.Keys)
-				store.Add(userInfo);
+			if (RefreshPeers != null) RefreshPeers(this);
 		}
 
 		/// Add New Peer
