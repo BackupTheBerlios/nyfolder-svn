@@ -153,6 +153,10 @@ namespace NyFolder.GUI {
 
 			// Select Item (Change Icon To Activate it)
 			UserInfo userInfo = store.GetUserInfo(path);
+			if (userInfo.IsOnline == false) {
+				Drag.Finish(args.Context, false, false, args.Time);
+				return;
+			}
 
 			// Get Drop Paths
 			object[] filesPath = Dnd.GetDragReceivedPaths(args);
@@ -167,6 +171,7 @@ namespace NyFolder.GUI {
 		protected void OnItemActivated (object sender, ItemActivatedArgs args) {
 			UserInfo userInfo = store.GetUserInfo(args.Path);
 			if (userInfo == null) return;
+			if (userInfo.IsOnline == false) return;
 			if (ItemActivated != null) ItemActivated(this, userInfo);
 		}
 

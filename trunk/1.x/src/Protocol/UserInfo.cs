@@ -33,7 +33,7 @@ namespace NyFolder.Protocol {
 	}
 
 	/// Rapresent User (Informations)
-	public class UserInfo {
+	public class UserInfo : IComparable {
 		// ============================================
 		// PROTECTED Members
 		// ============================================
@@ -102,6 +102,22 @@ namespace NyFolder.Protocol {
 			int domainStart = name.LastIndexOf('@');
 			if (domainStart < 0) return(null);
 			return(name.Substring(domainStart + 1));
+		}
+
+		/// Two User are Equals if Secure Auth & Name are Equals
+		public int CompareTo (object userInfo) {
+			return(CompareTo((UserInfo) userInfo));
+		}
+
+		/// Two User are Equals if Secure Auth & Name are Equals
+		public int CompareTo (UserInfo userInfo) {
+			int cmp = Name.CompareTo(userInfo.Name);
+
+			// if usernames are equals but not secure auth return 1
+			if (userInfo.SecureAuthentication == SecureAuthentication)
+				return((cmp == 0) ? 1 : cmp);
+
+			return(cmp);
 		}
 
 		// ============================================
