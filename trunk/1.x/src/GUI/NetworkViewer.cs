@@ -132,8 +132,8 @@ namespace NyFolder.GUI {
 		/// Return UserInfo of specified Username
 		public UserInfo GetUserInfo (string username) {
 			foreach (object[] row in this.store) {
-				if (username.Equals(row[NetworkStore.COL_NAME]) == true)
-					return((UserInfo) row[NetworkStore.COL_USER_INFO]);
+				UserInfo userInfo = (UserInfo) row[NetworkStore.COL_USER_INFO];
+				if (userInfo.Name == username) return(userInfo);
 			}
 			return(null);
 		}

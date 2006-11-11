@@ -49,8 +49,9 @@ namespace NyFolder.GUI.Dialogs {
 
 			// Add Peers
 			if (P2PManager.KnownPeers != null) {
-				foreach (UserInfo userInfo in P2PManager.KnownPeers.Keys)
+				foreach (UserInfo userInfo in P2PManager.KnownPeers.Keys) {
 					this.comboPeers.AppendText(userInfo.Name);
+				}
 			}
 			this.comboPeers.ShowAll();
 
