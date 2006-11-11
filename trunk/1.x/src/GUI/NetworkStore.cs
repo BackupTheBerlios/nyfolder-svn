@@ -65,6 +65,8 @@ namespace NyFolder.GUI {
 		// ============================================
 		/// Add New Peer
 		public void Add (UserInfo userInfo) {
+			Remove(userInfo);
+
 			// Setup Pixbuf
 			Gdk.Pixbuf pixbuf;
 			if (userInfo.SecureAuthentication == true) {
@@ -163,10 +165,6 @@ namespace NyFolder.GUI {
 		}
 
 		// ============================================
-		// PROTECTED Methods
-		// ============================================		
-
-		// ============================================
 		// PRIVATE Methods
 		// ============================================
 #if false
@@ -174,14 +172,14 @@ namespace NyFolder.GUI {
 		private int StoreSortFunc (TreeModel model, TreeIter a, TreeIter b) {
 			string a_name = (string) model.GetValue(a, COL_NAME);
 			string b_name = (string) model.GetValue(b, COL_NAME);
-			Debug.Log("[ED] Store Sort Function");
 			return(String.Compare(a_name, b_name));
 		}
 #endif
 
 		private bool RemoveForeach (TreeModel model, TreePath path, TreeIter iter) {
 			lock (this.rmUser) {
-				if (GetUserInfo(iter) == this.rmUser) {
+				//if (GetUserInfo(iter) == this.rmUser) {
+				if (GetUserInfo(iter).CompareTo(this.rmUser) == 0) {
 					this.Remove(ref iter);
 					return(true);
 				}

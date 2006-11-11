@@ -5,6 +5,9 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/
 
+ * 11 Nov 2006  - Matteo Bertozzi <theo.bertozzi@gmail.com>
+	Working on Buddy (Offline) List...
+
  * 08 Nov 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Changed Network & MyFolder Icon and Removed unused ones.
 	Fixed StockIcons.cs for the new icons.

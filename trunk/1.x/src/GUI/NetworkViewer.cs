@@ -118,7 +118,7 @@ namespace NyFolder.GUI {
 		/// Remove Peer
 		public void Remove (UserInfo userInfo) {
 			// Raise User Logged Out Event
-			if (userInfo.IsOnline == true && UserLoggedOut != null)
+			if (UserLoggedOut != null) 
 				UserLoggedOut(this, userInfo);
 
 			store.Remove(userInfo);
@@ -171,7 +171,6 @@ namespace NyFolder.GUI {
 		protected void OnItemActivated (object sender, ItemActivatedArgs args) {
 			UserInfo userInfo = store.GetUserInfo(args.Path);
 			if (userInfo == null) return;
-			if (userInfo.IsOnline == false) return;
 			if (ItemActivated != null) ItemActivated(this, userInfo);
 		}
 
@@ -179,6 +178,7 @@ namespace NyFolder.GUI {
 			foreach (TreePath treePath in iconView.SelectedItems) {
 				UserInfo userInfo = store.GetUserInfo(treePath);
 				if (userInfo == null) continue;
+				if (userInfo.IsOnline == false) continue;
 				if (ItemRemoved != null) ItemRemoved(this, userInfo);
 			}
 		}

@@ -114,7 +114,7 @@ namespace NyFolder.Protocol {
 			int cmp = Name.CompareTo(userInfo.Name);
 
 			// if usernames are equals but not secure auth return 1
-			if (userInfo.SecureAuthentication == SecureAuthentication)
+			if (userInfo.SecureAuthentication != SecureAuthentication)
 				return((cmp == 0) ? 1 : cmp);
 
 			return(cmp);

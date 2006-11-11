@@ -109,6 +109,7 @@ namespace NyFolder.Plugins.BuddyList {
 			NetworkManager.UserAccept += new AcceptUserHandler(OnAcceptUser);
 			networkViewer.RefreshPeers += new BlankEventHandler(OnNetViewerRefresh);
 			networkViewer.UserLoggedIn += new PeerSelectedHandler(OnUserLoggedIn);
+			networkViewer.UserLoggedOut += new PeerSelectedHandler(OnUserLoggedOut);
 		}
 
 		private void OnMainWindowClose (object sender) {
@@ -118,17 +119,20 @@ namespace NyFolder.Plugins.BuddyList {
 			NetworkManager.UserAccept -= new AcceptUserHandler(OnAcceptUser);
 			networkViewer.RefreshPeers -= new BlankEventHandler(OnNetViewerRefresh);
 			networkViewer.UserLoggedIn -= new PeerSelectedHandler(OnUserLoggedIn);
+			networkViewer.UserLoggedOut -= new PeerSelectedHandler(OnUserLoggedOut);
 		}
 
 		// ============================================
 		// PRIVATE (Methods) Event Handlers 
 		// ============================================
 		private void OnUserEntryLostFocus (object obj, FocusOutEventArgs args) {
-			GUI.Dialogs.Login login = this.nyFolder.LoginDialog;
+			Gtk.Application.Invoke(delegate {
+				GUI.Dialogs.Login login = this.nyFolder.LoginDialog;
 
-			Accounts accounts = new Accounts();
-			login.Password = accounts.GetUserPassword(login.Username);
-			accounts.Dispose();
+				Accounts accounts = new Accounts();
+				login.Password = accounts.GetUserPassword(login.Username);
+				accounts.Dispose();
+			});
 		}
 
 		private void OnUserLoggedIn (object sender, UserInfo userInfo) {
@@ -139,6 +143,25 @@ namespace NyFolder.Plugins.BuddyList {
 			Users usersDb = new Users();
 			if (usersDb.GetUserId(userInfo.Name) < 0) {
 				usersDb.Insert(userInfo.Name, true);
+			}
+			usersDb.Dispose();
+		}
+
+		private void OnUserLoggedOut (object sender, UserInfo userInfo) {
+			if (ShowOfflineBuddies == false)
+				return;
+
+			if (userInfo.SecureAuthentication == false)
+				return;
+
+			// Add Only Secure Auth User
+			Users usersDb = new Users();
+			if (usersDb.GetUserId(userInfo.Name) >= 0) {
+				Gtk.Application.Invoke(delegate {
+					// Load All Offline Buddy
+					NetworkViewer networkViewer = sender as NetworkViewer;
+					networkViewer.Store.Add(new UserInfo(userInfo.Name, true));
+				});
 			}
 			usersDb.Dispose();
 		}
