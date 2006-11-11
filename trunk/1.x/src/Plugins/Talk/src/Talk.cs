@@ -177,6 +177,7 @@ namespace NyFolder.Plugins.Talk {
 
 			foreach (TreePath treePath in networkViewer.SelectedItems) {
 				UserInfo userInfo = networkViewer.Store.GetUserInfo(treePath);
+				if (userInfo.IsOnline == false) continue;
 				ExtMenuItem menuItem = new ExtMenuItem("Talk", "TalkBubble", userInfo);
 				menu.AddItem(menuItem, new EventHandler(OnTalkRightMenu));
 			}

@@ -289,7 +289,7 @@ namespace NyFolder.Protocol {
 		}
 
 		private static XmlRequest MakeRequest (string url) {
-			Debug.Log("Web Request: '{0}'", url);
+//			Debug.Log("Web Request: '{0}'", url);
 
 			// Make Http Request
 			WebRequest request = WebRequest.Create(url);
