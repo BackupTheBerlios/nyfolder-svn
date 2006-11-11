@@ -171,6 +171,7 @@ namespace NyFolder.GUI {
 		protected void OnItemActivated (object sender, ItemActivatedArgs args) {
 			UserInfo userInfo = store.GetUserInfo(args.Path);
 			if (userInfo == null) return;
+			if (userInfo.IsOnline == false) return;
 			if (ItemActivated != null) ItemActivated(this, userInfo);
 		}
 
