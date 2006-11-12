@@ -5,8 +5,6 @@
   <widget class="GtkDialog" id="dialog">
     <property name="visible">True</property>
     <property name="title">Remove Peer</property>
-    <property name="default_width">290</property>
-    <property name="default_height">125</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="vbox">
@@ -30,6 +28,7 @@
             <child>
               <widget class="GtkVBox" id="vboxMain">
                 <property name="visible">True</property>
+                <property name="border_width">4</property>
                 <child>
                   <widget class="GtkLabel" id="labelTitle">
                     <property name="visible">True</property>
@@ -71,6 +70,7 @@
                 </child>
               </widget>
               <packing>
+                <property name="padding">1</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -86,7 +86,7 @@
             <child>
               <widget class="GtkButton" id="buttonOk">
                 <property name="visible">True</property>
-                <property name="label">gtk-ok</property>
+                <property name="label" context="yes">gtk-ok</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">-5</property>
               </widget>
@@ -94,7 +94,7 @@
             <child>
               <widget class="GtkButton" id="buttonCancel">
                 <property name="visible">True</property>
-                <property name="label">gtk-cancel</property>
+                <property name="label" context="yes">gtk-cancel</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">-6</property>
               </widget>

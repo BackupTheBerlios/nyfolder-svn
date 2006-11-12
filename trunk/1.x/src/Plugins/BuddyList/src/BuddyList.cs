@@ -83,19 +83,23 @@ namespace NyFolder.Plugins.BuddyList {
 		}
 
 		private void OnLoginDialogStart (object sender) {
-			GUI.Dialogs.Login login = sender as GUI.Dialogs.Login;
+			Gtk.Application.Invoke(delegate {
+				GUI.Dialogs.Login login = sender as GUI.Dialogs.Login;
 
-			// Fill User Entry Completion
-			login.UserNameCompletion.Model = CreateUserNameCompletion();
-			login.UserNameCompletion.TextColumn = 0;
+				// Fill User Entry Completion
+				string[] accounts = GetAllAccounts();
+				login.UserNameCompletion.Model = CreateEntryCompletion(accounts);
+				login.UserNameComboBoxAppend(accounts);
+				login.UserNameCompletion.TextColumn = 0;
 
-			// Add Event Handler When User Entry Lost Focus
-			login.UserFocusOut += new FocusOutEventHandler(OnUserEntryLostFocus);
+				// Add Event Handler When Password Entry Get Focus
+				login.PasswordFocusIn += new FocusInEventHandler(OnPasswordFocusIn);
+			});
 		}
 
 		private void OnLoginDialogClose (object sender) {
 			GUI.Dialogs.Login login = sender as GUI.Dialogs.Login;
-			login.UserFocusOut -= new FocusOutEventHandler(OnUserEntryLostFocus);
+			login.PasswordFocusIn -= new FocusInEventHandler(OnPasswordFocusIn);
 		}
 
 		private void OnMainWindowStart (object sender) {
@@ -125,7 +129,7 @@ namespace NyFolder.Plugins.BuddyList {
 		// ============================================
 		// PRIVATE (Methods) Event Handlers 
 		// ============================================
-		private void OnUserEntryLostFocus (object obj, FocusOutEventArgs args) {
+		private void OnPasswordFocusIn (object obj, FocusInEventArgs args) {
 			Gtk.Application.Invoke(delegate {
 				GUI.Dialogs.Login login = this.nyFolder.LoginDialog;
 
@@ -219,11 +223,14 @@ namespace NyFolder.Plugins.BuddyList {
 			accounts.Dispose();
 		}
 
-		private TreeModel CreateUserNameCompletion() {
+		private string[] GetAllAccounts() {
 			Accounts accounts = new Accounts();
 			string[] accNames = accounts.GetAllAccounts();
 			accounts.Dispose();
+			return(accNames);
+		}
 
+		private ListStore CreateEntryCompletion (string[] accNames) {
 			// No Account Saved
 			if (accNames == null) return(null);
 
