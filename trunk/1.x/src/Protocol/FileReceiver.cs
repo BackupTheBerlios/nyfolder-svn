@@ -35,6 +35,8 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
+		/// Event Raised When Recv is Aborted
+		public BlankEventHandler EndAbort = null;
 
 		// ============================================
 		// PRIVATE Members
@@ -108,6 +110,8 @@ namespace NyFolder.Protocol {
 			Save();
 			saveOnExit = false;
 			AbortRecvFile(msgerror);
+
+			if (EndAbort != null) EndAbort(this);
 		}
 
 		/// Save File

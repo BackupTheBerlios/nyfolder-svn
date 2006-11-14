@@ -96,10 +96,12 @@ namespace NyFolder.GUI {
 			// Update Download Label
 			DownloadManager.Added += new BlankEventHandler(UpdateDownloadNum);
 			DownloadManager.Finished += new BlankEventHandler(UpdateDownloadNum);
+			DownloadManager.Aborted += new BlankEventHandler(UpdateDownloadNum);
 
 			// Update Upload Label
 			UploadManager.Added += new BlankEventHandler(UpdateUploadNum);
 			UploadManager.Finished += new BlankEventHandler(UpdateUploadNum);
+			UploadManager.Aborted += new BlankEventHandler(UpdateUploadNum);
 		}
 
 		~UserPanel() {

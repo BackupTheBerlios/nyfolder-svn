@@ -79,6 +79,8 @@ namespace NyFolder.Protocol {
 									string path, string saveAs) 
 		{
 			FileReceiver fileRecv = new FileReceiver(id, peer, path, saveAs);
+			fileRecv.EndAbort += new BlankEventHandler(OnEndAbort);
+
 			acceptList.Add(peer, fileRecv);
 
 			// Update Num Downloads
@@ -132,14 +134,7 @@ namespace NyFolder.Protocol {
 				recvList.Remove(peer, fileRecv);
 			}
 
-			// Abort Download
-			fileRecv.Abort();
-
-			// Update Num Downloads
-			numDownloads--;
-
-			// Raise Aborted Event
-			if (Aborted != null) Aborted(fileRecv);
+			AbortDownload(fileRecv);
 		}
 
 		/// Save and Remove Download From Receiving List
@@ -147,6 +142,7 @@ namespace NyFolder.Protocol {
 			FileReceiver fileRecv = new FileReceiver(id);
 			fileRecv = (FileReceiver) recvList.Search(peer, fileRecv);
 			fileRecv.Save();
+			fileRecv.EndAbort -= new BlankEventHandler(OnEndAbort);
 			recvList.Remove(peer, fileRecv);
 
 			// Update Num Downloads
@@ -159,10 +155,25 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE (Methods) Event Handlers
 		// ============================================
+		private static void OnEndAbort (object sender) {
+			FileReceiver fileRecv = sender as FileReceiver;
+			AbortDownload(fileRecv);
+		}
 
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		private static void AbortDownload (FileReceiver fileRecv) {
+			// Abort Download
+			fileRecv.EndAbort -= new BlankEventHandler(OnEndAbort);
+			fileRecv.Abort();
+
+			// Update Num Downloads
+			numDownloads--;
+
+			// Raise Aborted Event
+			if (Aborted != null) Aborted(fileRecv);
+		}
 
 		// ============================================
 		// PUBLIC Properties

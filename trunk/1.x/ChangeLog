@@ -5,6 +5,10 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/
 
+ * 14 Nov 2006  - Matteo Bertozzi <theo.bertozzi@gmail.com>
+	Fixed Download/Upload Manager When User Disconnect...
+	Fixed UserPanel To Update Downloads/Uploads Num When Abort...
+
  * 11 Nov 2006  - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Working on Buddy (Offline) List...
 
