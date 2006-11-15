@@ -64,6 +64,8 @@ namespace NyFolder.GUI.Dialogs {
 		// ============================================
 		/// Get Selected Peer and Return his name, or null if no one is selected.
 		public string GetPeerSelected() {
+			// Bad Method, ReDo this:
+			//  - Return UserInfo
 			TreeIter iter;
 			if (comboPeers.GetActiveIter(out iter))
 				return((string) comboPeers.Model.GetValue(iter, 0));

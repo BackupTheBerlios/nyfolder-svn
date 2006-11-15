@@ -128,6 +128,75 @@ namespace NyFolder.Protocol {
 		}
 
 		// ============================================
+		// PUBLIC (Protocol) Methods
+		// ============================================
+		/// <snd what='file' id='10' part='0'>...</snd>
+		public void SendFilePart (byte[] data, uint npart) {
+			// Base64 Convert
+			string b64data = Convert.ToBase64String(data);
+
+			// XmlRequest
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "snd";
+			xmlRequest.BodyText = b64data;
+			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("id", Id);
+			xmlRequest.Attributes.Add("part", npart);
+
+			// Add md5sum
+			xmlRequest.AddAttributeMd5Sum();
+
+			// Send To Peer
+			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
+		}
+
+		/// <snd-start what='file' id='10' name='/pippo.txt' size='1024' />  
+		public void SendFileStart() {
+			// XmlRequest
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "snd-start";
+			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("id", Id);
+			xmlRequest.Attributes.Add("size", Size);
+			xmlRequest.Attributes.Add("name", DisplayedName);
+
+			// Send To Peer
+			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
+		}
+
+		/// <snd-end what='file' id='10 />
+		public void SendFileEnd() {
+			// XmlRequest
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "snd-end";
+			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("id", Id);
+
+			// Send To Peer
+			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
+		}
+
+		/// <snd-abort what='file' id='10' />
+		public void AbortSendFile() {
+			AbortSendFile(null);
+		}
+
+		/// <snd-abort what='file' id='10'>Error Message</abort>
+		public void AbortSendFile (string msgerror) {
+			// XmlRequest
+			XmlRequest xmlRequest = new XmlRequest();
+			xmlRequest.FirstTag = "snd-abort";
+			if (msgerror != null)
+				xmlRequest.BodyText = "Sending Error: " + msgerror;
+			xmlRequest.Attributes.Add("what", "file");
+			xmlRequest.Attributes.Add("id", Id);
+
+			// Send To Peer
+			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
+		}
+
+
+		// ============================================
 		// PRIVATE (Thread) Methods
 		// ============================================
 		private void StartSendingFile() {
@@ -167,7 +236,7 @@ namespace NyFolder.Protocol {
 			}
 		}
 
-		/// Split and Send "Small File" In Parts of ChunkSize
+		// Split and Send "Small File" In Parts of ChunkSize
 		private void SendSmallFileParts() {
 			// Initialize & Read Entire File
 			byte[] fileContent = FileUtils.ReadEntireFile(OriginalName);
@@ -206,7 +275,7 @@ namespace NyFolder.Protocol {
 			}
 		}
 
-		/// Split and Send "Big File" In Parts of ChunkSize
+		// Split and Send "Big File" In Parts of ChunkSize
 		private void SendBigFileParts() {
 			BufferedStream stream = null;
 
@@ -258,74 +327,6 @@ namespace NyFolder.Protocol {
 					stream = null;
 				}
 			}
-		}
-
-		// ============================================
-		// PRIVATE Methods
-		// ============================================
-		/// <snd what='file' id='10' part='0'>...</snd>
-		private void SendFilePart (byte[] data, uint npart) {
-			// Base64 Convert
-			string b64data = Convert.ToBase64String(data);
-
-			// XmlRequest
-			XmlRequest xmlRequest = new XmlRequest();
-			xmlRequest.FirstTag = "snd";
-			xmlRequest.BodyText = b64data;
-			xmlRequest.Attributes.Add("what", "file");
-			xmlRequest.Attributes.Add("id", Id);
-			xmlRequest.Attributes.Add("part", npart);
-
-			// Add md5sum
-			xmlRequest.AddAttributeMd5Sum();
-
-			// Send To Peer
-			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
-		}
-
-		/// <snd-start what='file' id='10' name='/pippo.txt' size='1024' />  
-		private void SendFileStart() {
-			// XmlRequest
-			XmlRequest xmlRequest = new XmlRequest();
-			xmlRequest.FirstTag = "snd-start";
-			xmlRequest.Attributes.Add("what", "file");
-			xmlRequest.Attributes.Add("id", Id);
-			xmlRequest.Attributes.Add("size", Size);
-			xmlRequest.Attributes.Add("name", DisplayedName);
-
-			// Send To Peer
-			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
-		}
-
-		/// <snd-end what='file' id='10 />
-		private void SendFileEnd() {
-			// XmlRequest
-			XmlRequest xmlRequest = new XmlRequest();
-			xmlRequest.FirstTag = "snd-end";
-			xmlRequest.Attributes.Add("what", "file");
-			xmlRequest.Attributes.Add("id", Id);
-
-			// Send To Peer
-			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
-		}
-
-		/// <snd-abort what='file' id='10' />
-		private void AbortSendFile() {
-			AbortSendFile(null);
-		}
-
-		/// <snd-abort what='file' id='10'>Error Message</abort>
-		private void AbortSendFile (string msgerror) {
-			// XmlRequest
-			XmlRequest xmlRequest = new XmlRequest();
-			xmlRequest.FirstTag = "snd-abort";
-			if (msgerror != null)
-				xmlRequest.BodyText = "Sending Error: " + msgerror;
-			xmlRequest.Attributes.Add("what", "file");
-			xmlRequest.Attributes.Add("id", Id);
-
-			// Send To Peer
-			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
 		}
 
 		// ============================================

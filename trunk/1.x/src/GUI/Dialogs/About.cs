@@ -30,21 +30,21 @@ using NyFolder;
 
 namespace NyFolder.GUI.Dialogs {
 	/// NyFolder About Dialog
-	public class About : Gtk.Window {
+	public sealed class About : Gtk.Window {
 		private ScrollBox scrollBox;
 		private Gtk.Image imageLogo;
 		private Gtk.VBox vbox;
 
-		protected string[] authors = new string[] {
+		private string[] authors = new string[] {
 			"Matteo Bertozzi"
 		};
 		
-		protected string[] thanks = new string[] {
+		private string[] thanks = new string[] {
 			"Laura Marastoni",
 			"Ambra Cavalletto"
 		};
 
-		protected string[] icons = new string[] {
+		private string[] icons = new string[] {
 			"YellowIcon - http://yellowicon.com",
 			"Gnome Art - http://art.gnome.org",
 			"Kde Look - http://kde-look.org",

@@ -27,6 +27,7 @@ using NyFolder.GUI;
 using NyFolder.Protocol;
 
 namespace NyFolder.GUI.Dialogs.LoginDialog {
+	/// Login Progress Dialog
 	public class ProgressDialog : Gtk.Dialog {
 		// ============================================
 		// PRIVATE Members
@@ -102,6 +103,7 @@ namespace NyFolder.GUI.Dialogs.LoginDialog {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
+		/// Get Login Response Message
 		public string ResponseMessage {
 			get { return(this.message); }
 		}
