@@ -249,6 +249,9 @@ namespace NyFolder.Plugins.BuddyList {
 			// Connect Offline Users
 			foreach (UserInfo userInfo in offline) {
 				UserConnect(userInfo);
+				Gtk.Application.Invoke(delegate {
+					AddUserToNetworkViewer(userInfo);
+				});
 			}
 
 			return(timeoutAddBuddyRet);
@@ -325,6 +328,11 @@ namespace NyFolder.Plugins.BuddyList {
 						"</ui>";
 
 			nyFolder.MainWindow.Menu.AddMenus(ui, toggleEntries);
+		}
+
+		private void AddUserToNetworkViewer (UserInfo userInfo) {
+			NetworkViewer networkViewer = nyFolder.MainWindow.NotebookViewer.NetworkViewer;
+			networkViewer.Store.Add(userInfo);
 		}
 
 		// ============================================
