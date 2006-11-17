@@ -10,6 +10,7 @@ Table Users' ID is The Account ID, Dho, Dho, Dho!
 +-------------------------------------+
 | Timeout to try to add offline users |
 +-------------------------------------+
+	- Add Lock To Exclude Collision Possibility (Refresh/Timeout AutoAdd)
 
 Combo Box + EntryCompletion for Login UserName
 

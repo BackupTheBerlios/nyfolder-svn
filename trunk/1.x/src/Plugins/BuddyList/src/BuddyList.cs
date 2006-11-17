@@ -50,6 +50,11 @@ namespace NyFolder.Plugins.BuddyList {
 		private int myAccountId = -1;
 
 		// ============================================
+		// INTERNAL Members
+		// ============================================	
+		internal bool timeoutAddBuddyRet;
+
+		// ============================================
 		// PUBLIC Constructors
 		// ============================================
 		/// Create New BuddyList
@@ -71,6 +76,8 @@ namespace NyFolder.Plugins.BuddyList {
 			this.nyFolder.LoginDialogClosed += new BlankEventHandler(OnLoginDialogClose);
 			this.nyFolder.MainWindowStarted += new BlankEventHandler(OnMainWindowStart);
 			this.nyFolder.MainWindowClosed += new BlankEventHandler(OnMainWindowClose);
+			CmdManager.AddProtocolEvent += new SetProtocolEventHandler(OnAddProtocolEvent);
+			CmdManager.DelProtocolEvent += new SetProtocolEventHandler(OnDelProtocolEvent);
 		}
 
 		// ============================================
@@ -110,7 +117,7 @@ namespace NyFolder.Plugins.BuddyList {
 			// Initialize Buddy List Component
 			InitializeBuddyListMenu();
 
-			// Network GUI Options
+			// Network GUI Event
 			NetworkViewer networkViewer = window.NotebookViewer.NetworkViewer;
 			NetworkManager.UserAccept += new AcceptUserHandler(OnAcceptUser);
 			networkViewer.RefreshPeers += new BlankEventHandler(OnNetViewerRefresh);
@@ -122,6 +129,10 @@ namespace NyFolder.Plugins.BuddyList {
 			GUI.Window window = sender as GUI.Window;
 			NetworkViewer networkViewer = window.NotebookViewer.NetworkViewer;
 
+			// Stop Auto Add Buddy Timeout
+			timeoutAddBuddyRet = false;
+
+			// Remove Network GUI Event
 			NetworkManager.UserAccept -= new AcceptUserHandler(OnAcceptUser);
 			networkViewer.RefreshPeers -= new BlankEventHandler(OnNetViewerRefresh);
 			networkViewer.UserLoggedIn -= new PeerSelectedHandler(OnUserLoggedIn);
@@ -184,12 +195,15 @@ namespace NyFolder.Plugins.BuddyList {
 		
 		// When Network Viewer is Refreshed
 		private void OnNetViewerRefresh (object sender) {
-			NetworkViewer networkViewer = sender as NetworkViewer;
+			Gtk.Application.Invoke(delegate {
+				NetworkViewer networkViewer = sender as NetworkViewer;
 
-			if (ShowOfflineBuddies == true) {
-				// Load All Offline Buddies
-				networkViewer.Store.Add(GetOfflineUsers());
-			}
+				AutoAddBuddyTimeout();
+				if (ShowOfflineBuddies == true) {
+					// Load All Offline Buddies
+					networkViewer.Store.Add(GetOfflineUsers());
+				}
+			});
 		}
 
 		private void OnShowOfflineBuddies (object sender, EventArgs args) {
@@ -205,6 +219,39 @@ namespace NyFolder.Plugins.BuddyList {
 					networkViewer.Store.RemoveAllOffline();
 				}
 			});
+		}
+
+		private void OnAddProtocolEvent (P2PManager p2pManager) {
+			// Auto Add Buddy Timeout (2min)
+			timeoutAddBuddyRet = true;
+			AutoAddBuddyTimeout();
+			GLib.Timeout.Add(120000, AutoAddBuddyTimeout);
+		}
+
+		private void OnDelProtocolEvent (P2PManager p2pManager) {
+			// Stop Auto Add Buddy Timeout
+			timeoutAddBuddyRet = false;
+		}
+
+		private bool AutoAddBuddyTimeout() {
+			// If I'm Offline Skip
+			if (P2PManager.IsListening() == false)
+				return(timeoutAddBuddyRet);
+
+			// If Timeout is Ended
+			if (timeoutAddBuddyRet != true)
+				return(false);
+
+			// Get Offline Users
+			UserInfo[] offline = GetOfflineUsers();
+			if (offline == null) return(timeoutAddBuddyRet);
+
+			// Connect Offline Users
+			foreach (UserInfo userInfo in offline) {
+				UserConnect(userInfo);
+			}
+
+			return(timeoutAddBuddyRet);
 		}
 
 		// ============================================
@@ -243,6 +290,22 @@ namespace NyFolder.Plugins.BuddyList {
 			}
 
 			return(false);
+		}
+
+		private void UserConnect (UserInfo userInfo) {
+			if (userInfo.SecureAuthentication == false)
+				return;
+
+			try {
+				// Connect & Send Login
+				userInfo.GetIpAndPort();
+				Debug.Log("Auto Add Buddy: {0} {1}:{2}", userInfo.Name, userInfo.Ip, userInfo.Port);
+				P2PManager.AddPeer(userInfo, userInfo.Ip, userInfo.Port);
+				PeerSocket peer = (PeerSocket) P2PManager.KnownPeers[userInfo];
+				Cmd.Login(peer, MyInfo.GetInstance());
+			} catch (Exception e) {
+				Debug.Log("Connection To {0} Failed: {1}", userInfo.Name, e.Message);
+			}
 		}
 
 		private void InitializeBuddyListMenu() {

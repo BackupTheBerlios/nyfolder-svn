@@ -103,9 +103,11 @@ namespace NyFolder.GUI {
 
 		/// Remove a List of Users
 		public void Remove (UserInfo[] users) {
-			lock (this) {
-				foreach (UserInfo userInfo in users)
-					Remove(userInfo);
+			if (users != null) {
+				lock (this) {
+					foreach (UserInfo userInfo in users)
+						Remove(userInfo);
+				}
 			}
 		}
 

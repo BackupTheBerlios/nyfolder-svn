@@ -48,7 +48,7 @@ namespace NyFolder.Plugins.BuddyList {
 			string sql = "SELECT username FROM users WHERE id=@Id;";
 			Hashtable sqlParams = new Hashtable();
 			sqlParams.Add("@Id", id);
-			return(db.ExecuteReadStrings(sql));
+			return(db.ExecuteReadStrings(sql, sqlParams));
 		}
 
 		/// Get All The Accepted Users of The Specified Account
@@ -56,7 +56,7 @@ namespace NyFolder.Plugins.BuddyList {
 			string sql = "SELECT username FROM users WHERE id=@Id AND accept=1;";
 			Hashtable sqlParams = new Hashtable();
 			sqlParams.Add("@Id", id);
-			return(db.ExecuteReadStrings(sql));
+			return(db.ExecuteReadStrings(sql, sqlParams));
 		}
 
 		/// Get All The Non Accepted Users of The Specified Account
@@ -64,7 +64,7 @@ namespace NyFolder.Plugins.BuddyList {
 			string sql = "SELECT username FROM users WHERE id=@Id AND accept=0;";
 			Hashtable sqlParams = new Hashtable();
 			sqlParams.Add("@Id", id);
-			return(db.ExecuteReadStrings(sql));
+			return(db.ExecuteReadStrings(sql, sqlParams));
 		}
 
 		public void Remove (string username) {
