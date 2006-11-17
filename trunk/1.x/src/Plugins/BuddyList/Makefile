@@ -27,10 +27,10 @@ PLUGIN_DLL = nfBuddyList.dll
 SRC_Base = 		AssemblyInfo.cs	\
 				Info.cs
 
-SRC_Plugin =	src/Accounts.cs		\
-				src/IAccounts.cs	\
-				src/IUsers.cs		\
-				src/Users.cs		\
+SRC_Plugin =	src/Database/AccountsTable.cs		\
+				src/Database/DbTable.cs				\
+				src/Database/UsersTable.cs			\
+				src/BuddyDb.cs						\
 				src/BuddyList.cs
 
 RES_Glade =	

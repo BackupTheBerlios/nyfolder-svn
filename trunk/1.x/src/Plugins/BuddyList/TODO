@@ -7,5 +7,24 @@
 
 Table Users' ID is The Account ID, Dho, Dho, Dho!
 
-Timeout to try to add offline users
++-------------------------------------+
+| Timeout to try to add offline users |
++-------------------------------------+
+
 Combo Box + EntryCompletion for Login UserName
+
+
+	Accounts Table:
+		- Get All Account
+		- Get ID from UserName
+		- Get Username associate at ID
+		- Get Password From UserName and ID
+		- Set Password From UserName and ID
+		- Insert/Delete
+
+	Users Table:
+		- Get All Users With ID
+		- Insert/Delete
+
+	BuddyDB:
+		- Get Buddy List From Account ID or Account Name

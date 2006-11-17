@@ -86,9 +86,11 @@ namespace NyFolder.GUI {
 
 		/// Add a List of Users
 		public void Add (UserInfo[] users) {
-			lock (this) {
-				foreach (UserInfo userInfo in users)
-					Add(userInfo);
+			if (users != null) {
+				lock (this) {
+					foreach (UserInfo userInfo in users)
+						Add(userInfo);
+				}
 			}
 		}
 

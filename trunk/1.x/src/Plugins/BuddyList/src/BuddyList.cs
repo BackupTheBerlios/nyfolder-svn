@@ -47,6 +47,7 @@ namespace NyFolder.Plugins.BuddyList {
 		// PRIVATE Members
 		// ============================================
 		private INyFolder nyFolder = null;
+		private int myAccountId = -1;
 
 		// ============================================
 		// PUBLIC Constructors
@@ -78,8 +79,9 @@ namespace NyFolder.Plugins.BuddyList {
 		private void OnUserLogin (object sender) {
 			GUI.Dialogs.Login login = this.nyFolder.LoginDialog;
 			if (login.RememberPassword && login.SecureAuthentication) {
-				SaveAccount(login);
+				BuddyDb.AddAccount(login.Username, login.Password);
 			}
+			myAccountId = BuddyDb.AccountId(login.Username);
 		}
 
 		private void OnLoginDialogStart (object sender) {
@@ -87,7 +89,7 @@ namespace NyFolder.Plugins.BuddyList {
 				GUI.Dialogs.Login login = sender as GUI.Dialogs.Login;
 
 				// Fill User Entry Completion
-				string[] accounts = GetAllAccounts();
+				string[] accounts = BuddyDb.Accounts();
 				login.UserNameCompletion.Model = CreateEntryCompletion(accounts);
 				login.UserNameComboBoxAppend(accounts);
 				login.UserNameCompletion.TextColumn = 0;
@@ -132,10 +134,7 @@ namespace NyFolder.Plugins.BuddyList {
 		private void OnPasswordFocusIn (object obj, FocusInEventArgs args) {
 			Gtk.Application.Invoke(delegate {
 				GUI.Dialogs.Login login = this.nyFolder.LoginDialog;
-
-				Accounts accounts = new Accounts();
-				login.Password = accounts.GetUserPassword(login.Username);
-				accounts.Dispose();
+				login.Password = BuddyDb.AccountPassword(login.Username);
 			});
 		}
 
@@ -144,11 +143,7 @@ namespace NyFolder.Plugins.BuddyList {
 				return;
 
 			// Add Only Secure Auth User
-			Users usersDb = new Users();
-			if (usersDb.GetUserId(userInfo.Name) < 0) {
-				usersDb.Insert(userInfo.Name, true);
-			}
-			usersDb.Dispose();
+			BuddyDb.AddUser(myAccountId, userInfo.Name, true);
 		}
 
 		private void OnUserLoggedOut (object sender, UserInfo userInfo) {
@@ -159,31 +154,29 @@ namespace NyFolder.Plugins.BuddyList {
 				return;
 
 			// Add Only Secure Auth User
-			Users usersDb = new Users();
-			if (usersDb.GetUserId(userInfo.Name) >= 0) {
+			if (BuddyDb.UserIsInList(myAccountId, userInfo.Name) == true) {
 				Gtk.Application.Invoke(delegate {
 					// Load All Offline Buddy
 					NetworkViewer networkViewer = sender as NetworkViewer;
 					networkViewer.Store.Add(new UserInfo(userInfo.Name, true));
 				});
 			}
-			usersDb.Dispose();
 		}
 
 		private AcceptUserType OnAcceptUser (PeerSocket peer, UserInfo userInfo) {
 			if (userInfo.SecureAuthentication == false)
 				return(AcceptUserType.Ask);
 
-			Users usersDb = new Users();
+			UsersTable usersDb = new UsersTable();
 
 			// If User isn't into DB
-			if (usersDb.GetUserId(userInfo.Name) < 0) {
+			if (usersDb.IsPresent(myAccountId, userInfo.Name) == false) {
 				usersDb.Dispose();
 				return(AcceptUserType.Ask);
 			}
 
 			// Get User Accept Status
-			bool acceptUser = usersDb.GetAccept(userInfo.Name);
+			bool acceptUser = usersDb.GetAccept(myAccountId, userInfo.Name);
 
 			usersDb.Dispose();
 			return(acceptUser ? AcceptUserType.Yes : AcceptUserType.No);
@@ -217,19 +210,6 @@ namespace NyFolder.Plugins.BuddyList {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
-		private void SaveAccount (GUI.Dialogs.Login login) {
-			Accounts accounts = new Accounts();
-			accounts.Insert(login.Username, login.Password);
-			accounts.Dispose();
-		}
-
-		private string[] GetAllAccounts() {
-			Accounts accounts = new Accounts();
-			string[] accNames = accounts.GetAllAccounts();
-			accounts.Dispose();
-			return(accNames);
-		}
-
 		private ListStore CreateEntryCompletion (string[] accNames) {
 			// No Account Saved
 			if (accNames == null) return(null);
@@ -242,9 +222,8 @@ namespace NyFolder.Plugins.BuddyList {
 		}
 
 		private UserInfo[] GetOfflineUsers() {
-			Users usersDb = new Users();
-			string[] users = usersDb.GetAllAcceptedUsers();
-			usersDb.Dispose();
+			string[] users = BuddyDb.AccountAcceptedUsers(myAccountId);
+			if (users == null) return(null);
 
 			ArrayList offlineUsers = new ArrayList();
 			foreach (string username in users) {

@@ -157,9 +157,13 @@ namespace NyFolder.GUI.Glue {
 
 			switch (what) {
 				case "file-id":
-					uint id = uint.Parse((string) xml.Attributes["id"]);
-					UploadManager.Send(peer, id);
-					// TODO: Manage ID Not Found
+					try {
+						uint id = uint.Parse((string) xml.Attributes["id"]);
+						UploadManager.Send(peer, id);
+						// TODO: Manage ID Not Found
+					} catch (Exception e) {
+						Base.Dialogs.MessageError("File Not Found", e.Message);
+					}
 					break;
 				case "file":
 					string filePath = (string) xml.Attributes["path"];

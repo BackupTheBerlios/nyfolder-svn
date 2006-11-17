@@ -107,6 +107,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Methods
 		// ============================================
+		/// "Pack" The Files in Specified Directory
 		private static string FolderFileList (string path) {
 			string mySharedPath = Paths.UserSharedDirectory(MyInfo.Name);
 

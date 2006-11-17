@@ -16,6 +16,7 @@
             <child>
               <widget class="GtkImage" id="image">
                 <property name="visible">True</property>
+                <property name="yalign">0</property>
                 <property name="stock">gtk-missing-image</property>
               </widget>
               <packing>
