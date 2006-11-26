@@ -124,15 +124,20 @@ namespace NyFolder.Plugins.Talk {
 		}
 
 		private static void OnTalkFrameRemoved (object o, object page) {
-			if (talkFrames.ContainsValue(page) == true) {
-				TalkFrame talkFrame = page as TalkFrame;
-				talkFrame.Message -= new StringEventHandler(OnSendMessage);
-
-				PeerSocket peer = (PeerSocket) P2PManager.KnownPeers[talkFrame.UserInfo];
-				SendStatus(peer, MyInfo.GetInstance().Name + " has closed the conversation Window...");
-
-				talkFrames.Remove(talkFrame.UserInfo);
-			}
+			Gtk.Application.Invoke(delegate {
+				if (talkFrames.ContainsValue(page) == true) {
+					TalkFrame talkFrame = page as TalkFrame;
+					talkFrame.Message -= new StringEventHandler(OnSendMessage);
+	
+					PeerSocket peer = (PeerSocket) P2PManager.KnownPeers[talkFrame.UserInfo];
+					if (peer != null) {
+						UserInfo userInfo = MyInfo.GetInstance();
+						SendStatus(peer, userInfo.Name + " has closed the conversation Window...");
+					}
+	
+					talkFrames.Remove(talkFrame.UserInfo);
+				}
+			});
 		}
 
 		// ============================================
@@ -146,7 +151,7 @@ namespace NyFolder.Plugins.Talk {
 			XmlRequest xmlRequest = new XmlRequest();
 			xmlRequest.FirstTag = "msg";
 			xmlRequest.BodyText = message;
-			peer.Send(xmlRequest.GenerateXml());
+			if (peer != null) peer.Send(xmlRequest.GenerateXml());
 		}
 
 		private static void SendStatus (PeerSocket peer, string status) {
@@ -154,7 +159,7 @@ namespace NyFolder.Plugins.Talk {
 			xmlRequest.FirstTag = "msg";
 			xmlRequest.BodyText = status;
 			xmlRequest.Attributes.Add("type", "status");
-			peer.Send(xmlRequest.GenerateXml());
+			if (peer != null) peer.Send(xmlRequest.GenerateXml());
 		}
 
 #if false
@@ -163,7 +168,7 @@ namespace NyFolder.Plugins.Talk {
 			xmlRequest.FirstTag = "msg";
 			xmlRequest.BodyText = error;
 			xmlRequest.Attributes.Add("type", "error");
-			peer.Send(xmlRequest.GenerateXml());
+			if (peer != null) peer.Send(xmlRequest.GenerateXml());
 		}
 #endif
 	}

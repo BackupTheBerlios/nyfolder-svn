@@ -99,8 +99,10 @@ namespace NyFolder {
 		// ============================================
 		//             APPLICATION MAIN
 		// ============================================
-		// Horrible Main :D
 		public static int Main (string[] args) {
+			// Starting Application
+			Debug.Log("{0} {1} Started...", Info.Name, Info.Version);
+
 			do {
 				p2pManager = null;
 				nyFolder = null;
@@ -145,6 +147,9 @@ namespace NyFolder {
 				}
 				Thread.Sleep(1000);
 			} while (NyFolderApp.Restart == true);
+
+			// Application Correct Termination
+			Debug.Log("{0} {1} Ended...", Info.Name, Info.Version);
 			return(0);
 		}
 
