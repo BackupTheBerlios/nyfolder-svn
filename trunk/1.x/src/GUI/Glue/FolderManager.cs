@@ -103,7 +103,8 @@ namespace NyFolder.GUI.Glue {
 		private void OnSwitchPage (object o, SwitchPageArgs args) {
 			Gtk.Application.Invoke(delegate {
 				Gtk.Widget page = notebookViewer.GetNthPage((int) args.PageNum);
-				if (page.GetType() != typeof(FolderViewer)) {
+				Type objType = page.GetType();
+				if (objType != typeof(FolderViewer)) {
 					// NetworkViewer or Custom
 					SetSensitiveGoUpMenu(false);
 					SetSensitiveGoHomeMenu(false);
@@ -116,6 +117,9 @@ namespace NyFolder.GUI.Glue {
 					SetSensitiveGoUpMenu(canGoUp);
 					SetSensitiveGoHomeMenu(true);
 				}
+
+				// Set Sensitive Refresh Menu
+				SetSensitiveRefreshMenu(objType.IsSubclassOf(typeof(RefreshableViewer)));
 			});
 		}
 
@@ -147,6 +151,11 @@ namespace NyFolder.GUI.Glue {
 			this.menuManager.SetSensitive("/ToolBar/GoHome", sensitive);
 		}
 
+		private void SetSensitiveRefreshMenu (bool sensitive) {
+			this.menuManager.SetSensitive("/MenuBar/ViewMenu/Refresh", sensitive);
+			this.menuManager.SetSensitive("/ToolBar/Refresh", sensitive);
+		}
+
 		// ============================================
 		// PRIVATE Methods (Notebook, Folder, Network Viewer)
 		// ============================================
@@ -170,14 +179,10 @@ namespace NyFolder.GUI.Glue {
 
 		private void FolderViewerRefresh() {
 			Gtk.Widget page = notebookViewer.CurrentPageWidget;
-			if (page.GetType() == typeof(NetworkViewer)) {
-				// Refresh Network Viewer
-				NetworkViewer networkViewer = page as NetworkViewer;
-				networkViewer.Refresh();
-			} else if (page.GetType() == typeof(FolderViewer)) {
-				// Refresh Folder Viewer
-				FolderViewer folderViewer = page as FolderViewer;
-				folderViewer.Refresh();
+			Type objType = page.GetType();
+			if (objType.IsSubclassOf(typeof(RefreshableViewer)) == true) {
+				RefreshableViewer obj = page as RefreshableViewer;
+				obj.Refresh();
 			}
 		}
 	}

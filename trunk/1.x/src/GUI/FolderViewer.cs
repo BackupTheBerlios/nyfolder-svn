@@ -39,7 +39,7 @@ namespace NyFolder.GUI {
 	public delegate void FileSendEventHandler (object sender, string path, bool isDir);
 
 	/// User Shared Folder Viewer
-	public class FolderViewer : Gtk.ScrolledWindow {
+	public class FolderViewer : RefreshableViewer {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
@@ -61,7 +61,6 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PROTECTED Members
 		// ============================================
-		protected Gtk.IconView iconView;
 		protected FolderStore store;
 		protected UserInfo userInfo;
 
@@ -77,11 +76,6 @@ namespace NyFolder.GUI {
 		// ============================================
 		/// Create New Folder Viewer
 		public FolderViewer (UserInfo userInfo) {
-			// Initialize Scrolled Window
-			BorderWidth = 0;
-			ShadowType = ShadowType.EtchedIn;
-			SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-
 			// Initialize UserInfo
 			this.userInfo = userInfo;
 			if (this.userInfo == MyInfo.GetInstance()) {
@@ -161,7 +155,7 @@ namespace NyFolder.GUI {
 		}
 
 		/// Refresh Folder Viewer and Folder Store
-		public void Refresh() {
+		public override void Refresh() {
 			// Directory's Path
 			if (currentDirectory == null || baseDirectory == null)
 				return;
@@ -332,19 +326,14 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
-		/// Return The Selected Items
-		public TreePath[] SelectedItems {
-			get { return(this.iconView.SelectedItems); }
-		}
-
-		/// Return The Folder's File List
-		public FolderStore Store {
-			get { return(this.store); }
-		}
-
 		/// Return The Folder's User Informations
 		public UserInfo UserInfo {
 			get { return(this.userInfo); }
+		}
+
+		/// Get Folder Store
+		public FolderStore Store {
+			get { return(this.store); }
 		}
 	}
 }

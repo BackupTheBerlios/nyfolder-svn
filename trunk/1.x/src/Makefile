@@ -13,7 +13,7 @@ PKGS = $(PKG_GTK) $(PKG_CAIRO) $(PKG_GLADE) $(PKG_NIRY)
 
 # ============================== NyFolder Infos ====
 NAME = NyFolder
-VERSION = 0.92
+VERSION = 0.93
 COMPILER = `$(CC) --version`
 # ==================================================
 NYFOLDER_DLL = nyfolder-plugin.dll
@@ -31,16 +31,18 @@ SRC_GUI_Dialogs =	GUI/Dialogs/About.cs					\
 					GUI/Dialogs/RemovePeer.cs				\
 					GUI/Dialogs/SetPort.cs
 
-SRC_GUI_Main =	GUI/Dnd.cs				\
-				GUI/FolderStore.cs		\
-				GUI/FolderViewer.cs		\
-				GUI/MenuManager.cs		\
-				GUI/NetworkStore.cs		\
-				GUI/NetworkViewer.cs	\
-				GUI/NotebookViewer.cs	\
-				GUI/StockIcons.cs		\
-				GUI/TabLabel.cs			\
-				GUI/UserPanel.cs		\
+SRC_GUI_Main =	GUI/Dnd.cs					\
+				GUI/FolderStore.cs			\
+				GUI/FolderViewer.cs			\
+				GUI/MenuManager.cs			\
+				GUI/NetworkStore.cs			\
+				GUI/NetworkViewer.cs		\
+				GUI/NotebookViewer.cs		\
+				GUI/RefreshableViewer.cs	\
+				GUI/StockIcons.cs			\
+				GUI/TabLabel.cs				\
+				GUI/UserPanel.cs			\
+				GUI/Viewer.cs				\
 				GUI/Window.cs
 
 SRC_GUI_Glue = 	GUI/Glue/Dialogs.cs			\

@@ -37,7 +37,7 @@ namespace NyFolder.GUI {
 	public delegate void SendFileHandler (object sender, UserInfo userInfo, string path);
 
 	/// Network Viewer
-	public class NetworkViewer : Gtk.ScrolledWindow {
+	public class NetworkViewer : RefreshableViewer {
 		// ============================================
 		// PUBLIC Events
 		// ============================================
@@ -52,7 +52,6 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PROTECTED Members
 		// ============================================
-		protected Gtk.IconView iconView;
 		protected NetworkStore store;
 
 		// ============================================
@@ -63,11 +62,6 @@ namespace NyFolder.GUI {
 		// PUBLIC Constructors
 		// ============================================
 		public NetworkViewer() {
-			// Initialize Scrolled Window
-			BorderWidth = 0;
-			ShadowType = ShadowType.EtchedIn;
-			SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-
 			// Initialize Network Store
 			this.store = new NetworkStore();
 
@@ -93,7 +87,7 @@ namespace NyFolder.GUI {
 		// PUBLIC Methods
 		// ============================================
 		/// Refresh Network Viewer and Network Store
-		public void Refresh() {
+		public override void Refresh() {
 			store.Clear();
 
 			if (P2PManager.KnownPeers != null &&
@@ -212,11 +206,6 @@ namespace NyFolder.GUI {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
-		/// Get Selected Items TreePath
-		public TreePath[] SelectedItems {
-			get { return(this.iconView.SelectedItems); }
-		}
-
 		/// Get Network Store
 		public NetworkStore Store {
 			get { return(this.store); }
