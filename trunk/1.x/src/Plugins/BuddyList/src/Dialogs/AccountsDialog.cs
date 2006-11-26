@@ -45,6 +45,16 @@ namespace NyFolder.Plugins.BuddyList {
 		// ============================================
 		/// Create New "Add Peer" Dialog
 		public AccountsDialog() : base("dialog", "AccountsDialog.glade") {
+			TreeStore store = new TreeStore(typeof(string), typeof(string));
+
+			store.AppendValues("Demo 0", "Data 0");
+			store.AppendValues("Demo 1", "Data 1");
+			store.AppendValues("Demo 1", "Data 1");
+
+			treeView.Model = store;
+
+			treeView.AppendColumn("Demo", new CellRendererText(), "text", 0);
+			treeView.AppendColumn("Data", new CellRendererText(), "text", 1);
 		}
 
 		// ============================================

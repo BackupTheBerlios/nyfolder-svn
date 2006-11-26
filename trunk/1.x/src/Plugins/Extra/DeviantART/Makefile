@@ -6,38 +6,30 @@ CC = gmcs
 CFLAGS = 
 
 PKG_GTK = -pkg:gtk-sharp-2.0
-PKG_CAIRO = -r:Mono.Cairo.dll
-PKG_NIRY = -r:../../niry-sharp.dll
-PKG_GLADE = -pkg:glade-sharp-2.0
-PKG_NF_PLUGIN = -r:../../nyfolder-plugin.dll
-PKG_SQLITE = -r:System.Data.dll -r:Mono.Data.SqliteClient.dll
-PKGS = $(PKG_GTK) $(PKG_CAIRO) $(PKG_GLADE) $(PKG_NIRY) $(PKG_NF_PLUGIN) $(PKG_SQLITE)
+PKG_NIRY = -r:../../../niry-sharp.dll
+PKG_NF_PLUGIN = -r:../../../nyfolder-plugin.dll
+PKGS = $(PKG_GTK) $(PKG_NIRY) $(PKG_NF_PLUGIN)
 
 # ============================== Plugin Infos ====
-NAME = Buddy List
+NAME = DeviantART
 VERSION = 0.1
 AUTHORS = \"Matteo Bertozzi\"
 WEB = http://nyfolder.berlios.de
-PRIORITY = -20
-DESCRIPTION = NyFolder Buddy List
+PRIORITY = 0
+DESCRIPTION = NyFolder DeviantART Preview
 COPYRIGHT = (C) Copyright Matteo Bertozzi 2006
 COMPANY = Matteo Bertozzi
 # ==================================================
-PLUGIN_DLL = nfBuddyList.dll
+PLUGIN_DLL = nfDeviantART.dll
 
 SRC_Base = 		AssemblyInfo.cs	\
 				Info.cs
-
-SRC_Plugin =	src/Database/AccountsTable.cs		\
-				src/Database/DbTable.cs				\
-				src/Database/UsersTable.cs			\
-				src/Dialogs/AccountsDialog.cs		\
-				src/Dialogs/AccountDetails.cs		\
-				src/BuddyDb.cs						\
-				src/BuddyList.cs
+SRC_Plugin =	src/DeviantART.cs	\
+				src/ImageStore.cs	\
+				src/ImageViewer.cs
 
 RES_Glade =	
-RES_Images =
+RES_Images = 	Pixmaps/DeviantART.png
 
 SRC = $(SRC_Base) $(SRC_Plugin)
 RESOURCES = $(RES_Glade) $(RES_Images)

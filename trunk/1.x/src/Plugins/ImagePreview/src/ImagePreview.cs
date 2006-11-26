@@ -148,7 +148,7 @@ namespace NyFolder.Plugins.ImagePreview {
 
 			// Request Image Thumb if it's Image
 			string filePath = store.GetFilePath(iter);
-			if (IsImage(Path.GetExtension(filePath)) == true) {
+			if (ImageUtils.IsImage(Path.GetExtension(filePath)) == true) {
 				RequestImage(folderViewer.UserInfo, filePath);
 			}
 		}
@@ -195,21 +195,6 @@ namespace NyFolder.Plugins.ImagePreview {
 						"</ui>";
 
 			nyFolder.MainWindow.Menu.AddMenus(ui, entries);
-		}
-
-		private bool IsImage (string extension) {
-			if (extension == String.Empty || extension == null || extension.Length <= 0)
-				return(false);
-			extension = extension.Substring(1);
-
-			string[] pixbufExt = new string[] {
-				"wmf", "ani", "bmp", "gif", "ico", "jpg", "jpeg", "pcx", "png", 
-				"pnm", "ras", "tga", "tiff", "wbmp", "xbm", "xpm", "svg"
-			};
-
-			foreach (string ext in pixbufExt)
-				if (ext == extension) return(true);
-			return(false);
 		}
 
 		private string GenerateRealImagePath (string imagePath) {

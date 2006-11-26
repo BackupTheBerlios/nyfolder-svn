@@ -27,6 +27,7 @@ using Niry.Utils;
 using Niry.Network;
 
 using NyFolder;
+using NyFolder.GUI;
 using NyFolder.Protocol;
 using NyFolder.GUI.Base;
 
