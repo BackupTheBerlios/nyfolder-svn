@@ -70,6 +70,22 @@ namespace NyFolder.Protocol {
 		// ============================================
 		/// Initialize Protocol Command Manager (Init at Startup)
 		public static void Initialize() {
+			// Initialize Events (None)
+			LoginEvent = null;
+			QuitEvent = null;
+			ErrorEvent = null;
+			GetEvent = null;
+			AskEvent = null;
+			SndEvent = null;
+			SndStartEvent = null;
+			SndEndEvent = null;
+			SndAbortEvent = null;
+			RecvAbortEvent = null;
+			UnknownEvent = null;
+			AddProtocolEvent = null;
+			DelProtocolEvent = null;
+
+			// Setup Events
 			P2PManager.StatusChanged += new BoolEventHandler(OnP2PStatusChanged);
 		}
 

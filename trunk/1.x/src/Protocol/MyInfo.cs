@@ -50,6 +50,9 @@ namespace NyFolder.Protocol {
 		public static void Initialize (string username) {
 			myInfo = new UserInfo(username);
 			myInfo.Informations.Add("magic", "None");
+
+			LoginChecked = null;
+			timerWebStatusUpdate = null;
 		}
 
 		public static void Initialize (string username, bool secureAuth) {

@@ -50,6 +50,9 @@ namespace NyFolder.Protocol {
 			// PUBLIC Constructors
 			// ============================================
 			public CmdParser (PeerSocket peer, ArrayList xmlCmds) {
+				// Initialize Events (None)
+				Error = null;
+
 				// Initialize Members
 				this.xmlCmds = xmlCmds;
 				this.peer = peer;

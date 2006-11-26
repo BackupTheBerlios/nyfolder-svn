@@ -42,76 +42,57 @@ namespace NyFolder {
 		// ============================================
 		// PRIVATE STATIC Methods
 		// ============================================
-		private static void SplashInit() {
-			// Initialize Splash Screen
-			Gdk.Pixbuf splashPixbuf = new Gdk.Pixbuf(null, "NFSplash.png");
-			SplashScreen splash = new SplashScreen("NyFolder", splashPixbuf);
-			splash.TextColor = new Cairo.Color(0xff, 0xff, 0xff, 1.0);
-			splash.Run();
-
-			splash.Update("Initializing Application...", 1, 13);
-
-			InitBase(ref splash);
-			InitNetwork(ref splash);
-			InitApplication(ref splash);
-
-			splash.Update("Running Application...", 13, 13);
-
-			// Destroy Splash Screen
-			splash.Dispose();
-		}
-
 		/// Initialize NyFolder Application, Paths, Proxy, Stock Icons...
-		private static void InitBase (ref SplashScreen splash) {
+		private static void InitBase() {
 			// Initialize NyFolder Paths
-			splash.Update("Initializing NyFolder Paths...", 2, 13);
+			Debug.Log("Initializing NyFolder Paths...");
 			Paths.Initialize();
 
 			// Set Home Directory as Current Environment Path
-			splash.Update("Setting Current Environment Path...", 3, 13);
+			Debug.Log("Setting Current Environment Path...");
 			Environment.CurrentDirectory = Paths.HomeDirectory;
 
 			// Initialize Proxy Settings
-			splash.Update("Initializing Proxy Settings...", 4, 13);
+			Debug.Log("Initializing Proxy Settings...");
 			Proxy.Initialize();
 
 			// Initialize (Gtk GUI) Stock Icons
-			splash.Update("Initializing Stock Icons...", 5, 13);
+			Debug.Log("Initializing Stock Icons...");
 			GUI.StockIcons.Initialize();
 		}
 
 		/// Initialize NyFolder P2PManager & Network Related
-		private static void InitNetwork (ref SplashScreen splash) {
+		private static void InitNetwork() {
 			// Initialize P2PManager
-			splash.Update("Initializing P2P Manager...", 6, 13);
+			Debug.Log("Initializing P2P Manager...");
 			p2pManager = P2PManager.GetInstance();
 
+			// Initialize Command Manager
+			Debug.Log("Initializing Protocol Manager...");
+			CmdManager.Initialize();
+
 			// Initialize Download Manager
-			splash.Update("Initializing Download Manager...", 7, 13);
+			Debug.Log("Initializing Download Manager...");
 			DownloadManager.Initialize();
 
 			// Initialize Upload Manager
-			splash.Update("Initializing Upload Manager...", 8, 13);
+			Debug.Log("Initializing Upload Manager...");
 			UploadManager.Initialize();
-
-			// Initialize Command Manager
-			splash.Update("Initializing Protocol Manager...", 9, 13);
-			CmdManager.Initialize();
 		}
 
 		/// Initialize NyFolder Application + Plugins
-		private static void InitApplication (ref SplashScreen splash) {
+		private static void InitApplication() {
 			// Initialize NyFolder Application
-			splash.Update("Initializing NyFolder...", 10, 13);
+			Debug.Log("Initializing NyFolder...");
 			nyFolder = new NyFolderApp();
 			nyFolder.Initialize();
 
 			// Initialize Plugins
-			splash.Update("Initializing NyFolder Plugins...", 11, 13);
+			Debug.Log("Initializing NyFolder Plugins...");
 			PluginManager.Initialize(nyFolder);
 
 			// Start Plugins
-			splash.Update("Starting NyFolder Plugins...", 12, 13);
+			Debug.Log("Starting NyFolder Plugins...");
 			PluginManager.RunPlugins();
 		}
 
@@ -120,31 +101,24 @@ namespace NyFolder {
 		// ============================================
 		// Horrible Main :D
 		public static int Main (string[] args) {
-			try {
+			do {
+				p2pManager = null;
+				nyFolder = null;
+
 				// Initialize Gtk Support
 				if (Gtk.Application.InitCheck("NyFolder.exe", ref args) == false) {
 					PrintErrorMessage("You Don't Have Gtk Support Here...");
 					return(1);
 				}
 
-				// Run Splash Screen and Initialize Components
-				SplashInit();
-			} catch (Exception e) {
-				if (nyFolder != null) nyFolder.Quit();
-				if (p2pManager != null) p2pManager.Kill();
+				// Initialize Components
+				InitBase();
+				InitNetwork();
+				InitApplication();
 
-				// Print Error Message
-				PrintErrorMessage(e);
-				return(1);
-			}
-
-			do {
 				try {
 					// Set 'No Restart' Application
 					NyFolderApp.Restart = false;
-
-					// Get P2P Manager Instance
-					p2pManager = P2PManager.GetInstance();
 
 					// Run NyFolder Application
 					nyFolder.Run();
@@ -169,6 +143,7 @@ namespace NyFolder {
 					if (NyFolderApp.Restart == false && nyFolder != null)
 						nyFolder.Quit();
 				}
+				Thread.Sleep(1000);
 			} while (NyFolderApp.Restart == true);
 			return(0);
 		}

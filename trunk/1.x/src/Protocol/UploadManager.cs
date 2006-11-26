@@ -56,15 +56,25 @@ namespace NyFolder.Protocol {
 		// ============================================
 		/// Initialize Upload Manager
 		public static void Initialize() {
+			// Initialize Events (None)
+			SendedPart = null;
+			Finished = null;
+			Aborted = null;
+			Added = null;
+
 			// Create Thread-Safe File Lists Instances
 			acceptList = new FileList();
 			uploadList = new FileList();
+			numUploads = 0;
+			fileId = 1;
 		}
 
 		/// Abort All The Uploads in the List
 		public static void Clear() {
 			acceptList.RemoveAll();
 			uploadList.RemoveAll();
+			numUploads = 0;
+			fileId = 1;
 		}
 
 		// ============================================

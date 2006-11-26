@@ -55,6 +55,9 @@ namespace NyFolder.GUI.Glue {
 		// PUBLIC Constructors
 		// ============================================
 		public NetworkManager (GUI.Window window) {
+			// Initialize Events (None)
+			UserAccept = null;
+
 			// Initialize Components
 			this.menuManager = window.Menu;
 			this.userPanel = window.UserPanel;

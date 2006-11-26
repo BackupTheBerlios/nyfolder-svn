@@ -127,7 +127,7 @@ namespace NyFolder.GUI {
 		};
 
 		// [name] = Gtk.Image
-		private static Hashtable stock_images = new Hashtable();
+		private static Hashtable stock_images = null;
 
 		// ============================================
 		// PUBLIC Methods
@@ -146,7 +146,7 @@ namespace NyFolder.GUI {
 			}
 
 			// Stock Images
-			stock_images.Clear();
+			stock_images = Hashtable.Synchronized(new Hashtable());
 			foreach (string name in stock_images_names) {
 				stock_images.Add(name, new Gdk.Pixbuf(null, name + ".png"));
 			}

@@ -56,10 +56,15 @@ namespace NyFolder.Protocol {
 		// ============================================
 		/// Initialize Download Manager
 		public static void Initialize() {
+			// Initialize Events (None)
+			ReceivedPart = null;
+			Finished = null;
+			Aborted = null;
+			Added = null;
+
 			// Create Thread-Safe File Lists Instances
 			acceptList = new FileList();
 			recvList = new FileList();
-
 			numDownloads = 0;
 		}
 
@@ -67,7 +72,6 @@ namespace NyFolder.Protocol {
 		public static void Clear() {
 			acceptList.RemoveAll();
 			recvList.RemoveAll();
-
 			numDownloads = 0;
 		}
 

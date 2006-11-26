@@ -52,6 +52,11 @@ namespace NyFolder.PluginLib {
 		// ============================================
 		/// Initialize The Plugin Manager and Load Base Plugins (User and System)
 		public static void Initialize (INyFolder nyFolderApp) {
+			// Initialize Events (None)
+			LoadFailed = null;
+			InitFailed = null;
+			Initing = null;
+
 			// Set Interface to Access into NyFolder Application
 			nyFolder = nyFolderApp;
 
