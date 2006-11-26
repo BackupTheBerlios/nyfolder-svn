@@ -1,0 +1,13 @@
+            _______         ___________    .__       .___            
+            \      \ ___.__.\_   _____/___ |  |    __| _/___________ 
+            /   |   <   |  | |    __)/  _ \|  |   / __ |/ __ \_  __ \
+           /    |    \___  | |     \(  <_> )  |__/ /_/ \  ___/|  | \/
+           \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
+                   \/\/          \/ Known Issues      \/    \/
+
+This list covers some of the known problems with NyFolder. 
+Please read this before reporting any new bugs.
+
+ * Download/Upload
+	Unhandled Exception when you save file with the name of another in progress.
+	This Bug is in ToDo List.

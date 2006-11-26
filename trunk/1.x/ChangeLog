@@ -8,6 +8,8 @@
  * 26 Nov 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Added GUI.Viewer and GUI.RefreshableViewer to Simplify 
 	the Managment of the Refresh Button (Plugins, ecc)
+	Dropped SplashScreen, Main.cs.old note that Main.cs code is changed a little
+	Fixed All The ReInit and Reset of Events
 
  * 14 Nov 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Fixed Download/Upload Manager When User Disconnect...
