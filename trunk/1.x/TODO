@@ -18,12 +18,12 @@ Note:	All Event Handler That Works with The GUI have to do this first
  - "No Splash Screen" Options	(Dropped Splash Screen)
  - Download/Upload Save on The same file
  - Download/Upload Manager FIX ID NOT FOUND (URGENT)
+ - Upload Manager Reset fileId when is > MAX uint SIZE
 
 -------------
    Plugins
 -------------
  - Update Notifier
  - BuddyList (Remember Password, Accepted User, Saved User) 
-	- Do The IsOnline Check :'(
 	- Automatic Login (Skip Login Dialog)
 	- Accounts Managing...
