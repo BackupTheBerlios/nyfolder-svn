@@ -49,7 +49,7 @@ namespace NyFolder.Protocol {
 		private static FileList acceptList = null;
 		private static FileList uploadList = null;
 		private static int numUploads = 0;
-		private static uint fileId = 1;		// ID Zero is Reserved
+		private static ulong fileId = 1L;		// ID Zero is Reserved
 
 		// ============================================
 		// PUBLIC (Init/Clear) Methods
@@ -119,6 +119,7 @@ namespace NyFolder.Protocol {
 			fileSender.SendedPart += new BlankEventHandler(OnSendedPart);
 			fileSender.EndSend += new ExceptionEventHandler(OnEndSend);
 
+			// Add File Sender To The List
 			uploadList.Add(peer, fileSender);
 
 			// Start The File Sender
@@ -145,8 +146,9 @@ namespace NyFolder.Protocol {
 			// Abort Upload
 			fileSender.Abort();
 
-			// Update Num Uploads
+			// Update Num Uploads & Reset file Id if it's possible
 			numUploads--;
+			if (numUploads == 0) fileId = 1;
 
 			// Raise Aborted Event
 			if (Aborted != null) Aborted(fileSender);
@@ -163,8 +165,9 @@ namespace NyFolder.Protocol {
 		private static void OnEndSend (object sender, Exception e) {
 			FileSender fileSender = sender as FileSender;
 
-			// Update Num Uploads
+			// Update Num Uploads & Reset file Id if it's possible
 			numUploads--;
+			if (numUploads == 0) fileId = 1;
 			
 			// Upload Finished/Aborted, Remove it
 			Remove(fileSender);

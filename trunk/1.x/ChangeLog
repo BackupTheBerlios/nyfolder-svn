@@ -5,6 +5,10 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/
 
+ * 01 Dec 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
+	Moved Upload Manager fileId from uint to ulong and resetted
+	to the "1" value when numDownloads is 0.
+
  * 26 Nov 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Added GUI.Viewer and GUI.RefreshableViewer to Simplify 
 	the Managment of the Refresh Button (Plugins, ecc)

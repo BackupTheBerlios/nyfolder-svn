@@ -60,11 +60,11 @@ namespace NyFolder.Protocol {
 		// PUBLIC Constructors
 		// ============================================
 		/// Create New File Sender (Used Only for Compare)
-		public FileSender (uint id) : base(id) {
+		public FileSender (ulong id) : base(id) {
 		}
 
 		/// Create New File Sender
-		public FileSender (uint id, PeerSocket peer, string path) :
+		public FileSender (ulong id, PeerSocket peer, string path) :
 			base(id, peer, path)
 		{
 			System.IO.FileInfo fileInfo = new System.IO.FileInfo(path);

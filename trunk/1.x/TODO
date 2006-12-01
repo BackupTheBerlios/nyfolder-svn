@@ -17,8 +17,10 @@ Note:	All Event Handler That Works with The GUI have to do this first
 -------------
  - "No Splash Screen" Options	(Dropped Splash Screen)
  - Download/Upload Save on The same file
- - Download/Upload Manager FIX ID NOT FOUND (URGENT)
  - Upload Manager Reset fileId when is > MAX uint SIZE
+
+ - Download/Upload Manager FIX ID NOT FOUND
+	Half solved with a Message Box in The GUI.Glue
 
 -------------
    Plugins

@@ -44,18 +44,18 @@ namespace NyFolder.Protocol {
 		private string originalName = null;
 		private PeerSocket peer = null;
 		private long fileSize = 0;
-		private uint id;
+		private ulong id;
 
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
-		public FileInfo (uint id) : this(id, null, null) {
+		public FileInfo (ulong id) : this(id, null, null) {
 		}
 
-		public FileInfo (uint id, PeerSocket peer) : this(id, peer, null) {
+		public FileInfo (ulong id, PeerSocket peer) : this(id, peer, null) {
 		}
 
-		public FileInfo (uint id, PeerSocket peer, string originalName) {
+		public FileInfo (ulong id, PeerSocket peer, string originalName) {
 			this.id = id;
 			this.peer = peer;
 			if (this.peer != null) {
@@ -96,7 +96,7 @@ namespace NyFolder.Protocol {
 		// PUBLIC Properties
 		// ============================================
 		/// Get The File Id
-		public uint Id {
+		public ulong Id {
 			get { return(this.id); }
 			set { this.id = value; }
 		}
