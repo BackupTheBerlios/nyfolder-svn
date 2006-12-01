@@ -86,7 +86,7 @@ namespace NyFolder.Protocol {
 		}
 
 		/// Request File By ID
-		public static void RequestFile (PeerSocket peer, uint id) {
+		public static void RequestFile (PeerSocket peer, ulong id) {
 			XmlRequest xmlRequest = new XmlRequest();
 			xmlRequest.FirstTag = "get";
 			xmlRequest.Attributes.Add("what", "file-id");

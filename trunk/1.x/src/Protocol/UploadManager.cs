@@ -97,7 +97,7 @@ namespace NyFolder.Protocol {
 		}
 
 		/// Start File Transfer (Accepted File)
-		public static void Send (PeerSocket peer, uint id) {
+		public static void Send (PeerSocket peer, ulong id) {
 			FileSender fileSender = new FileSender(id);
 			fileSender = (FileSender) acceptList.Search(peer, fileSender);
 
@@ -133,7 +133,7 @@ namespace NyFolder.Protocol {
 		}
 
 		/// Abort File Upload
-		public static void Abort (PeerSocket peer, uint id) {
+		public static void Abort (PeerSocket peer, ulong id) {
 			FileSender fileSender = new FileSender(id);
 			if ((fileSender = (FileSender) acceptList.Search(peer, fileSender)) != null) {
 				RemoveFromAcceptList(fileSender);

@@ -79,7 +79,7 @@ namespace NyFolder.Protocol {
 		// PUBLIC Methods
 		// ============================================
 		/// Add New Download To The Accept List
-		public static void Accept  (PeerSocket peer, uint id, 
+		public static void Accept  (PeerSocket peer, ulong id, 
 									string path, string saveAs) 
 		{
 			FileReceiver fileRecv = new FileReceiver(id, peer, path, saveAs);
@@ -95,7 +95,7 @@ namespace NyFolder.Protocol {
 		}
 
 		/// Move Download From Accept To Receiving List and Initialize it
-		public static void InitDownload (PeerSocket peer, uint id, XmlRequest xml) {
+		public static void InitDownload (PeerSocket peer, ulong id, XmlRequest xml) {
 			FileReceiver fileRecv = new FileReceiver(id);
 			if ((fileRecv = (FileReceiver) acceptList.Search(peer, fileRecv)) == null) {
 				ArrayList files = acceptList.GetFiles(peer);
@@ -115,7 +115,7 @@ namespace NyFolder.Protocol {
 		}
 
 		/// Append New Data To Download
-		public static void GetFilePart (PeerSocket peer, uint id, XmlRequest xml) {
+		public static void GetFilePart (PeerSocket peer, ulong id, XmlRequest xml) {
 			FileReceiver fileRecv = new FileReceiver(id);
 			fileRecv = (FileReceiver) recvList.Search(peer, fileRecv);
 			if (fileRecv == null) return;
@@ -128,7 +128,7 @@ namespace NyFolder.Protocol {
 		}
 
 		/// Abort Download and Remove it From Receiving or Accepted List
-		public static void AbortDownload (PeerSocket peer, uint id) {
+		public static void AbortDownload (PeerSocket peer, ulong id) {
 			FileReceiver fileRecv = new FileReceiver(id);
 			if ((fileRecv = (FileReceiver) acceptList.Search(peer, fileRecv)) != null) {
 				acceptList.Remove(peer, fileRecv);
@@ -142,7 +142,7 @@ namespace NyFolder.Protocol {
 		}
 
 		/// Save and Remove Download From Receiving List
-		public static void FinishedDownload (PeerSocket peer, uint id) {
+		public static void FinishedDownload (PeerSocket peer, ulong id) {
 			FileReceiver fileRecv = new FileReceiver(id);
 			fileRecv = (FileReceiver) recvList.Search(peer, fileRecv);
 			fileRecv.Save();

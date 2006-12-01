@@ -158,7 +158,7 @@ namespace NyFolder.GUI.Glue {
 			switch (what) {
 				case "file-id":
 					try {
-						uint id = uint.Parse((string) xml.Attributes["id"]);
+						ulong id = ulong.Parse((string) xml.Attributes["id"]);
 						UploadManager.Send(peer, id);
 						// TODO: Manage ID Not Found
 					} catch (Exception e) {
@@ -196,7 +196,7 @@ namespace NyFolder.GUI.Glue {
 
 			switch (what) {
 				case "file":
-					uint id = uint.Parse((string) xml.Attributes["id"]);
+					ulong id = ulong.Parse((string) xml.Attributes["id"]);
 					DownloadManager.GetFilePart(peer, id, xml);
 					break;
 				case "file-list":
@@ -214,7 +214,7 @@ namespace NyFolder.GUI.Glue {
 			string what = (string) xml.Attributes["what"];
 
 			if (what == "file") {
-				uint id = uint.Parse((string) xml.Attributes["id"]);
+				ulong id = ulong.Parse((string) xml.Attributes["id"]);
 				DownloadManager.InitDownload(peer, id, xml);
 			}
 		});
@@ -226,7 +226,7 @@ namespace NyFolder.GUI.Glue {
 			string what = (string) xml.Attributes["what"];
 
 			if (what == "file") {
-				uint id = uint.Parse((string) xml.Attributes["id"]);
+				ulong id = ulong.Parse((string) xml.Attributes["id"]);
 				DownloadManager.FinishedDownload(peer, id);
 			}
 		});
@@ -238,7 +238,7 @@ namespace NyFolder.GUI.Glue {
 			string what = (string) xml.Attributes["what"];
 
 			if (what == "file") {
-				uint id = uint.Parse((string) xml.Attributes["id"]);
+				ulong id = ulong.Parse((string) xml.Attributes["id"]);
 				DownloadManager.AbortDownload(peer, id);
 			}
 		});
@@ -250,7 +250,7 @@ namespace NyFolder.GUI.Glue {
 			string what = (string) xml.Attributes["what"];
 
 			if (what == "file") {
-				uint id = uint.Parse((string) xml.Attributes["id"]);
+				ulong id = ulong.Parse((string) xml.Attributes["id"]);
 				UploadManager.Abort(peer, id);
 			}
 		});
@@ -262,7 +262,7 @@ namespace NyFolder.GUI.Glue {
 		private void AcceptFileQuestion (PeerSocket peer, XmlRequest xml) {
 			string name = (string) xml.Attributes["name"];
 			string size = (string) xml.Attributes["size"];
-			uint id = uint.Parse((string) xml.Attributes["id"]);
+			ulong id = ulong.Parse((string) xml.Attributes["id"]);
 
 			UserInfo userInfo = peer.Info as UserInfo;
 
