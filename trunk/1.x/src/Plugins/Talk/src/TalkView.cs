@@ -24,6 +24,9 @@ using System.Text.RegularExpressions;
 
 using Gtk;
 
+using Niry;
+using Niry.Utils;
+
 namespace NyFolder.Plugins.Talk {
 	public class TalkView : TextView {
 		private TextIter endIter;
@@ -37,7 +40,7 @@ namespace NyFolder.Plugins.Talk {
 		private Gdk.Cursor handCursor;
 		
 		private const string URL_REGEX = @"((\b((news|http|https|ftp|file|irc)://|mailto:|(www|ftp)\.|\S*@\S*\.)|(^|\s)/\S+/|(^|\s)~/\S+)\S*\b/?)";
-		
+
 		private static Regex regex = new Regex(URL_REGEX, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 		
 		private static Regex emoticonRegex;
@@ -194,14 +197,17 @@ namespace NyFolder.Plugins.Talk {
 			if (iter.HasTag(linkTag)) {
 				TextIter end = iter;
 				if (iter.BackwardToTagToggle(linkTag) &&
-					end.ForwardToTagToggle(linkTag)) {
+					end.ForwardToTagToggle(linkTag)) 
+				{
+					// Open URL
+					UrlUtils.OpenLink(GetUrl(iter, end));
 					return true;
 				}
 			}
 			
 			return base.OnButtonPressEvent(evnt);
 		}
-		
+
 		protected override bool OnMotionNotifyEvent(Gdk.EventMotion evnt) {
 			int pointerX, pointerY;
 			Gdk.ModifierType pointerMask;
@@ -289,6 +295,22 @@ namespace NyFolder.Plugins.Talk {
 					ScrollMarkOnscreen(endMark);
 				}
 			}
+		}
+
+		private string GetUrl(TextIter start, TextIter end) {
+			string url = start.GetText(end).Trim();
+			
+			// Add to 'http://' to the front of www.foo.com
+			// 'ftp://' to ftp.foo.com,
+			// 'mailto:' to alex@foo.com
+			if (url.StartsWith("www.")) {
+				url = "http://" + url;
+			} else if (url.StartsWith("ftp.")) {
+				url = "ftp://" + url;
+			} else if (url.IndexOf("@") > 1 && url.IndexOf(".") > 3 && !url.StartsWith("mailto:")) {
+				url = "mailto:" + url;
+			}
+			return(url);
 		}
 	}
 }
