@@ -101,6 +101,9 @@ namespace NyFolder.Plugins.BuddyList {
 				login.UserNameComboBoxAppend(accounts);
 				login.UserNameCompletion.TextColumn = 0;
 
+				// Add Login Dialogs Menus
+				AddLoginDialogMenus(login);
+
 				// Add Event Handler When Password Entry Get Focus
 				login.PasswordFocusIn += new FocusInEventHandler(OnPasswordFocusIn);
 			});
@@ -333,6 +336,34 @@ namespace NyFolder.Plugins.BuddyList {
 		private void AddUserToNetworkViewer (UserInfo userInfo) {
 			NetworkViewer networkViewer = nyFolder.MainWindow.NotebookViewer.NetworkViewer;
 			networkViewer.Store.Add(userInfo);
+		}
+
+		private void AddLoginDialogMenus (GUI.Dialogs.Login login) {
+			ActionEntry[] entries = new ActionEntry[] {
+//				new ActionEntry("FileMenu", null, "_File", null, null, null),
+	
+				// File Menu
+				new ActionEntry("Accounts", null, "Accounts", null, 
+								"Accounts", new EventHandler(OnAccountsDialog))
+			};
+
+			string ui = "<ui>" +
+						"  <menubar name='MenuBar'>" +
+						"    <menu action='FileMenu'>" +
+						"      <menuitem action='Accounts' position='top'/>" +
+						"    </menu>" +
+						"  </menubar>" +
+						"</ui>";
+
+			login.Menu.AddMenus(ui, entries);
+		}
+
+		private void OnAccountsDialog (object sender, EventArgs args) {
+			Gtk.Application.Invoke(delegate {
+				AccountsDialog dialog = new AccountsDialog();
+				dialog.Run();
+				dialog.Destroy();
+			});
 		}
 
 		// ============================================

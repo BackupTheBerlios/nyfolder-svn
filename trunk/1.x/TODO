@@ -15,7 +15,6 @@ Note:	All Event Handler That Works with The GUI have to do this first
 -------------
    Main
 -------------
- - "No Splash Screen" Options	(Dropped Splash Screen)
  - Download/Upload Save on The same file
  - Upload Manager Reset fileId when is > MAX uint SIZE
 
@@ -25,7 +24,13 @@ Note:	All Event Handler That Works with The GUI have to do this first
 -------------
    Plugins
 -------------
- - Update Notifier
- - BuddyList (Remember Password, Accepted User, Saved User) 
+[x] Account Registration
+[ ] Buddy List
+	(Remember Password, Accepted User, Saved User) 
 	- Automatic Login (Skip Login Dialog)
 	- Accounts Managing...
+[x] Download Manager
+[x] Image Preview
+[x] Talk
+	- TODO: Allow Multiple Person Chat
+[x] Tray Icon

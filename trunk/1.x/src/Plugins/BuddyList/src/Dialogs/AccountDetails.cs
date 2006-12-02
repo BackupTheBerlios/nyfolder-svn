@@ -19,6 +19,7 @@
  */
 
 using Gtk;
+using Glade;
 
 using System;
 
@@ -46,7 +47,8 @@ namespace NyFolder.Plugins.BuddyList {
 		// PUBLIC Constructors
 		// ============================================
 		/// Create New "Add Peer" Dialog
-		public AccountDetails() : base("dialog", "AccountDetails.glade") {
+		public AccountDetails() : base("dialog", new XML(null, "AccountDetails.glade", "dialog", null))
+		{
 			// Initialize Dialog Image
 			this.image.Pixbuf = StockIcons.GetPixbuf("Network", 96);
 		}

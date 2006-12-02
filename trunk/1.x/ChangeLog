@@ -5,6 +5,9 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/
 
+ * 02 Dec 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
+	Now Double Click on Your Folder Items, Try To Open The Selected File.
+
  * 01 Dec 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Moved Upload Manager fileId from uint to ulong and resetted
 	to the "1" value when numDownloads is 0.

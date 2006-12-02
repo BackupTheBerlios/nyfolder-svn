@@ -13,7 +13,7 @@ PKGS = $(PKG_GTK) $(PKG_CAIRO) $(PKG_GLADE) $(PKG_NIRY)
 
 # ============================== NyFolder Infos ====
 NAME = NyFolder
-VERSION = 0.93
+VERSION = 0.94
 COMPILER = `$(CC) --version`
 # ==================================================
 NYFOLDER_DLL = nyfolder-plugin.dll
@@ -54,7 +54,6 @@ SRC_GUI_Base =	GUI/Base/Dialogs.cs		\
 				GUI/Base/GladeDialog.cs	\
 				GUI/Base/GladeWindow.cs	\
 				GUI/Base/UIManager.cs
-
 
 SRC_GUI = $(SRC_GUI_Base) $(SRC_GUI_Main) $(SRC_GUI_Dialogs) $(SRC_GUI_Glue)
 

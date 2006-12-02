@@ -19,6 +19,7 @@
  */
 
 using Gtk;
+using Glade;
 
 using System;
 
@@ -44,17 +45,18 @@ namespace NyFolder.Plugins.BuddyList {
 		// PUBLIC Constructors
 		// ============================================
 		/// Create New "Add Peer" Dialog
-		public AccountsDialog() : base("dialog", "AccountsDialog.glade") {
-			TreeStore store = new TreeStore(typeof(string), typeof(string));
+		public AccountsDialog() : base("dialog", new XML(null, "AccountsDialog.glade", "dialog", null))
+		{
+			TreeStore store = new TreeStore(typeof(string), typeof(bool));
 
-			store.AppendValues("Demo 0", "Data 0");
-			store.AppendValues("Demo 1", "Data 1");
-			store.AppendValues("Demo 1", "Data 1");
+			store.AppendValues("Demo 0", true);
+			store.AppendValues("Demo 1", false);
+			store.AppendValues("Demo 1", false);
 
 			treeView.Model = store;
 
 			treeView.AppendColumn("Demo", new CellRendererText(), "text", 0);
-			treeView.AppendColumn("Data", new CellRendererText(), "text", 1);
+			treeView.AppendColumn("Data", new CellRendererToggle(), "active", 1);
 		}
 
 		// ============================================

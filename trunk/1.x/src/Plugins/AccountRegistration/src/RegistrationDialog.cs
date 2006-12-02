@@ -104,7 +104,7 @@ namespace NyFolder.Plugins.AccountRegistration {
 		private int PasswordStrength (string password) {
 			int strength = 0;
 			string[] patterns = new string[] {
-				"#[a-z]#", "#[A-Z]#", "#[0-9]#", 
+				"[a-z]", "[A-Z]", "[0-9]"
 			};
 
 			foreach (string pattern in patterns) {

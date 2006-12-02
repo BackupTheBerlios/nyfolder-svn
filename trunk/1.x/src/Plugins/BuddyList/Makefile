@@ -36,7 +36,8 @@ SRC_Plugin =	src/Database/AccountsTable.cs		\
 				src/BuddyDb.cs						\
 				src/BuddyList.cs
 
-RES_Glade =	
+RES_Glade =		Glade/AccountDetails.glade	\
+				Glade/AccountsDialog.glade
 RES_Images =
 
 SRC = $(SRC_Base) $(SRC_Plugin)
