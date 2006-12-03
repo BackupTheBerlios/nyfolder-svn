@@ -34,18 +34,11 @@ using NyFolder.Utils;
 
 namespace NyFolder.Protocol {
 	/// Web Server Interaction
-	public sealed class HttpRequest {
+	public static class HttpRequest {
 		// ============================================
 		// PRIVATE STATIC Members
 		// ============================================
 		private static WebProxy proxy;
-
-		// ============================================
-		// PUBLIC Constructors
-		// ============================================
-		public HttpRequest() {
-			proxy = null;
-		}
 
 		// ============================================
 		// PUBLIC STATIC Methods
@@ -206,6 +199,7 @@ namespace NyFolder.Protocol {
 			return(xml.BodyText);
 		}
 
+		/// Try to Register new Account
 		public static void RegisterAccount (string user, string pass, string mail) {
 			// Set Options
 			Hashtable options = new Hashtable();
@@ -227,15 +221,18 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC STATIC Proxy Methods
 		// ============================================
+		/// Set Proxy Server
 		public static void SetProxyServer (string server, int port) {
 			proxy = new WebProxy(server, port);
 			proxy.BypassProxyOnLocal = true;
 		}
 
+		/// Set Proxy Credential
 		public static void SetProxyCredential (string userName, string password) {
 			proxy.Credentials = new NetworkCredential(userName, password);
 		}
 
+		/// Set Proxy Credential
 		public static void SetProxyCredential (string userName, 
 											   string password,
 											   string domain)
@@ -243,6 +240,7 @@ namespace NyFolder.Protocol {
 			proxy.Credentials = new NetworkCredential(userName, password, domain);			
 		}
 
+		/// Unset Proxy
 		public static void UnsetProxy() {
 			proxy = null;
 		}
@@ -306,6 +304,9 @@ namespace NyFolder.Protocol {
 			return(xmlRequest);
 		}
 		
+		// ============================================
+		// PUBLIC Properties
+		// ============================================
 		public static  WebProxy Proxy {
 			get { return(proxy); }
 		}

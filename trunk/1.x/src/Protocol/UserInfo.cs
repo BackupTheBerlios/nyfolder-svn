@@ -46,6 +46,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
+		/// Create New User Info
 		public UserInfo (string username) {
 			this.informations = Hashtable.Synchronized(new Hashtable());
 			this.secureAuth = false;
@@ -53,6 +54,7 @@ namespace NyFolder.Protocol {
 			this.port = 7085;
 		}
 
+		/// Create New User Info
 		public UserInfo (string username, bool secureAuth) {
 			this.informations = Hashtable.Synchronized(new Hashtable());
 			this.secureAuth = secureAuth;
@@ -60,6 +62,7 @@ namespace NyFolder.Protocol {
 			this.port = 7085;
 		}
 
+		/// Create New User Info
 		public UserInfo (string username, bool secureAuth, string magic) {
 			this.informations = Hashtable.Synchronized(new Hashtable());
 			this.secureAuth = secureAuth;
@@ -156,6 +159,7 @@ namespace NyFolder.Protocol {
 			set { this.secureAuth = value; }
 		}
 
+		/// User Is Online ?
 		public bool IsOnline {
 			get {
 				if (P2PManager.KnownPeers == null) return(false);

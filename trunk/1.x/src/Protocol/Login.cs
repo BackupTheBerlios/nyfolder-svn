@@ -85,6 +85,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC STATIC Methods
 		// ============================================
+		/// Generate Peer's Magic
 		public static string GenerateMagic (PeerSocket peer) {
 			UserInfo myInfo = MyInfo.GetInstance();
 			string userIp = CryptoUtils.SHA1String(peer.GetRemoteIP().ToString());

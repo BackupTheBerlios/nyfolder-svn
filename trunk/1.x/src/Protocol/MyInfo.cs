@@ -47,6 +47,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC STATIC Methods
 		// ============================================
+		/// Initialize My Info
 		public static void Initialize (string username) {
 			myInfo = new UserInfo(username);
 			myInfo.Informations.Add("magic", "None");
@@ -55,11 +56,13 @@ namespace NyFolder.Protocol {
 			timerWebStatusUpdate = null;
 		}
 
+		/// Initialize My Info
 		public static void Initialize (string username, bool secureAuth) {
 			myInfo = new UserInfo(username, secureAuth);
 			if (secureAuth == false) myInfo.Informations.Add("magic", "None");
 		}
 
+		/// Get MyInfo's UserInfo Instance
 		public static UserInfo GetInstance() {
 			return(myInfo);
 		}

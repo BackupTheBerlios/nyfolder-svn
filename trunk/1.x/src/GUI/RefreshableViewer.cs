@@ -21,6 +21,7 @@
 namespace NyFolder.GUI {
 	/// Abstract Refreshable Viewer
 	public abstract class RefreshableViewer : Viewer {
+		/// Refresh Method
 		public abstract void Refresh();
 	}
 }

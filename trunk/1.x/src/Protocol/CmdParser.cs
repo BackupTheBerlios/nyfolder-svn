@@ -32,7 +32,7 @@ using NyFolder.Protocol;
 
 namespace NyFolder.Protocol {
 	public static partial class CmdManager {
-		public class CmdParser {
+		internal class CmdParser {
 			// ============================================
 			// PUBLIC Events
 			// ============================================

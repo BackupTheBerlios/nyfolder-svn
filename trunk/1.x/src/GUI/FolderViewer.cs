@@ -241,8 +241,12 @@ namespace NyFolder.GUI {
 				// Sensitize the up button
 				if (DirChanged != null) DirChanged(this, true);
 			} else if (userInfo == MyInfo.GetInstance()) {
-				// Try To Open This File
-				System.Diagnostics.Process.Start(path);
+				try {
+					// Try To Open This File
+					System.Diagnostics.Process.Start(path);
+				} catch (Exception e) {
+					Debug.Log("Failed Process.Start() {0}: {1}", path, e.Message);
+				}
 			}
 		}
 

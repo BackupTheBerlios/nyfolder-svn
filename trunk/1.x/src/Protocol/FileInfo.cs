@@ -29,6 +29,7 @@ using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.Protocol {
+	/// Abstract File Info
 	public abstract class FileInfo : IComparable {
 		// ============================================
 		// PUBLIC Events
@@ -49,12 +50,15 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
+		/// Create New File Info only with Id (used for compare)
 		public FileInfo (ulong id) : this(id, null, null) {
 		}
 
+		/// Create New File Info with id and its owner
 		public FileInfo (ulong id, PeerSocket peer) : this(id, peer, null) {
 		}
 
+		/// Create New File Info with id, its owner and its name
 		public FileInfo (ulong id, PeerSocket peer, string originalName) {
 			this.id = id;
 			this.peer = peer;
@@ -73,6 +77,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Abort Method
 		public abstract void Abort();
 
 		/// Compare Files Id

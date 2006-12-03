@@ -51,6 +51,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Constructors
 		// ============================================
+		/// Create New File List
 		public FileList() {
 			this.data = Hashtable.Synchronized(new Hashtable());
 		}
@@ -88,6 +89,7 @@ namespace NyFolder.Protocol {
 			}
 		}
 
+		/// Search File into List
 		public FileInfo Search (PeerSocket peer, FileInfo fileInfo) {
 			lock (this.data) {
 				if (this.data.ContainsKey(peer) == true) {
@@ -99,6 +101,7 @@ namespace NyFolder.Protocol {
 			return(null);
 		}
 
+		/// Get Peer's File List
 		public ArrayList GetFiles (PeerSocket peer) {
 			return((ArrayList) this.data[peer]);
 		}

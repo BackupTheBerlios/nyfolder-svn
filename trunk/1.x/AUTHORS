@@ -5,4 +5,12 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ Authors           \/    \/
 
+
 Matteo Bertozzi <theo.bertozzi@gmail.com>
+
+
+Deb Package Mantainer
+	Fabio Nigi <http://fabiolone.debianhardstyle.net/>
+	
+	#debianhardstyle
+	deb http://debian.debianhardstyle.net/debian binary/

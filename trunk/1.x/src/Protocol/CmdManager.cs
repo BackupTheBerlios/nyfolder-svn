@@ -35,26 +35,40 @@ namespace NyFolder.Protocol {
 	public delegate void ProtocolHandler (PeerSocket peer, XmlRequest xml);
 	public delegate void SetProtocolEventHandler (P2PManager p2pManager);
 
+	/// Command Manager
 	public static partial class CmdManager {
 		// ============================================
 		// PUBLIC (Default Commands) Events
 		// ============================================
+		/// Raised When "Login" Event Arrive
 		public static event ProtocolLoginHandler LoginEvent = null;
+		/// Raised When "Quit" (logout/disconnect) Event Arrive
 		public static event ProtocolHandler QuitEvent = null;
+		/// Raised When "Error" Event Arrive
 		public static event ProtocolHandler ErrorEvent = null;
+		/// Raised When "Get" Event Arrive
 		public static event ProtocolHandler GetEvent = null;
+		/// Raised When "Ask" Event Arrive
 		public static event ProtocolHandler AskEvent = null;
+		/// Raised When "Send" Event Arrive
 		public static event ProtocolHandler SndEvent = null;
+		/// Raised When "Send Start" Event Arrive
 		public static event ProtocolHandler SndStartEvent = null;
+		/// Raised When "Send End" Event Arrive
 		public static event ProtocolHandler SndEndEvent = null;
+		/// Raised When "Send Abort" Event Arrive
 		public static event ProtocolHandler SndAbortEvent = null;
+		/// Raised When "Recv Abort" Event Arrive
 		public static event ProtocolHandler RecvAbortEvent = null;
+		/// Raised When Unknown Event Arrive
 		public static event ProtocolHandler UnknownEvent = null;
 
 		// ============================================
 		// PUBLIC Events
 		// ============================================
+		/// Raised When You could add new Protocol Handler
 		public static event SetProtocolEventHandler AddProtocolEvent = null;
+		/// Raised When You should remove your Protocol Handler
 		public static event SetProtocolEventHandler DelProtocolEvent = null;
 
 		// ============================================

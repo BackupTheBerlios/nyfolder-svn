@@ -106,6 +106,7 @@ namespace NyFolder.Protocol {
 			Abort(null);
 		}
 		
+		/// Abort The Recv Operation with Error Message
 		public void Abort (string msgerror) {
 			Save();
 			saveOnExit = false;

@@ -80,6 +80,7 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
+		/// Add New Upload
 		public static void Add (PeerSocket peer, string path) {
 			// Create New File Sender && Update File ID
 			FileSender fileSender = new FileSender(fileId++, peer, path);

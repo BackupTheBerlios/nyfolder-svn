@@ -31,6 +31,7 @@ using NyFolder.Utils;
 using NyFolder.Protocol;
 
 namespace NyFolder.Protocol {
+	/// Commands
 	public static class Cmd {
 		// ============================================
 		// PUBLIC Events
