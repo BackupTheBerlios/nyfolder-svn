@@ -73,6 +73,11 @@ namespace NyFolder.Plugins.TrayIcon {
 			this.nyFolder = iNyFolder;
 		}
 
+		/// UnInitialize Tray Icon Plugin
+		public override void Uninitialize() {
+			this.statusIcon = null;
+		}
+
 		// ============================================
 		// PRIVATE (Methods) Event Handlers
 		// ============================================

@@ -72,13 +72,17 @@ namespace NyFolder.Plugins.DownloadManager {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		/// Initialize Tray Icon Plugin
+		/// Initialize Download Manager Plugin
 		public override void Initialize (INyFolder iNyFolder) {
 			this.nyFolder = iNyFolder;
 
 			// Initialize GUI Events
 			this.nyFolder.MainWindowStarted += new BlankEventHandler(OnMainWindowStarted);
 			this.nyFolder.MainWindowClosed += new BlankEventHandler(OnMainWindowClosed);
+		}
+
+		/// UnInitialize Download Manager Plugin
+		public override void Uninitialize() {
 		}
 
 		// ============================================

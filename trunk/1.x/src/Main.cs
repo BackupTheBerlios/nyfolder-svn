@@ -134,6 +134,9 @@ namespace NyFolder {
 					PrintErrorMessage(e);
 					return(1);
 				} finally {
+					// Uninitialize Plugins
+					PluginManager.StopPlugins();
+
 					// Clear Download/Upload Manager
 					UploadManager.Clear();
 					DownloadManager.Clear();

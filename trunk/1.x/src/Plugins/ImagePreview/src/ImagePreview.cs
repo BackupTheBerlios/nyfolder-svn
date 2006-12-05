@@ -62,7 +62,7 @@ namespace NyFolder.Plugins.ImagePreview {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		/// Initialize Tray Icon Plugin
+		/// Initialize Image Preview Plugin
 		public override void Initialize (INyFolder iNyFolder) {
 			this.nyFolder = iNyFolder;
 
@@ -72,6 +72,10 @@ namespace NyFolder.Plugins.ImagePreview {
 			// Initialize Protocol Events
 			CmdManager.AddProtocolEvent += new SetProtocolEventHandler(OnAddProtocolCmds);
 			CmdManager.DelProtocolEvent += new SetProtocolEventHandler(OnDelProtocolCmds);
+		}
+
+		/// UnInitialize Image Preview Plugin
+		public override void Uninitialize() {
 		}
 
 		public void RequestImage (UserInfo userInfo, string filePath) {

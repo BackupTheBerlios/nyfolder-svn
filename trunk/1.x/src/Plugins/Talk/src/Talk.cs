@@ -65,7 +65,7 @@ namespace NyFolder.Plugins.Talk {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		/// Initialize Tray Icon Plugin
+		/// Initialize Talk Plugin
 		public override void Initialize (INyFolder iNyFolder) {
 			this.nyFolder = iNyFolder;
 
@@ -75,6 +75,11 @@ namespace NyFolder.Plugins.Talk {
 			// Initialize Protocol Events
 			CmdManager.AddProtocolEvent += new SetProtocolEventHandler(OnAddProtocolCmds);
 			CmdManager.DelProtocolEvent += new SetProtocolEventHandler(OnDelProtocolCmds);
+		}
+
+
+		/// UnInitialize Talk Plugin
+		public override void Uninitialize() {
 		}
 
 		// ============================================

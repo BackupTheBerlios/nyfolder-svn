@@ -40,6 +40,10 @@ namespace NyFolder.PluginLib {
 		public static event StringEventHandler InitFailed = null;
 		/// Event Raised When Plugin's Initialize() is Called.
 		public static event BlankEventHandler Initing = null;
+		/// Event Raised When Plugin's UnInitialize() Failed.
+		public static event StringEventHandler StopFailed = null;
+		/// Event Raised When Plugin's UnInitialize() is Called.
+		public static event BlankEventHandler Stopping = null;
 
 		// ============================================
 		// PRIVATE Members
@@ -61,6 +65,7 @@ namespace NyFolder.PluginLib {
 			nyFolder = nyFolderApp;
 
 			// Initialize Plugins Table
+			if (pluginsTable != null) pluginsTable.Clear();
 			pluginsTable = new Hashtable();
 
 			// Load System's Plugins
@@ -87,6 +92,27 @@ namespace NyFolder.PluginLib {
 					// Remove Plugin From Table
 					pluginsTable.Remove(plugin.Info);
 				}
+			}
+		}
+
+		/// Stop The Plugins In The Reverse Priority Order
+		public static void StopPlugins() {
+			Plugin[] pluginList = ReverseSortPluginsByPriority();
+			foreach (Plugin plugin in pluginList) {
+				try {
+					// Raise Stopping Event
+					if (Stopping != null) Stopping(plugin);
+
+					// Initialize Plugin
+					plugin.Uninitialize();
+				} catch (Exception e) {
+					// Raise InitFailed Event
+					string msg = "Plugin's Uninitialization Error: " + e.Message;
+					if (StopFailed != null) StopFailed(plugin, msg);					
+				}
+
+				// Remove Plugin From Table
+				pluginsTable.Remove(plugin.Info);
 			}
 		}
 
@@ -149,6 +175,24 @@ namespace NyFolder.PluginLib {
 			int i = 0;
 			foreach (PluginInfo pluginInfo in keys) {
 				plugins[i++] = pluginsTable[pluginInfo] as Plugin;
+			}
+
+			keys = null;
+			return(plugins);
+		}
+
+		/// Returns a Plugin Array with Plugin Sorted Reversed By Priority
+		private static Plugin[] ReverseSortPluginsByPriority() {
+			// Initialize Plugins Priority Sorted Array
+			Plugin[] plugins = new Plugin[pluginsTable.Count];
+
+			ArrayList keys = new ArrayList(pluginsTable.Keys);
+			keys.Sort();
+
+			// Fill Plugins Array
+			int i = pluginsTable.Count - 1;
+			foreach (PluginInfo pluginInfo in keys) {
+				plugins[i--] = pluginsTable[pluginInfo] as Plugin;
 			}
 
 			keys = null;

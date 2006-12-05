@@ -39,6 +39,9 @@ namespace NyFolder.PluginLib {
 		/// Initialize The Plugin Class
 		public abstract void Initialize (INyFolder nyfolder);
 
+		/// Uninitialize The Plugin Class
+		public abstract void Uninitialize();
+
 		// ============================================
 		// PUBLIC Properties
 		// ============================================

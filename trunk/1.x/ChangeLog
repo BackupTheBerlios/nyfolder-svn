@@ -5,8 +5,10 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/
 
- * 05 Dec 2006 - 
+ * 05 Dec 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com> 
 	I've Tried to Fix Download/Upload Save on The same file problem.
+	Added The Unitialize() Method to The Abstract Plugin Class.
+	Added StopPlugins() Method to The PluginManager and used in Main()
 
  * 04 Dec 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Try To Fix the Dowload/Upload File Replace Error.

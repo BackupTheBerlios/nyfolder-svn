@@ -63,11 +63,15 @@ namespace NyFolder.Plugins.AccountRegistration {
 		// ============================================
 		// PUBLIC Methods
 		// ============================================
-		/// Initialize Tray Icon Plugin
+		/// Initialize Account Registration Plugin
 		public override void Initialize (INyFolder iNyFolder) {
 			this.nyFolder = iNyFolder;
 
 			this.nyFolder.LoginDialogStarted += new BlankEventHandler(OnLoginDialogStarted);
+		}
+
+		/// UnInitialize Account Registration Plugin
+		public override void Uninitialize() {
 		}
 
 		// ============================================
