@@ -15,7 +15,6 @@ Note:	All Event Handler That Works with The GUI have to do this first
 -------------
    Main
 -------------
- - Download/Upload Save on The same file
  - Upload Manager Reset fileId when is > MAX uint SIZE
 
  - Download/Upload Manager FIX ID NOT FOUND
