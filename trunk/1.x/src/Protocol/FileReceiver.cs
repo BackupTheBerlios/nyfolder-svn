@@ -43,7 +43,6 @@ namespace NyFolder.Protocol {
 		// ============================================
 		private BinaryWriter binaryWriter = null;
 		private bool saveOnExit = true;
-		private string saveName = null;
 		private long fileSaved = 0;
 
 		// ============================================
@@ -54,18 +53,10 @@ namespace NyFolder.Protocol {
 		}
 
 		/// Create New File Receiver
-		public FileReceiver (ulong id, PeerSocket peer, string fileName) : 
-			base(id, peer, fileName)
-		{
-			this.saveName = null;
-		}
-
-		/// Create New File Receiver
 		public FileReceiver (ulong id, PeerSocket peer, 
 							 string fileName, string saveAs) :
-			base(id, peer, fileName)
+			base(id, peer, saveAs, fileName)
 		{
-			this.saveName = saveAs;
 		}
 
 		/// File Receiver Distructor
@@ -79,10 +70,10 @@ namespace NyFolder.Protocol {
 		/// Initialize File
 		public void Init (XmlRequest xml) {
 			Size = long.Parse((string) xml.Attributes["size"]);
-			OriginalName = (string) xml.Attributes["name"];
+			Name = (string) xml.Attributes["name"];
 
 			// Create Null File and Open Binary Stream
-			FileStream stream = FileUtils.CreateNullFile(SaveName, Size);
+			FileStream stream = FileUtils.CreateNullFile(MyDiskName, Size);
 			binaryWriter = new BinaryWriter(stream);
 		}
 
@@ -145,11 +136,6 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
-		/// Get Displayed File Name
-		public string SaveName {
-			get { return((saveName == null) ? OriginalName : saveName); }
-		}
-
 		/// Get File Saved Size
 		public long SavedSize {
 			get { return(this.fileSaved); }

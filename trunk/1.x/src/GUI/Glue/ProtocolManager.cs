@@ -117,12 +117,11 @@ namespace NyFolder.GUI.Glue {
 		Gtk.Application.Invoke(delegate {
 			PeerSocket peer = P2PManager.KnownPeers[userInfo] as PeerSocket;
 
-			// Save File Dialog
-			string saveAs = Base.Dialogs.SaveFile(Paths.UserSharedDirectory(MyInfo.Name), path.Substring(1));
-			if (saveAs == null) return;
-
-			DownloadManager.Accept(peer, 0, path, saveAs);
-			Cmd.RequestFile(peer, path);
+			string saveAs = FileAlreadyInUse(path.Substring(1));
+			if (saveAs != null) {
+				DownloadManager.Accept(peer, 0, path, saveAs);
+				Cmd.RequestFile(peer, path);
+			}
 		});
 		}
 
@@ -276,7 +275,7 @@ namespace NyFolder.GUI.Glue {
 			if (accept == false) return;
 
 			// Save File Dialog
-			string savePath = Base.Dialogs.SaveFile(Paths.UserSharedDirectory(MyInfo.Name), name);
+			string savePath = FileAlreadyInUse(name);
 			if (savePath == null) return;
 
 			// Send Accept File Command
@@ -284,6 +283,30 @@ namespace NyFolder.GUI.Glue {
 
 			DownloadManager.Accept(peer, id, name, savePath);
 			Cmd.RequestFile(peer, id);
+		}
+
+		private string FileAlreadyInUse (string fileName) {
+			string saveAs = null;
+			bool goOn = true;
+			do {
+				// Save File Dialog
+				saveAs = Base.Dialogs.SaveFile(Paths.UserSharedDirectory(MyInfo.Name), fileName);
+				if (saveAs == null) return(null);
+
+				if (DownloadManager.IsInList(saveAs) == true) {
+					string msg = "Currently you are Downloading file that you have saved as '" + saveAs + "'.\n" +
+								 "I've to stop the Download of It in favor of this?";
+					goOn = GUI.Base.Dialogs.QuestionDialog("Name Conflict", msg);
+
+					if (goOn == true) DownloadManager.AbortDownload(saveAs);
+				} else if (UploadManager.IsInList(saveAs) == true) {
+					string msg = "Currently you are Uploading file '"+saveAs+"' that you want replace.\n" +
+								 "I've to stop the Upload of It favor of this?";
+					goOn = GUI.Base.Dialogs.QuestionDialog("Name Conflict", msg);
+					if (goOn == true) DownloadManager.AbortDownload(saveAs);
+				}
+			} while (goOn == false);
+			return(saveAs);
 		}
 	}
 }

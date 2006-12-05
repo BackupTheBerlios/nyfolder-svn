@@ -5,6 +5,12 @@
            \____|__  / ____| \___  / \____/|____/\____ |\___  >__|   
                    \/\/          \/ ChangeLog         \/    \/
 
+ * 04 Dec 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
+	Try To Fix the Dowload/Upload File Replace Error.
+	Now File Info has Name and MyDiskName.
+	I've added to Upload/Download Manager new Abort() and IsInList() methods.
+	Now GUI.Glue.ProtocolManager.OnSaveFile() Tell you the Replace Problem.
+
  * 02 Dec 2006 - Matteo Bertozzi <theo.bertozzi@gmail.com>
 	Now Double Click on Your Folder Items, Try To Open The Selected File.
 

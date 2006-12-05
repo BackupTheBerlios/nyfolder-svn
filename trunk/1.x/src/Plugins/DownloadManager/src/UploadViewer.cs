@@ -96,7 +96,7 @@ namespace NyFolder.Plugins.DownloadManager {
 			obj.Delete += new BlankEventHandler(OnButtonDelete);
 
 			// Setup Image
-			string ext = FileUtils.GetExtension(fileSender.DisplayedName);
+			string ext = FileUtils.GetExtension(fileSender.Name);
 			obj.Image = StockIcons.GetFileIconPixbuf(TextUtils.UpFirstChar(ext));
 
 			// Set Transfer Info
@@ -104,7 +104,7 @@ namespace NyFolder.Plugins.DownloadManager {
 			
 			// Set Info
 			UserInfo userInfo = fileSender.Peer.Info as UserInfo;
-			obj.SetName(fileSender.DisplayedName, userInfo.Name);
+			obj.SetName(fileSender.Name, userInfo.Name);
 
 			// Add Update
 			progressObjects.Add(fileSender, obj);

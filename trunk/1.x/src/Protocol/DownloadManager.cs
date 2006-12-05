@@ -102,7 +102,7 @@ namespace NyFolder.Protocol {
 
 				string name = (string) xml.Attributes["name"];
 				foreach (FileReceiver fRecv in files) {
-					if (fRecv.OriginalName == name) {
+					if (fRecv.Name == name) {
 						fileRecv = fRecv;
 						break;
 					}
@@ -141,6 +141,21 @@ namespace NyFolder.Protocol {
 			AbortDownload(fileRecv);
 		}
 
+		/// Abort Download and Remove it From Receiving or Accepted List using Disk Name
+		public static void AbortDownload (string fileName) {
+			FileReceiver fileRecv = null;
+
+			if ((fileRecv = (FileReceiver) acceptList.Search(fileName)) != null) {
+				acceptList.Remove(fileRecv.Peer, fileRecv);
+			} else {
+				fileRecv = (FileReceiver) recvList.Search(fileName);
+				if (fileRecv == null) return;
+				recvList.Remove(fileRecv.Peer, fileRecv);
+			}
+
+			AbortDownload(fileRecv);
+		}
+
 		/// Save and Remove Download From Receiving List
 		public static void FinishedDownload (PeerSocket peer, ulong id) {
 			FileReceiver fileRecv = new FileReceiver(id);
@@ -154,6 +169,16 @@ namespace NyFolder.Protocol {
 
 			// Raise Finished Event
 			if (Finished != null) Finished(fileRecv);
+		}
+
+		/// Return true if the Current File Path is already in Download List
+		/// (Used for File Replace Check)
+		public static bool IsInList (string filePath) {
+			if (acceptList.HasFile(filePath) == true)
+				return(true);
+			if (recvList.HasFile(filePath) == true)
+				return(true);
+			return(false);
 		}
 
 		// ============================================

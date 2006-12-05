@@ -21,6 +21,10 @@ Note:	All Event Handler That Works with The GUI have to do this first
  - Download/Upload Manager FIX ID NOT FOUND
 	Half solved with a Message Box in The GUI.Glue
 
+ - Fix: Too Slow
+	Glue.ProtocolManager.FileAlreadyInUse()
+	Protocol.FileList.Search(diskName)
+
 -------------
    Plugins
 -------------
@@ -34,3 +38,5 @@ Note:	All Event Handler That Works with The GUI have to do this first
 [x] Talk
 	- TODO: Allow Multiple Person Chat
 [x] Tray Icon
+	- Fix: Restart (Double Tray Icon)
+ 

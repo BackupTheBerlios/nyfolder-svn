@@ -144,15 +144,31 @@ namespace NyFolder.Protocol {
 				Remove(fileSender);
 			}
 
-			// Abort Upload
-			fileSender.Abort();
+			Abort(fileSender);
+		}
 
-			// Update Num Uploads & Reset file Id if it's possible
-			numUploads--;
-			if (numUploads == 0) fileId = 1;
+		/// Abort Upload from Disk Name
+		public static void Abort (string fileName) {
+			FileSender fileSender = null;
+			if ((fileSender = (FileSender) acceptList.Search(fileName)) != null) {
+				RemoveFromAcceptList(fileSender);
+			} else {
+				fileSender = (FileSender) uploadList.Search(fileName);
+				if (fileSender == null) return;
+				Remove(fileSender);
+			}
 
-			// Raise Aborted Event
-			if (Aborted != null) Aborted(fileSender);
+			Abort(fileSender);
+		}
+
+		/// Return true if the Current File Path is already in Download List
+		/// (Used for File Replace Check)
+		public static bool IsInList (string filePath) {
+			if (acceptList.HasFile(filePath) == true)
+				return(true);
+			if (uploadList.HasFile(filePath) == true)
+				return(true);
+			return(false);
 		}
 
 		// ============================================
@@ -199,6 +215,18 @@ namespace NyFolder.Protocol {
 				fileSender.EndSend -= new ExceptionEventHandler(OnEndSend);
 				acceptList.Remove(fileSender.Peer, fileSender);
 			}
+		}
+
+		private static void Abort (FileSender fileSender) {
+			// Abort Upload
+			fileSender.Abort();
+
+			// Update Num Uploads & Reset file Id if it's possible
+			numUploads--;
+			if (numUploads == 0) fileId = 1;
+
+			// Raise Aborted Event
+			if (Aborted != null) Aborted(fileSender);
 		}
 
 		// ============================================

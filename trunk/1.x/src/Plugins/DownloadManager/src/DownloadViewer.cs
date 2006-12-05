@@ -94,7 +94,7 @@ namespace NyFolder.Plugins.DownloadManager {
 			obj.Delete += new BlankEventHandler(OnButtonDelete);
 
 			// Setup Image
-			string ext = FileUtils.GetExtension(fileRecv.SaveName);
+			string ext = FileUtils.GetExtension(fileRecv.MyDiskName);
 			obj.Image = StockIcons.GetFileIconPixbuf(TextUtils.UpFirstChar(ext));
 
 			// Set Transfer Info
@@ -102,7 +102,7 @@ namespace NyFolder.Plugins.DownloadManager {
 			
 			// Set Info
 			UserInfo userInfo = fileRecv.Peer.Info as UserInfo;
-			obj.SetName(fileRecv.OriginalName, userInfo.Name);
+			obj.SetName(fileRecv.Name, userInfo.Name);
 
 			// Add Update
 			progressObjects.Add(fileRecv, obj);

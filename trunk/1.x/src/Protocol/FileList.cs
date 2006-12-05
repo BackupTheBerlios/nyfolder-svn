@@ -101,9 +101,42 @@ namespace NyFolder.Protocol {
 			return(null);
 		}
 
+		/// Search Disk Name into List
+		public FileInfo Search (string diskName) {
+			lock(this.data) {
+				foreach (PeerSocket peer in data.Keys) {
+					ArrayList files = GetFiles(peer);
+					foreach (FileInfo fileInfo in files) {
+						if (fileInfo.MyDiskName == diskName)
+							return(fileInfo);
+					}
+				}
+			}
+			return(null);
+		}
+
 		/// Get Peer's File List
 		public ArrayList GetFiles (PeerSocket peer) {
 			return((ArrayList) this.data[peer]);
+		}
+
+		/// Return true if File Path is found in someone's list
+		public bool HasFile (string filePath) {
+			foreach (PeerSocket peer in data.Keys) {
+				if (HasFile(peer, filePath) == true)
+					return(true);
+			}
+			return(false);
+		}
+
+		/// Return true if File Path is found in peer's list
+		public bool HasFile (PeerSocket peer, string filePath) {
+			ArrayList files = GetFiles(peer);
+			foreach (FileInfo fileInfo in files) {
+				if (fileInfo.MyDiskName == filePath)
+					return(true);
+			}
+			return(false);
 		}
 
 		// ============================================

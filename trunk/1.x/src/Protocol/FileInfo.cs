@@ -42,7 +42,8 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private string originalName = null;
+		private string diskName = null;
+		private string dispName = null;
 		private PeerSocket peer = null;
 		private long fileSize = 0;
 		private ulong id;
@@ -51,21 +52,25 @@ namespace NyFolder.Protocol {
 		// PUBLIC Constructors
 		// ============================================
 		/// Create New File Info only with Id (used for compare)
-		public FileInfo (ulong id) : this(id, null, null) {
+		public FileInfo (ulong id) : this(id, null, null, null) {
 		}
 
 		/// Create New File Info with id and its owner
-		public FileInfo (ulong id, PeerSocket peer) : this(id, peer, null) {
+		public FileInfo (ulong id, PeerSocket peer) : this(id, peer, null, null)
+		{
 		}
 
 		/// Create New File Info with id, its owner and its name
-		public FileInfo (ulong id, PeerSocket peer, string originalName) {
+		public FileInfo (ulong id, PeerSocket peer,
+						 string diskName, string dispName)
+		{
 			this.id = id;
 			this.peer = peer;
 			if (this.peer != null) {
 				this.peer.Disconnecting += new PeerEventHandler(OnPeerDisconnect);
 			}
-			this.originalName = originalName;
+			this.diskName = diskName;
+			this.dispName = dispName;
 		}
 
 		~FileInfo() {
@@ -117,10 +122,16 @@ namespace NyFolder.Protocol {
 			get { return(this.peer); }
 		}
 
-		// Get The Original File Name
-		public string OriginalName {
-			get { return(this.originalName); }
-			protected set { this.originalName = value; }
+		/// Get The Displayed Name
+		public string Name {
+			get { return(this.dispName); }
+			protected set { this.dispName = value; }
+		}
+
+		/// Get The Name (On My Disk)
+		public string MyDiskName {
+			get { return(this.diskName); }
+			protected set { this.diskName = value; }
 		}
 	}
 }

@@ -50,7 +50,6 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PRIVATE Members
 		// ============================================
-		private string displayedName = null;
 		private int sendedPercent = 0;
 		private Thread thread = null;
 		private bool endSend = false;
@@ -65,15 +64,15 @@ namespace NyFolder.Protocol {
 
 		/// Create New File Sender
 		public FileSender (ulong id, PeerSocket peer, string path) :
-			base(id, peer, path)
+			base(id, peer, path, null)
 		{
 			System.IO.FileInfo fileInfo = new System.IO.FileInfo(path);
 
 			string sharedFolder = Paths.UserSharedDirectory(MyInfo.Name);
-			if (OriginalName.StartsWith(sharedFolder) == true) {				
-				this.displayedName = OriginalName.Substring(sharedFolder.Length);
+			if (MyDiskName.StartsWith(sharedFolder) == true) {				
+				Name = MyDiskName.Substring(sharedFolder.Length);
 			} else {
-				this.displayedName = fileInfo.Name;
+				Name = fileInfo.Name;
 			}
 			Size = fileInfo.Length;
 		}
@@ -94,7 +93,7 @@ namespace NyFolder.Protocol {
 			xmlRequest.Attributes.Add("what", "file");
 			xmlRequest.Attributes.Add("id", Id);
 			xmlRequest.Attributes.Add("size", Size);
-			xmlRequest.Attributes.Add("name", DisplayedName);
+			xmlRequest.Attributes.Add("name", Name);
 
 			// Send To Peer
 			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
@@ -102,28 +101,38 @@ namespace NyFolder.Protocol {
 
 		/// Abort Sending Operation
 		public override void Abort() {
-			if (endSend == false && thread.IsAlive == true) {
-				thread.Abort();
+			if (thread != null) {
+				if (endSend == false && thread.IsAlive == true) {
+					thread.Abort();
+				}
+				thread = null;
 			}
 		}
 
 		/// Abort Sending Operation
-		public void Abort (Exception e) {
-			// Send Abort Message + Error
-			endSend = true;
-			AbortSendFile(e.Message);
+		public void Abort (Exception exception) {
+			try {
+				// Send Abort Message + Error
+				endSend = true;
+				AbortSendFile(exception.Message);
 
-			// Raise End Send Event
-			if (EndSend != null) EndSend(this, e);
+				// Raise End Send Event
+				if (EndSend != null) EndSend(this, exception);
 
-			// Abort Thread
-			if (thread.IsAlive == true) thread.Abort();
+				// Abort Thread
+				if (thread != null) {
+					if (thread.IsAlive == true) thread.Abort();
+					thread = null;
+				}
+			} catch (Exception e) {
+				Debug.Log("FileSender.Abort(): {0}", e.Message);
+			}
 		}
 
 		/// Start Sending File
 		public void Start() {
 			thread = new Thread(new ThreadStart(StartSendingFile));
-			thread.Name = "Send File " + DisplayedName;
+			thread.Name = "Send File " + Name;
 			thread.Start();
 		}
 
@@ -158,7 +167,7 @@ namespace NyFolder.Protocol {
 			xmlRequest.Attributes.Add("what", "file");
 			xmlRequest.Attributes.Add("id", Id);
 			xmlRequest.Attributes.Add("size", Size);
-			xmlRequest.Attributes.Add("name", DisplayedName);
+			xmlRequest.Attributes.Add("name", Name);
 
 			// Send To Peer
 			if (Peer != null) Peer.Send(xmlRequest.GenerateXml());
@@ -239,7 +248,7 @@ namespace NyFolder.Protocol {
 		// Split and Send "Small File" In Parts of ChunkSize
 		private void SendSmallFileParts() {
 			// Initialize & Read Entire File
-			byte[] fileContent = FileUtils.ReadEntireFile(OriginalName);
+			byte[] fileContent = FileUtils.ReadEntireFile(MyDiskName);
 			Size = fileContent.Length;
 
 			uint part = 0;
@@ -282,7 +291,7 @@ namespace NyFolder.Protocol {
 			try {
 				uint totalParts = (uint) Size / FileSender.ChunkSize;
 
-				stream = new BufferedStream(File.OpenRead(OriginalName));
+				stream = new BufferedStream(File.OpenRead(MyDiskName));
 				byte[] buffer = new byte[FileSender.ChunkSize];
 
 				for (uint part=0; part < totalParts; part++) {
@@ -332,13 +341,6 @@ namespace NyFolder.Protocol {
 		// ============================================
 		// PUBLIC Properties
 		// ============================================
-		/// Get Displayed File Name
-		public string DisplayedName {
-			get {
-				return((displayedName == null) ? OriginalName : displayedName);
-			}
-		}
-
 		/// Get The File Sended Size
 		public long SendedSize {
 			get { return(this.sendedSize); }
