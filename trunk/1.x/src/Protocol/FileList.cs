@@ -44,6 +44,12 @@ namespace NyFolder.Protocol {
 		///  - Values: ArrayList of FileInfo
 		protected Hashtable data = null;
 
+		// In This List i couldn't have two file with the same Disk Path
+		// so i save it for a faster Search(diskPath)
+		/// Keys: string Disk Path
+		/// Values: File Info
+		private Hashtable diskPaths = null;
+
 		// ============================================
 		// PRIVATE Members
 		// ============================================
@@ -54,6 +60,7 @@ namespace NyFolder.Protocol {
 		/// Create New File List
 		public FileList() {
 			this.data = Hashtable.Synchronized(new Hashtable());
+			this.diskPaths = Hashtable.Synchronized(new Hashtable());
 		}
 
 		// ============================================
@@ -61,29 +68,45 @@ namespace NyFolder.Protocol {
 		// ============================================
 		/// Add Peer's File Info to his list
 		public void Add (PeerSocket peer, FileInfo fileInfo) {
+			// Add FileInfo into Peer's ArrayList
 			ArrayList fileList = GetPeerFileList(peer);
 			fileList.Add(fileInfo);
 			UpdatePeerFileList(peer, fileList);
+
+			// Add Disk Path
+			this.diskPaths.Add(fileInfo.MyDiskName, fileInfo);
 		}
 
 		/// Remove Peer's File Info from his list
 		public void Remove (PeerSocket peer, FileInfo fileInfo) {
+			// Remove Peer's FileInfo from ArrayList
 			ArrayList fileList = (ArrayList) this.data[peer];
 			if (fileList != null) fileList.Remove(fileInfo);
+			UpdatePeerFileList(peer, fileList);
+
+			// Remove Disk Path
+			this.diskPaths.Remove(fileInfo.MyDiskName);
 		}
 
 		/// Remove all Peer's File List
 		public void RemoveAll() {
-			foreach (ArrayList fileList in this.data.Values) {
-				fileList.Clear();
+			lock (this.data) {
+				foreach (ArrayList fileList in this.data.Values) {
+					fileList.Clear();
+				}
+				this.data.Clear();
+				this.diskPaths.Clear();
 			}
-			this.data.Clear();
 		}
 
 		/// Remove All Peer's File List
 		public void RemoveAll (PeerSocket peer) {
 			if (this.data.ContainsKey(peer) == true) {
 				ArrayList fileList = (ArrayList) this.data[peer];
+
+				foreach (FileInfo fileInfo in fileList)
+					this.diskPaths.Remove(fileInfo.MyDiskName);
+
 				fileList.Clear();
 				this.data.Remove(peer);
 			}
@@ -103,16 +126,8 @@ namespace NyFolder.Protocol {
 
 		/// Search Disk Name into List
 		public FileInfo Search (string diskName) {
-			lock(this.data) {
-				foreach (PeerSocket peer in data.Keys) {
-					ArrayList files = GetFiles(peer);
-					foreach (FileInfo fileInfo in files) {
-						if (fileInfo.MyDiskName == diskName)
-							return(fileInfo);
-					}
-				}
-			}
-			return(null);
+			FileInfo fileInfo = this.diskPaths[diskName] as FileInfo;
+			return(fileInfo);
 		}
 
 		/// Get Peer's File List
@@ -122,14 +137,11 @@ namespace NyFolder.Protocol {
 
 		/// Return true if File Path is found in someone's list
 		public bool HasFile (string filePath) {
-			foreach (PeerSocket peer in data.Keys) {
-				if (HasFile(peer, filePath) == true)
-					return(true);
-			}
-			return(false);
+			return(this.diskPaths.ContainsKey(filePath));
 		}
 
-		/// Return true if File Path is found in peer's list
+#if false
+		// Return true if File Path is found in peer's list
 		public bool HasFile (PeerSocket peer, string filePath) {
 			ArrayList files = GetFiles(peer);
 			foreach (FileInfo fileInfo in files) {
@@ -138,6 +150,7 @@ namespace NyFolder.Protocol {
 			}
 			return(false);
 		}
+#endif
 
 		// ============================================
 		// PROTECTED (Methods) Event Handlers

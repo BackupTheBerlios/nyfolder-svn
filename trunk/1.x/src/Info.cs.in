@@ -22,7 +22,7 @@ using System;
 
 namespace NyFolder {
 	/// Niry Sharo Informations
-	public class Info {
+	public static class Info {
 		/// NyFolder Name
 		public const string Name = "@name@";
 		/// NyFolder Version
