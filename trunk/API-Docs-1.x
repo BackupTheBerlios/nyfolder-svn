@@ -1,1 +1,0 @@
-/home/oz/NyFolder-API/
